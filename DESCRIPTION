@@ -1,12 +1,16 @@
 Package: kvkapiR
-Title: What the Package Does (One Line, Title Case)
+Title: An R Wrapper for the Dutch Chamber of Commerce API  
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Coen", "Eisma", , "coeneisma@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0007-9001-2572"))
+Description: Provides a convenient interface to the Dutch Chamber of Commerce (KvK) API.  
+    This package is built using the `httr2` package and follows best practices  
+    for wrapping APIs in R, as outlined in the httr2 documentation  
+    (https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies  
+    authentication, request handling, and response parsing when interacting  
+    with the KvK API.
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
