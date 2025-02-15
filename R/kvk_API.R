@@ -1,4 +1,3 @@
-
 #' Set KvK API Key in .Renviron
 #'
 #' This function sets or updates the `KVK_API_KEY` environment variable in the
