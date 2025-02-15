@@ -1,6 +1,6 @@
 Package: kvkapiR
 Title: An R Wrapper for the Dutch Chamber of Commerce API  
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person("Coen", "Eisma", , "coeneisma@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0009-0007-9001-2572"))
@@ -13,9 +13,10 @@ Description: Provides a convenient interface to the Dutch Chamber of Commerce (K
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 URL: https://coeneisma.github.io/kvkapiR/
 Imports: 
     dplyr,
     httr2,
+    jsonlite,
     tidyr
