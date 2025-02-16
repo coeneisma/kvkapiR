@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
+`r lifecycle::badge('experimental')`
+
 <!-- badges: end -->
 
 The goal of kvkapiR is to provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (<https://httr2.r-lib.org/articles/wrapping-apis.html>). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
@@ -43,6 +45,7 @@ koudum
 
 
 ```{r}
-rotterdam <- kvk_search(plaats = "Rotterdam", type = "hoofdvestiging")
+rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
+rotterdam
 ```
 

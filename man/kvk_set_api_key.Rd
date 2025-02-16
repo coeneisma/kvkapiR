@@ -18,6 +18,8 @@ Invisibly returns \code{TRUE} if the key was added/updated, or \code{FALSE} if
 no change was made.
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 This function sets or updates the \code{KVK_API_KEY} environment variable in the
 \code{.Renviron} file. If the key already exists and \code{overwrite = FALSE}, no
 changes are made.
