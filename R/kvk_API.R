@@ -1,4 +1,5 @@
 #' Set KvK API Key in .Renviron
+#' @description `r lifecycle::badge('experimental')`
 #'
 #' This function sets or updates the `KVK_API_KEY` environment variable in the
 #' `.Renviron` file. If the key already exists and `overwrite = FALSE`, no
@@ -70,9 +71,11 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 
 #' Retrieve all results from the KvK Search API (up to 1.000 results)
 #'
-#' @description This function automatically paginates through the KvK API to
-#'   jlajdsflkj l;aj asdlfj collect available results. Due to API limitations,
-#'   it retrieves a maximum of 1.000 records.
+#' @description `r lifecycle::badge('experimental')`
+#'
+#'   This function automatically paginates through the KvK API to collect
+#'   available results. Due to API limitations, it retrieves a maximum of 1.000
+#'   records.
 #'
 #'   Available arguments are:
 #'
@@ -108,15 +111,17 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 #' * `vervallenNaam`: Contains the expired trade name or statutory name with which this search result was found.
 #' * `links`: No links will be shown if the deregistration occurred before 22 May 2010 and if "active" is "false". Otherwise a List containing:
 #'
-#'   1. Link to the first search result.
-#'   2. Link to Basisprofiel (based on KVK number).
-#'   3. Link to Vestigingsprofiel (based on branch number).
+#'   1. Link to the first search result. 2. Link to Basisprofiel (based on KVK
+#'   number). 3. Link to Vestigingsprofiel (based on branch number).
 #'
 #' @export
 #' @examples
 #'
 #' koudum <- kvk_search(plaats = "Koudum")
 #' koudum
+#'
+#' rotterdam <- kvk_search(plaats = "Rotterdam")
+#' rotterdam
 kvk_search <- function(...) {
 
   # API Key from environment

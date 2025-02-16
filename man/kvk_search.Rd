@@ -30,16 +30,17 @@ parameters:
 \item \code{vervallenNaam}: Contains the expired trade name or statutory name with which this search result was found.
 \item \code{links}: No links will be shown if the deregistration occurred before 22 May 2010 and if "active" is "false". Otherwise a List containing:
 \enumerate{
-\item Link to the first search result.
-\item Link to Basisprofiel (based on KVK number).
-\item Link to Vestigingsprofiel (based on branch number).
+\item Link to the first search result. 2. Link to Basisprofiel (based on KVK
+number). 3. Link to Vestigingsprofiel (based on branch number).
 }
 }
 }
 \description{
-This function automatically paginates through the KvK API to
-jlajdsflkj l;aj asdlfj collect available results. Due to API limitations,
-it retrieves a maximum of 1.000 records.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
+This function automatically paginates through the KvK API to collect
+available results. Due to API limitations, it retrieves a maximum of 1.000
+records.
 
 Available arguments are:
 \itemize{
@@ -61,4 +62,7 @@ Available arguments are:
 
 koudum <- kvk_search(plaats = "Koudum")
 koudum
+
+rotterdam <- kvk_search(plaats = "Rotterdam")
+rotterdam
 }

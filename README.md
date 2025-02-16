@@ -50,8 +50,20 @@ koudum
 ```
 
 ``` r
-rotterdam <- kvk_search(plaats = "Rotterdam", type = "hoofdvestiging")
-#> Warning in kvk_search(plaats = "Rotterdam", type = "hoofdvestiging"): API
-#> response contains more than 1.000 results. Only the first 1.000 will be
-#> retrieved.
+rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
+rotterdam
+#> # A tibble: 199 × 7
+#>    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam
+#>    <chr>     <chr>            <chr>      <list>       <chr> <list> <chr>        
+#>  1 24475068  000009219072     Wijkprakt… <named list> hoof… <list> <NA>         
+#>  2 81943938  000048204625     Jans Huis… <named list> hoof… <list> <NA>         
+#>  3 24484189  000016351312     Sanitas H… <named list> neve… <list> <NA>         
+#>  4 24477358  000010787356     Van Schai… <named list> hoof… <list> <NA>         
+#>  5 66346339  000034979034     Huisartse… <named list> hoof… <list> <NA>         
+#>  6 54446538  000024210382     Huisartse… <named list> hoof… <list> <NA>         
+#>  7 62380281  000031391419     Huisartse… <named list> hoof… <list> <NA>         
+#>  8 24484189  000036373648     Sanitas H… <named list> hoof… <list> <NA>         
+#>  9 85464007  000051508060     itj huisa… <named list> hoof… <list> <NA>         
+#> 10 24476795  000010613765     Baggerman… <named list> hoof… <list> <NA>         
+#> # ℹ 189 more rows
 ```
