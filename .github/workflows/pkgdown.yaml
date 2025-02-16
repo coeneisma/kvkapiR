@@ -38,8 +38,7 @@ jobs:
           needs: website
 
       - name: Set API key in environment
-        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> $GITHUB_ENV
-
+        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> "$GITHUB_ENV"
       - name: Check if KVK_API_KEY is set
         run: echo "KVK_API_KEY is set to $KVK_API_KEY"
 
