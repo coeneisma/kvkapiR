@@ -36,8 +36,11 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: Set API Key
-        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> $GITHUB_ENV
+      - name: Set API Key in .Renviron
+        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> ~/.Renviron
+
+      - name: Verify API Key is Set
+        run: cat ~/.Renviron
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
