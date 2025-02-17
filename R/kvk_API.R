@@ -25,10 +25,10 @@
 #' @examples
 #' \dontrun{
 #' # Set the API key if it is not already set
-#' set_kvk_api_key("abcd1234")
+#' set_KVK_API_KEY("abcd1234")
 #'
 #' # Overwrite an existing API key
-#' set_kvk_api_key("newkey5678", overwrite = TRUE)
+#' set_KVK_API_KEY("newkey5678", overwrite = TRUE)
 #' }
 #'
 #' @export
@@ -125,15 +125,15 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 kvk_search <- function(...) {
 
   # API Key from environment
-  API_KEY <- Sys.getenv("KVK_API_KEY")
-  if (API_KEY == "") stop("API key is missing. Set it using `Sys.setenv(KVK_API_KEY='your_key')`")
+  KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
+  if (KVK_API_KEY == "") stop("API key is missing. Set it using `Sys.setenv(KVK_API_KEY='your_key')`")
 
   # API URL
   API_URL <- "https://api.kvk.nl/api/v2/zoeken"
 
   # First request to determine total results
   first_request <- httr2::request(API_URL) |>
-    httr2::req_headers(apikey = API_KEY, Accept = "application/json") |>
+    httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
     httr2::req_url_query(resultatenPerPagina = 1, pagina = 1, ...) |>
     httr2::req_perform() |>
     httr2::resp_body_json()
@@ -157,7 +157,7 @@ kvk_search <- function(...) {
   # Loop through pages (up to max 100 pages)
   for (pagina in 1:total_pages) {
     request <- httr2::request(API_URL) |>
-      httr2::req_headers(apikey = API_KEY, Accept = "application/json") |>
+      httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
       httr2::req_url_query(resultatenPerPagina = 100, pagina = pagina, ...) |>
       httr2::req_perform() |>
       httr2::resp_body_json()
