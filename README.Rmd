@@ -34,7 +34,7 @@ devtools::install_github("coeneisma/kvkapiR")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how use the `kvk_search()` function:
 
 ```{r example}
 library(kvkapiR)
