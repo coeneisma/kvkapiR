@@ -21,7 +21,8 @@ records."><meta property="og:image" content="https://coeneisma.github.io/kvkapiR
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/kvkapiR.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -96,7 +97,7 @@ number). 3. Link to Vestigingsprofiel (based on branch number).</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu">kvk_search</span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">koudum</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 514 × 6</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 513 × 6</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    kvkNummer vestigingsnummer naam                     adres        type  links </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> 01036576  000007810083     Stichting Gemeenschapsc… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span>
@@ -109,7 +110,7 @@ number). 3. Link to Vestigingsprofiel (based on branch number).</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> 01123666  000040288196     Winterberging IJzendoorn <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> 40001473  000000303062     De Sândobbe              <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> 01091668  000000678279     Multiservice Beheer en … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 504 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 503 more rows</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu">kvk_search</span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>API response contains more than 1,000 results. Only the first 1,000 will be retrieved.</span>
