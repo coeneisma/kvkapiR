@@ -21,6 +21,7 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      KVK_API_KEY: ${{ secrets.KVK_API_KEY }}
     permissions:
       contents: write
     steps:
@@ -38,7 +39,7 @@ jobs:
           needs: website
 
       - name: Set API Key in .Renviron
-        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> "~/.Renviron"
+        run:  echo KVK_API_KEY="$KVK_API_KEY" >> ~/.Renviron
 
       - name: Verify API Key is Set
         run: cat ~/.Renviron
