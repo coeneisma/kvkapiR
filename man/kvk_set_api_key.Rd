@@ -39,10 +39,10 @@ to take effect.
 \examples{
 \dontrun{
 # Set the API key if it is not already set
-set_kvk_api_key("abcd1234")
+set_KVK_API_KEY("abcd1234")
 
 # Overwrite an existing API key
-set_kvk_api_key("newkey5678", overwrite = TRUE)
+set_KVK_API_KEY("newkey5678", overwrite = TRUE)
 }
 
 }
