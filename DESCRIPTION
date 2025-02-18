@@ -21,3 +21,4 @@ Imports:
     jsonlite,
     lifecycle,
     tidyr
+Config/Needs/website: rmarkdown

@@ -8,17 +8,22 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of kvkapiR is to provides a convenient interface to the Dutch
-Chamber of Commerce (KvK) API. This package is built using the `httr2`
-package and follows best practices for wrapping APIs in R, as outlined
-in the httr2 documentation
+The goal of kvkapiR is to provides a convenient R programming language
+interface to the Dutch Chamber of Commerce (KvK) Search API. This
+package is built using the `httr2` package and follows best practices
+for wrapping APIs in R, as outlined in the httr2 documentation
 (<https://httr2.r-lib.org/articles/wrapping-apis.html>). It simplifies
 authentication, request handling, and response parsing when interacting
 with the KvK API.
 
+Currently, the package only provides access to the [KvK search
+API](https://developers.kvk.nl/apis/zoeken). Additional APIs are
+available; more details can be found on the [on the developers website
+of the KvK](https://developers.kvk.nl/apis).
+
 ## Installation
 
-You can install the development version of kvkapiR from
+You can install the development version of `kvkapiR` from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -26,17 +31,24 @@ You can install the development version of kvkapiR from
 devtools::install_github("coeneisma/kvkapiR")
 ```
 
+To install the latest development version:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("coeneisma/kvkapiR", ref = "development")
+```
+
 ## Example
 
-This is a basic example which shows you how use the `kvk_search()`
-function:
+Here are basic examples demonstrating how to use the `kvk_search()`
+function to retrieve KvK registrations:
 
 ``` r
 library(kvkapiR)
 
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 514 × 6
+#> # A tibble: 513 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -49,13 +61,17 @@ koudum
 #>  8 01123666  000040288196     Winterberging IJzendoorn <named list> hoof… <list>
 #>  9 40001473  000000303062     De Sândobbe              <named list> hoof… <list>
 #> 10 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
-#> # ℹ 504 more rows
+#> # ℹ 503 more rows
 ```
 
+You can also combine multiple search parameters:
+
 ``` r
+library(kvkapiR)
+
 rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
 rotterdam
-#> # A tibble: 199 × 7
+#> # A tibble: 200 × 7
 #>    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam
 #>    <chr>     <chr>            <chr>      <list>       <chr> <list> <chr>        
 #>  1 24475068  000009219072     Wijkprakt… <named list> hoof… <list> <NA>         
@@ -68,5 +84,8 @@ rotterdam
 #>  8 24484189  000036373648     Sanitas H… <named list> hoof… <list> <NA>         
 #>  9 85464007  000051508060     itj huisa… <named list> hoof… <list> <NA>         
 #> 10 24476795  000010613765     Baggerman… <named list> hoof… <list> <NA>         
-#> # ℹ 189 more rows
+#> # ℹ 190 more rows
 ```
+
+See `vignette("kvkapiR")` for more examples and information about the
+usage of this package.
