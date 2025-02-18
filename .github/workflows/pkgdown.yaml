@@ -38,11 +38,18 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
+      # Zorgt ervoor dat de API-key beschikbaar is in zowel de shell als de R-omgeving
       - name: Set API Key in .Renviron
-        run:  echo KVK_API_KEY="$KVK_API_KEY" >> ~/.Renviron
+        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> ~/.Renviron
 
-      - name: Verify API Key is Set
+      - name: Export API Key for R
+        run: echo "Sys.setenv(KVK_API_KEY='${{ secrets.KVK_API_KEY }}')" >> .Rprofile
+
+      - name: Verify API Key in shell
         run: cat ~/.Renviron
+
+      - name: Verify API Key in R
+        run: Rscript -e 'print(Sys.getenv("KVK_API_KEY"))'
 
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
