@@ -1,4 +1,7 @@
 url: https://coeneisma.github.io/kvkapiR/
 template:
-  bootstrap: 5
-
+  bslib:
+    version: 5
+    bg: "#ffffff"
+    fg: "#00526e"
+    primary: "#d87a47"

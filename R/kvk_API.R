@@ -103,7 +103,7 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 #'   * `straatnaam`: Street name
 #'   * `huisnummer`: If postal code and house number are also input.
 #'   * `huisletter`: If postal code and house number are also input.
-#'   * `postcode`: If postal code and house number are also input.
+#'   * `postcode`: If postal code and house number are also input. Remove any spaces.
 #'   * `plaats`: Place
 #' * `type`: Main branch, branch office, and/or legal entity.
 #' * `actief`: Indicates whether a company/establishment/legal entity is registered (Yes) or deregistered (No).
