@@ -1,4 +1,5 @@
 # kvkapiR (development version)
 
-* Initial setup of package. Everything works, but in experimental phase. 
-* Next version: examples in a Getting Started file.
+* Initial setup of package.
+* `pkgdown` site genereated with custom KvK color scheme.
+* Added multiple examples to `vignette("kvkapiR")` 

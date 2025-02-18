@@ -21,20 +21,29 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of kvkapiR is to provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (<https://httr2.r-lib.org/articles/wrapping-apis.html>). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
+The goal of kvkapiR is to provides a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) Search API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (<https://httr2.r-lib.org/articles/wrapping-apis.html>). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
+
+Currently, the package only provides access to the [KvK search API](https://developers.kvk.nl/apis/zoeken). Additional APIs are available; more details can be found on the  [on the developers website of the KvK](https://developers.kvk.nl/apis).
 
 ## Installation
 
-You can install the development version of kvkapiR from [GitHub](https://github.com/) with:
+You can install the development version of `kvkapiR` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("coeneisma/kvkapiR")
 ```
 
+To install the latest development version:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("coeneisma/kvkapiR", ref = "development")
+```
+
 ## Example
 
-This is a basic example which shows you how use the `kvk_search()` function:
+Here are basic examples demonstrating how to use the `kvk_search()` function to retrieve KvK registrations:
 
 ```{r example}
 library(kvkapiR)
@@ -43,9 +52,13 @@ koudum <- kvk_search(plaats = "Koudum")
 koudum
 ```
 
+You can also combine multiple search parameters:
 
 ```{r}
+library(kvkapiR)
+
 rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
 rotterdam
 ```
 
+See `vignette("kvkapiR")` for more examples and information about the usage of this package.
