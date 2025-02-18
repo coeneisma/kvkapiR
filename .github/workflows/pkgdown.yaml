@@ -1,5 +1,11 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 # Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+
+
+template:
+  bootstrap: 5
+  bootswatch: cerulean
+
 on:
   push:
     branches: [main, master]
@@ -37,7 +43,7 @@ jobs:
           needs: website
 
       - name: Set API Key in .Renviron
-        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> ~/.Renviron
+        run: echo "KVK_API_KEY=${{ secrets.KVK_API_KEY }}" >> "~/.Renviron"
 
       - name: Verify API Key is Set
         run: cat ~/.Renviron
