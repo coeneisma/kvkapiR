@@ -7,7 +7,21 @@
 kvk_search(...)
 }
 \arguments{
-\item{...}{Named arguments passed to the API query (e.g., naam = "Koudum").}
+\item{...}{Named arguments passed to the API query (e.g., naam = "Koudum"). Available arguments are:
+\itemize{
+\item \code{kvkNummer}: Dutch KVK number. Consists of 8 digits.
+\item \code{rsin}: Legal Entities and Partnerships Identification Number.
+\item \code{vestigingsnummer}: Branch number. Unique number consisting of 12 digits.
+\item \code{naam}: The name under which an establishment or legal entity trades. This can be: active or inactive statutory name, trade name, or name.
+\item \code{straatnaam}
+\item \code{huisnummer}: Only in combination with postal code.
+\item \code{huisletter}: Only in combination with house number. Consists of 1 (alphabetic) character.
+\item \code{postcode}: Only in combination with house number.
+\item \code{plaats}
+\item \code{postbusnummer}: Only allowed in combination with postcode
+\item \code{type}: Filter by type: main branch, branch, and/or legal entity.  Combine multiple by using ‘&’. E.g. :   type=nevenvestiging&type=hoofdvestiging&type=rechtspersoon.
+\item \code{inclusiefInactieveRegistraties}: Possible values are "true" or "false". Default value is "false".
+}}
 }
 \value{
 A tibble containing the retrieved results with the following
@@ -41,22 +55,6 @@ number). 3. Link to Vestigingsprofiel (based on branch number).
 This function automatically paginates through the KvK API to collect
 available results. Due to API limitations, it retrieves a maximum of 1.000
 records.
-
-Available arguments are:
-\itemize{
-\item \code{kvkNummer}: Dutch KVK number. Consists of 8 digits.
-\item \code{rsin}: Legal Entities and Partnerships Identification Number.
-\item \code{vestigingsnummer}: Branch number. Unique number consisting of 12 digits.
-\item \code{naam}: The name under which an establishment or legal entity trades. This can be: active or inactive statutory name, trade name, or name.
-\item \code{straatnaam}
-\item \code{huisnummer}: Only in combination with postal code.
-\item \code{huisletter}: Only in combination with house number. Consists of 1 (alphabetic) character.
-\item \code{postcode}: Only in combination with house number.
-\item \code{plaats}
-\item \code{postbusnummer}: Only allowed in combination with postcode
-\item \code{type}: Filter by type: main branch, branch, and/or legal entity.  Combine multiple by using ‘&’. E.g. :   type=nevenvestiging&type=hoofdvestiging&type=rechtspersoon.
-\item \code{inclusiefInactieveRegistraties}: Possible values are "true" or "false". Default value is "false".
-}
 }
 \examples{
 

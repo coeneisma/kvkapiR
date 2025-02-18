@@ -77,7 +77,7 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 #'   available results. Due to API limitations, it retrieves a maximum of 1.000
 #'   records.
 #'
-#'   Available arguments are:
+#' @param ... Named arguments passed to the API query (e.g., naam = "Koudum"). Available arguments are:
 #'
 #' * `kvkNummer`: Dutch KVK number. Consists of 8 digits.
 #' * `rsin`: Legal Entities and Partnerships Identification Number.
@@ -92,7 +92,6 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 #' * `type`: Filter by type: main branch, branch, and/or legal entity.  Combine multiple by using ‘&’. E.g. :   type=nevenvestiging&type=hoofdvestiging&type=rechtspersoon.
 #' * `inclusiefInactieveRegistraties`: Possible values are "true" or "false". Default value is "false".
 #'
-#' @param ... Named arguments passed to the API query (e.g., naam = "Koudum").
 #' @return A tibble containing the retrieved results with the following
 #'   parameters:
 #'
@@ -124,47 +123,86 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 #' rotterdam
 kvk_search <- function(...) {
 
-  # API Key from environment
+  # Retrieve API key from environment variables
   KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
   if (KVK_API_KEY == "") stop("API key is missing. Set it using `Sys.setenv(KVK_API_KEY='your_key')`")
 
   # API URL
   API_URL <- "https://api.kvk.nl/api/v2/zoeken"
 
-  # First request to determine total results
-  first_request <- httr2::request(API_URL) |>
-    httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
-    httr2::req_url_query(resultatenPerPagina = 1, pagina = 1, ...) |>
-    httr2::req_perform() |>
-    httr2::resp_body_json()
+  # First request to determine total number of results, with error handling
+  first_request <- tryCatch(
+    {
+      httr2::request(API_URL) |>
+        httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+        httr2::req_url_query(resultatenPerPagina = 1, pagina = 1, ...) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json()
+    },
+    error = function(e) {
+      if (grepl("HTTP 404", e$message)) {
+        message("No results found for the given search query.")
+        return(NULL)  # Return NULL instead of an error
+      } else {
+        stop(e)  # Other errors are raised normally
+      }
+    }
+  )
+
+  # If NULL was returned, stop execution
+  if (is.null(first_request)) return(NULL)
 
   if (!"totaal" %in% names(first_request)) stop("Unexpected API response: 'totaal' not found")
 
   total_results <- first_request$totaal
-  if (total_results == 0) return(NULL) # No results found
-
-  # If total results exceed 10,000, limit to 1,000 and show a warning
-  if (total_results > 1000) {
-    total_results <- 1000
-    warning("API response contains more than 1.000 results. Only the first 1.000 will be retrieved.")
+  if (total_results == 0) {
+    message("No results found.")
+    return(NULL)
   }
 
-  # Calculate total pages needed (max 100 pages)
+  # If more than 1,000 results, limit and show a warning
+  if (total_results > 1000) {
+    total_results <- 1000
+    warning("API response contains more than 1,000 results. Only the first 1,000 will be retrieved.")
+  }
+
+  # Determine total number of pages (maximum 100)
   total_pages <- min(ceiling(total_results / 100), 100)
 
   all_results <- list()
 
-  # Loop through pages (up to max 100 pages)
+  # Loop through pages (up to max 100)
   for (pagina in 1:total_pages) {
-    request <- httr2::request(API_URL) |>
-      httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
-      httr2::req_url_query(resultatenPerPagina = 100, pagina = pagina, ...) |>
-      httr2::req_perform() |>
-      httr2::resp_body_json()
+    request <- tryCatch(
+      {
+        httr2::request(API_URL) |>
+          httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+          httr2::req_url_query(resultatenPerPagina = 100, pagina = pagina, ...) |>
+          httr2::req_perform() |>
+          httr2::resp_body_json()
+      },
+      error = function(e) {
+        if (grepl("HTTP 404", e$message)) {
+          message("No results found on page ", pagina, ".")
+          return(NULL)
+        } else {
+          stop(e)
+        }
+      }
+    )
+
+    # If NULL, skip to next page
+    if (is.null(request)) next
 
     if ("resultaten" %in% names(request)) {
       all_results <- append(all_results, request$resultaten)
     }
+  }
+
+  # If no results, return NULL
+  if (length(all_results) == 0) {
+    message("No results found.")
+    return(NULL)
   }
 
   # Convert to tibble
