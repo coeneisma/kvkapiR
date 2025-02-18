@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kvkapiR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,6 +44,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/coeneisma/kvkapiR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -57,7 +58,7 @@
 </h1>
 </div>
 <!-- badges: start -->
-<!-- badges: end -->
+
 <p>The goal of kvkapiR is to provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This package is built using the <code>httr2</code> package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (<a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link uri">https://httr2.r-lib.org/articles/wrapping-apis.html</a>). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -76,7 +77,7 @@
 <span></span>
 <span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; # A tibble: 515 × 6</span></span>
+<span><span class="co">#&gt; # A tibble: 514 × 6</span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                    &lt;list&gt;       &lt;chr&gt; &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  1 01036576  000007810083     Stichting Gemeenschapsc… &lt;named list&gt; neve… &lt;list&gt;</span></span>
@@ -89,7 +90,7 @@
 <span><span class="co">#&gt;  8 01123666  000040288196     Winterberging IJzendoorn &lt;named list&gt; hoof… &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  9 40001473  000000303062     De Sândobbe              &lt;named list&gt; hoof… &lt;list&gt;</span></span>
 <span><span class="co">#&gt; 10 01091668  000000678279     Multiservice Beheer en … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt; # ℹ 505 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 504 more rows</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"huisartsen"</span>, plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span>
 <span><span class="va">rotterdam</span></span>
@@ -109,7 +110,14 @@
 <span><span class="co">#&gt; # ℹ 189 more rows</span></span></code></pre></div>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/coeneisma/kvkapiR/" class="external-link">Browse source code</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -132,7 +140,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
