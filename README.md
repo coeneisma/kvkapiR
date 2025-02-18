@@ -4,6 +4,8 @@
 # kvkapiR
 
 <!-- badges: start -->
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of kvkapiR is to provides a convenient interface to the Dutch
@@ -34,7 +36,7 @@ library(kvkapiR)
 
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 515 × 6
+#> # A tibble: 514 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -47,7 +49,7 @@ koudum
 #>  8 01123666  000040288196     Winterberging IJzendoorn <named list> hoof… <list>
 #>  9 40001473  000000303062     De Sândobbe              <named list> hoof… <list>
 #> 10 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
-#> # ℹ 505 more rows
+#> # ℹ 504 more rows
 ```
 
 ``` r
