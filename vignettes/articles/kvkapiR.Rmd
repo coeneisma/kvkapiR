@@ -9,12 +9,16 @@ knitr::opts_chunk$set(
 )
 ```
 
+The goal of kvkapiR is to provide a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) APIs. This package is built using the httr2 package and follows best practices for wrapping APIs in R, as outlined in the [httr2 documentation](https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
 
-The kvkapiR package provides a user-friendly interface to the Dutch Chamber of Commerce (KvK) Search API within the R programming environment. Built using the `httr2` package, it adheres to best practices for API wrappers in R, as outlined in the [httr2 documentation](https://httr2.r-lib.org/articles/wrapping-apis.html).
+Currently, the package provides access to the [following KvK APIs](https://developers.kvk.nl/documentation#available-apis):
 
-This package simplifies authentication, request handling, and response parsing, making it easier to interact with the KvK API.
+* KvK Search API
+* KvK Basisprofiel API
+* KvK Vestigingsprofiel API
+* KvK Naamgeving API
 
-Currently, kvkapiR only supports the [KvK search API](https://developers.kvk.nl/apis/zoeken). Additional KvK APIs are available, and more details can be found [on the developers website of the KvK](https://developers.kvk.nl/apis).
+More details can be found [on the developers website of the KvK](https://developers.kvk.nl/apis).
 
 
 ## Loading the package
@@ -23,25 +27,27 @@ Currently, kvkapiR only supports the [KvK search API](https://developers.kvk.nl/
 library(kvkapiR)
 ```
 
-## Optaining an API key
+## API keys
+
+### Optaining an API key
 
 To access the KvK API, you need an API key. You can apply for an API key and learn about different KvK APIs on the [KvK Developer Portal](https://developers.kvk.nl/apply-for-apis?step=api-overview).
 
-### Testing Environmet
-
-KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/apply-for-apis?step=api-overview).
-
-All functions in `kvkapiR` support testing mode via the `test_environment` argument, which is set to `FALSE` by default.
-
-## Setting Up the API Key in R
-
 ### Temporary API Key (Current Session Only)
 
-If you only need the API key for the current session, use the `kvk_set_api_key()``` function.
+If you only need an API key for the current session, use the `kvk_set_api_key()``` function. 
 
 ``` r
-kvk_set_api_key("put_your_api_key_here")
+kvk_set_api_key(api_name, api_key)
 ```
+
+This `api_name` can be any of the following:
+
+* "search"
+* "basisprofiel"
+* "vestigingsprofiel"
+* "naamgeving"
+
 **⚠️ Note:** This only sets the key for the current R session. The key will be lost once you restart R.
 
 ### Persistent API Key (Stored in `.Renviron`)
@@ -49,13 +55,23 @@ kvk_set_api_key("put_your_api_key_here")
 If you want to store the API key permanently, use the `kvk_store_api_key()` function. This saves the key in the `.Renviron` file, making it persist across R sessions.
 
 ``` r
-kvk_store_api_key("put_your_api_key_here")
+kvk_store_api_key(api_name, api_key)
 ```
+Restart R for the changes to take effect.
+
 **⚠️ Warning:** Only use this method if you can safely store your API key on your system.
 
-## Using the KvK API with `kvkapiR`
+### Testing Environmet
 
-The `kvkapiR` package acts as a simple wrapper around the KvK API. Below are examples demonstrating how to perform searches and handle API responses.
+KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/apply-for-apis?step=api-overview).
+
+All functions in `kvkapiR` support testing mode via the `test_environment` argument, which is set to `FALSE` by default.
+
+## Search the KvK API
+
+The `kvk_search()` function is wrapper for the KvK Search API. It automatically paginates results (up to 1,000 records).
+
+Below are examples demonstrating how to perform searches and handle API responses.
 
 ### Example 1: single variable, less then 1.000 records
 
@@ -96,6 +112,42 @@ For example, are there any business registrered at [this adress](https://maps.ap
 secret_adress <- kvk_search(postcode = "2594BD", huisnummer = "10")
 secret_adress
 ```
+
+## Retrieving Profiel Data
+
+The package has the abbility to retrieve three types of profiles from the API:
+
+* basisprofiel
+* vestigingsprofiel
+* naamgeving
+
+For these examples we will use the test invironment.
+
+```{r}
+donald <- kvk_search(naam = "Donald", test_environment = TRUE)
+```
+
+
+### Basisprofiel
+
+```{r}
+kvk_get_basisprofiel(kvkNummer = donald$kvkNummer[1], test_environment = TRUE)
+```
+
+
+### Vestigingsprofiel
+
+
+```{r}
+kvk_get_vestigingsprofiel(vestigingsnummer = donald$vestigingsnummer[1], test_environment = TRUE)
+```
+
+### Naamgeving
+
+```{r}
+kvk_get_naamgeving(kvkNummer = donald$kvkNummer[1], test_environment = TRUE)
+```
+
 
 ## Conclusion
 

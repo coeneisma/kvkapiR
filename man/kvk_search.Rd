@@ -2,14 +2,17 @@
 % Please edit documentation in R/kvk_API.R
 \name{kvk_search}
 \alias{kvk_search}
-\title{Retrieve all results from the KvK Search API (up to 1.000 results)}
+\title{Retrieve all results from the KvK Search API (up to 1,000 results)}
 \usage{
-kvk_search(...)
+kvk_search(..., test_environment = FALSE)
 }
 \arguments{
 \item{...}{Named arguments passed to the API query (e.g., naam = "Koudum").
 Available arguments can be found at
 \url{https://developers.kvk.nl/documentation/zoeken-api#input}.}
+
+\item{test_environment}{A logical value. If TRUE, uses the test environment
+instead of the live API. Defaults to FALSE.}
 }
 \value{
 A tibble containing the retrieved results. Possible parameters can be
@@ -20,8 +23,11 @@ found under the \code{Results} section of
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 This function automatically paginates through the KvK API to collect
-available results. Due to API limitations, it retrieves a maximum of 1.000
+available results. Due to API limitations, it retrieves a maximum of 1,000
 records. When this happens, a warning will be displayed.
+
+If \code{test_environment = TRUE}, it switches to the KvK's test environment,
+using a mock API key for testing purposes.
 }
 \examples{
 
@@ -30,4 +36,8 @@ koudum
 
 rotterdam <- kvk_search(plaats = "Rotterdam")
 rotterdam
+
+# Use test environment
+test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+test_data
 }
