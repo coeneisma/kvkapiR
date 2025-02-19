@@ -12,6 +12,7 @@ Provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This
 Useful links:
 \itemize{
   \item \url{https://coeneisma.github.io/kvkapiR/}
+  \item \url{https://github.com/coeneisma/kvkapiR/}
 }
 
 }

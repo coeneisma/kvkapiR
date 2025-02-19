@@ -1,117 +1,137 @@
-#' Set KvK API Key in .Renviron
+#' Set KvK API Key for the current session
+#'
 #' @description `r lifecycle::badge('experimental')`
 #'
-#' This function sets or updates the `KVK_API_KEY` environment variable in the
-#' `.Renviron` file. If the key already exists and `overwrite = FALSE`, no
-#' changes are made.
+#'   This function sets the specified KvK API key for the **current R session**
+#'   using `Sys.setenv()`. The key will be available until the session ends.
 #'
-#' @param KVK_API_KEY A string containing the KvK API key to be stored in
-#'   `.Renviron`.
-#' @param overwrite A logical value indicating whether to overwrite an existing
-#'   `KVK_API_KEY`. Defaults to `FALSE`.
+#' @param api_name A string containing the name of the API. One of: "search",
+#'   "basisprofiel", "vestigingsprofiel", "naamgeving".
+#' @param api_key A string containing the API key for the specified API.
 #'
-#' @details The function reads the `.Renviron` file, checks if a `KVK_API_KEY`
-#'   entry exists, and:
-#' - If the key exists and `overwrite = FALSE`, it returns a message and does nothing.
-#' - If the key exists and `overwrite = TRUE`, it replaces the existing key.
-#' - If the key does not exist, it appends a new `KVK_API_KEY` entry to `.Renviron`.
+#' @details The function sets the specified API key using `Sys.setenv()`, making
+#'   it available for the current session. However, it does **not** persist
+#'   across sessions.
 #'
-#'   After setting the key, you may need to restart your R session for changes
-#'   to take effect.
+#'   If you want to store the key permanently, use `kvk_store_api_key()`.
 #'
-#' @return Invisibly returns `TRUE` if the key was added/updated, or `FALSE` if
-#'   no change was made.
+#' @return Invisibly returns `TRUE` if the key was set.
 #'
 #' @examples
 #' \dontrun{
-#' # Set the API key if it is not already set
-#' set_KVK_API_KEY("abcd1234")
-#'
-#' # Overwrite an existing API key
-#' set_KVK_API_KEY("newkey5678", overwrite = TRUE)
+#' # Set the API key for the current session
+#' kvk_set_api_key("search", "abcd1234")
 #' }
 #'
 #' @export
-kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
+kvk_set_api_key <- function(api_name, api_key) {
+  valid_api_names <- c("search", "basisprofiel", "vestigingsprofiel", "naamgeving")
+
+  # Check if the api_name is valid
+  if (!(api_name %in% valid_api_names)) {
+    stop("Invalid api_name. Must be one of: 'search', 'basisprofiel', 'vestigingsprofiel', 'naamgeving'.")
+  }
+
+  api_key_var <- paste0("KVK_", toupper(api_name), "_API_KEY")
+  Sys.setenv(api_key_var = api_key)
+  message(paste(api_key_var, "has been set for this session."))
+  invisible(TRUE)
+}
+
+#' Store KvK API Key in .Renviron for persistent use
+#'
+#' @description `r lifecycle::badge('experimental')`
+#'
+#'   This function saves the specified KvK API key to the `.Renviron` file,
+#'   making it persist across R sessions. If an API key is already stored, you
+#'   must set `overwrite = TRUE` to replace it.
+#'
+#' @param api_name A string containing the name of the API. One of: "search",
+#'   "basisprofiel", "vestigingsprofiel", "naamgeving".
+#' @param api_key A string containing the API key for the specified API.
+#' @param overwrite A logical value indicating whether to overwrite an existing
+#'   API key entry in `.Renviron`. Defaults to `FALSE`.
+#'
+#' @details The function modifies `.Renviron` to store the API key permanently.
+#' - If the key exists and `overwrite = FALSE`, it returns an error.
+#' - If the key exists and `overwrite = TRUE`, it replaces the existing key.
+#' - If the key does not exist, it appends a new API key entry for the specified API to `.Renviron`.
+#'
+#' **Important:** You must restart R for the changes to take effect.
+#'
+#' @return Invisibly returns `TRUE` if the key was added or updated.
+#'
+#' @examples
+#' \dontrun{
+#' # Store the API key persistently for Search API
+#' kvk_store_api_key("search", "abcd1234")
+#'
+#' # Overwrite an existing API key for Basisprofiel API
+#' kvk_store_api_key("basisprofiel", "newkey5678", overwrite = TRUE)
+#' }
+#'
+#' @export
+kvk_store_api_key <- function(api_name, api_key, overwrite = FALSE) {
+  valid_api_names <- c("search", "basisprofiel", "vestigingsprofiel", "naamgeving")
+
+  # Check if the api_name is valid
+  if (!(api_name %in% valid_api_names)) {
+    stop("Invalid api_name. Must be one of: 'search', 'basisprofiel', 'vestigingsprofiel', 'naamgeving'.")
+  }
+
   renviron_path <- file.path(Sys.getenv("HOME"), ".Renviron")
 
-  # Lees de inhoud van .Renviron als het bestand bestaat
+  # Make a backup of .Renviron for safety
   if (file.exists(renviron_path)) {
+    file.copy(renviron_path, paste0(renviron_path, "_backup"), overwrite = TRUE)
     renviron_content <- readLines(renviron_path)
   } else {
     renviron_content <- character(0)
   }
 
-  # Kijk of er al een KVK_API_KEY regel bestaat
-  key_exists <- any(grepl("^KVK_API_KEY=", renviron_content))
+  # Look for existing API key entry
+  api_key_var <- paste0("KVK_", toupper(api_name), "_API_KEY")
+  key_exists <- any(grepl(paste0("^", api_key_var, "="), renviron_content))
 
   if (key_exists && !overwrite) {
-    message("KVK_API_KEY is already set. Use overwrite = TRUE to update it.")
-    return(invisible(FALSE))
+    stop(paste(api_key_var, "already exists in .Renviron. Use overwrite = TRUE to update it."))
   }
 
-  # Maak de nieuwe regel
-  new_line <- paste0("KVK_API_KEY=", KVK_API_KEY)
+  # Filter out old versions of the key
+  renviron_content <- renviron_content[!grepl(paste0("^", api_key_var, "="), renviron_content)]
 
-  if (key_exists && overwrite) {
-    # Overschrijf de bestaande KVK_API_KEY regel
-    renviron_content <- sub("^KVK_API_KEY=.*", new_line, renviron_content)
-  } else {
-    # Voeg de nieuwe KVK_API_KEY regel toe
-    renviron_content <- c(renviron_content, new_line)
-  }
+  # Add the new key
+  renviron_content <- c(renviron_content, paste0(api_key_var, "=", api_key))
 
-  # Schrijf de nieuwe inhoud terug naar .Renviron
+  # Write the modified content back
   writeLines(renviron_content, renviron_path)
 
-  message("KVK_API_KEY has been successfully set in .Renviron.")
-  return(invisible(TRUE))
+  message(paste(api_key_var, "has been stored in .Renviron. Restart R for changes to take effect."))
+
+  invisible(TRUE)
 }
 
 
-#' Retrieve all results from the KvK Search API (up to 1.000 results)
+#' Retrieve all results from the KvK Search API (up to 1,000 results)
 #'
 #' @description `r lifecycle::badge('experimental')`
 #'
-#'   This function automatically paginates through the KvK API to collect
-#'   available results. Due to API limitations, it retrieves a maximum of 1.000
-#'   records.
+#' This function automatically paginates through the KvK API to collect
+#' available results. Due to API limitations, it retrieves a maximum of 1,000
+#' records. When this happens, a warning will be displayed.
 #'
-#' @param ... Named arguments passed to the API query (e.g., naam = "Koudum"). Available arguments are:
+#' If `test_environment = TRUE`, it switches to the KvK's test environment,
+#' using a mock API key for testing purposes.
 #'
-#' * `kvkNummer`: Dutch KVK number. Consists of 8 digits.
-#' * `rsin`: Legal Entities and Partnerships Identification Number.
-#' * `vestigingsnummer`: Branch number. Unique number consisting of 12 digits.
-#' * `naam`: The name under which an establishment or legal entity trades. This can be: active or inactive statutory name, trade name, or name.
-#' * `straatnaam`
-#' * `huisnummer`: Only in combination with postal code.
-#' * `huisletter`: Only in combination with house number. Consists of 1 (alphabetic) character.
-#' * `postcode`: Only in combination with house number.
-#' * `plaats`
-#' * `postbusnummer`: Only allowed in combination with postcode
-#' * `type`: Filter by type: main branch, branch, and/or legal entity.  Combine multiple by using ‘&’. E.g. :   type=nevenvestiging&type=hoofdvestiging&type=rechtspersoon.
-#' * `inclusiefInactieveRegistraties`: Possible values are "true" or "false". Default value is "false".
+#' @param ... Named arguments passed to the API query (e.g., naam = "Koudum").
+#'   Available arguments can be found at
+#'   [https://developers.kvk.nl/documentation/zoeken-api#input]().
+#' @param test_environment A logical value. If TRUE, uses the test environment
+#'   instead of the live API. Defaults to FALSE.
 #'
-#' @return A tibble containing the retrieved results with the following
-#'   parameters:
-#'
-#' * `kvkNummer`: Dutch KVK number. Consists of 8 digits.
-#' * `rsin`: If RSIN is also input.
-#' * `vestigingsnummer`: Branch number. Unique number consisting of 12 digits.
-#' * `naam`: The name under which a branch or legal entity trades. This field contains the (statutory) name or the first trade name. If you searched for a name that is not the statutory or first trade name, we will show the trade name you used for your search query.
-#' * `adres`:  List which content indicates whether it's a correspondence or a visiting address, containing the following information:
-#'   * `straatnaam`: Street name
-#'   * `huisnummer`: If postal code and house number are also input.
-#'   * `huisletter`: If postal code and house number are also input.
-#'   * `postcode`: If postal code and house number are also input. Remove any spaces.
-#'   * `plaats`: Place
-#' * `type`: Main branch, branch office, and/or legal entity.
-#' * `actief`: Indicates whether a company/establishment/legal entity is registered (Yes) or deregistered (No).
-#' * `vervallenNaam`: Contains the expired trade name or statutory name with which this search result was found.
-#' * `links`: No links will be shown if the deregistration occurred before 22 May 2010 and if "active" is "false". Otherwise a List containing:
-#'
-#'   1. Link to the first search result. 2. Link to Basisprofiel (based on KVK
-#'   number). 3. Link to Vestigingsprofiel (based on branch number).
+#' @return A tibble containing the retrieved results. Possible parameters can be
+#'   found under the `Results` section of
+#'   [https://developers.kvk.nl/documentation/zoeken-api#output]().
 #'
 #' @export
 #' @examples
@@ -121,20 +141,29 @@ kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
 #'
 #' rotterdam <- kvk_search(plaats = "Rotterdam")
 #' rotterdam
-kvk_search <- function(...) {
+#'
+#' # Use test environment
+#' test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+#' test_data
+kvk_search <- function(..., test_environment = FALSE) {
 
-  # Retrieve API key from environment variables
-  KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
-  if (KVK_API_KEY == "") stop("API key is missing. Set it using `Sys.setenv(KVK_API_KEY='your_key')`")
-
-  # API URL
-  API_URL <- "https://api.kvk.nl/api/v2/zoeken"
+  # Determine API URL and API key based on test environment flag
+  if (test_environment) {
+    API_URL <- "https://api.kvk.nl/test/api/v2/zoeken"
+    KVK_SEARCH_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    message("You are using the KvK test environment. Test data will be returned.")
+  } else {
+    # Retrieve API key from environment variables for production use
+    KVK_SEARCH_API_KEY <- Sys.getenv("KVK_SEARCH_API_KEY")
+    if (KVK_SEARCH_API_KEY == "") stop("API key is missing. Set it using `Sys.setenv(KVK_SEARCH_API_KEY='your_key')`")
+    API_URL <- "https://api.kvk.nl/api/v2/zoeken"
+  }
 
   # First request to determine total number of results, with error handling
   first_request <- tryCatch(
     {
       httr2::request(API_URL) |>
-        httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+        httr2::req_headers(apikey = KVK_SEARCH_API_KEY, Accept = "application/json") |>
         httr2::req_url_query(resultatenPerPagina = 1, pagina = 1, ...) |>
         httr2::req_perform() |>
         httr2::resp_body_json()
@@ -176,7 +205,7 @@ kvk_search <- function(...) {
     request <- tryCatch(
       {
         httr2::request(API_URL) |>
-          httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+          httr2::req_headers(apikey = KVK_SEARCH_API_KEY, Accept = "application/json") |>
           httr2::req_url_query(resultatenPerPagina = 100, pagina = pagina, ...) |>
           httr2::req_perform() |>
           httr2::resp_body_json()
@@ -210,4 +239,321 @@ kvk_search <- function(...) {
     tidyr::unnest_wider(col = inhoud)
 
   return(data)
+}
+
+#' Retrieve the Basisprofiel for a given KvK number
+#'
+#' @description `r lifecycle::badge('experimental')`
+#'
+#'   This function retrieves the basis profile for a given KvK number
+#'   (`kvkNummer`) using the KvK Basisprofiel API. Users can also request
+#'   additional data, such as owner information, main establishment, and other
+#'   locations by specifying the `include` parameter.
+#'
+#'   The function also supports the `test_environment` argument. When set to
+#'   `TRUE`, the function will query the KvK test API environment, providing a
+#'   set of fictitious test data.
+#'
+#' @param kvkNummer A string representing the KvK number for which the basis
+#'   profile is requested.
+#' @param geoData A logical value indicating whether geo-data should be included
+#'   in the response. Defaults to `FALSE`. If `TRUE`, the response will include
+#'   geo-data.
+#' @param include A character specifying additional data to include. Possible
+#'   values: `"eigenaar"` (owner), `"hoofdvestiging"` (main establishment),
+#'   `"vestigingen"` (locations). Defaults to `NULL` (basic profile only).
+#' @param test_environment A logical value indicating whether to use the test
+#'   environment (`TRUE`) or the production environment (`FALSE`). Defaults to
+#'   `FALSE`.
+#'
+#' @details The function retrieves data from the KvK Basisprofiel API. If
+#'   `geoData = TRUE`, geo-data (e.g., location data) will be included in the
+#'   returned profile. The `include` parameter allows users to request
+#'   additional details, such as ownership information or business locations.
+#'
+#' **Important:** If `test_environment = TRUE`, no actual API key is required. You will be using
+#'   test data from the KvK test environment.
+#'
+#' @return A tibble containing the retrieved basis profile. If `geoData = TRUE`,
+#'   the returned tibble will also include geographical information.
+#'
+#' @examples
+#' \dontrun{
+#' # Retrieve basis profile for a given KvK number without geo-data
+#' basis_profile <- kvk_get_basisprofiel(kvkNummer = "12345678")
+#'
+#' # Retrieve basis profile with geo-data
+#' basis_profile_geo <- kvk_get_basisprofiel(kvkNummer = "12345678", geoData = TRUE)
+#'
+#' # Retrieve basis profile including owner and main establishment
+#' basis_profile_extended <- kvk_get_basisprofiel(kvkNummer = "12345678", include = "eigenaar"))
+#'
+#' # Retrieve basis profile from the test environment
+#' basis_profile_test <- kvk_get_basisprofiel(kvkNummer = "12345678", test_environment = TRUE)
+#' }
+#'
+#' @export
+kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, test_environment = FALSE) {
+
+  # Determine API URL and API key based on test_environment flag
+  if (test_environment) {
+    base_url <- "https://api.kvk.nl/test/api/v1/basisprofielen/"
+    KVK_BASISPROFIEL_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    message("You are using the KvK test environment. Test data will be returned.")
+  } else {
+    base_url <- "https://api.kvk.nl/api/v1/basisprofielen/"
+    KVK_BASISPROFIEL_API_KEY <- Sys.getenv("KVK_BASISPROFIEL_API_KEY")
+    if (KVK_BASISPROFIEL_API_KEY == "") {
+      stop("API key is missing. Set it using `kvk_set_api_key(basisprofiel='your_key')`")
+    }
+  }
+
+  # Validate 'include' parameter to ensure only allowed values are passed
+  valid_options <- c("eigenaar", "hoofdvestiging", "vestigingen")
+  if (!is.null(include)) {
+    invalid_values <- setdiff(include, valid_options)
+    if (length(invalid_values) > 0) {
+      stop("Invalid values in 'include': ", paste(invalid_values, collapse = ", "),
+           ". Choose from: ", paste(valid_options, collapse = ", "))
+    }
+  }
+
+  # Construct the dynamic URL based on parameters
+  url_path <- paste0(base_url, kvkNummer)
+  if (!is.null(include)) {
+    url_path <- paste0(url_path, "/", paste(include, collapse = "/"))
+  }
+
+  # Perform the API request with error handling
+  response <- tryCatch(
+    {
+      httr2::request(url_path) |>
+        httr2::req_headers(apikey = KVK_BASISPROFIEL_API_KEY, Accept = "application/json") |>
+        httr2::req_url_query(geoData = tolower(as.character(geoData))) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json() |>
+        list_to_tibble()
+    },
+    error = function(e) {
+      if (grepl("HTTP 404", e$message)) {
+        message("No results found for KvK number: ", kvkNummer)
+        return(NULL)
+      } else {
+        stop("Error retrieving basis profile: ", e$message)
+      }
+    }
+  )
+
+  return(response)
+}
+
+#' Retrieve the Vestigingsprofiel for a given establishment number
+#'
+#' @description `r lifecycle::badge('experimental')`
+#'
+#'   This function retrieves the establishment profile (`vestigingsprofiel`) for
+#'   a given establishment number (`vestigingsnummer`) using the KvK
+#'   Vestigingsprofiel API.
+#'
+#'   The function also supports the `test_environment` argument. When set to
+#'   `TRUE`, the function will query the KvK test API environment, providing a
+#'   set of fictitious test data.
+#'
+#' @param vestigingsnummer A string representing the establishment number for
+#'   which the profile is requested.
+#' @param geoData A logical value indicating whether geo-data should be included
+#'   in the response. Defaults to `FALSE`. If `TRUE`, the response will include
+#'   geo-data.
+#' @param test_environment A logical value indicating whether to use the test
+#'   environment (`TRUE`) or the production environment (`FALSE`). Defaults to
+#'   `FALSE`.
+#'
+#' @details The function retrieves data from the KvK Vestigingsprofiel API. If
+#'   `geoData = TRUE`, geo-data (e.g., location data) will be included in the
+#'   returned profile.
+#'
+#' **Important:** If `test_environment = TRUE`, no actual API key is required. You will be using
+#'   test data from the KvK test environment.
+#'
+#' @return A tibble containing the retrieved establishment profile. If `geoData
+#'   = TRUE`, the returned tibble will also include geographical information.
+#'
+#' @examples
+#' \dontrun{
+#' # Retrieve vestigingsprofiel for a given establishment number without geo-data
+#' vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
+#'
+#' # Retrieve vestigingsprofiel with geo-data
+#' vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504", geoData = TRUE)
+#'
+#' # Retrieve vestigingsprofiel from the test environment
+#' vestigingsprofiel_test <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504", test_environment = TRUE)
+#' }
+#'
+#' @export
+kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_environment = FALSE) {
+
+  # Determine API URL and API key based on test_environment flag
+  if (test_environment) {
+    base_url <- "https://api.kvk.nl/test/api/v1/vestigingsprofielen/"
+    KVK_VESTIGINGSPROFIEL_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    message("You are using the KvK test environment. Test data will be returned.")
+  } else {
+    base_url <- "https://api.kvk.nl/api/v1/vestigingsprofielen/"
+    KVK_VESTIGINGSPROFIEL_API_KEY <- Sys.getenv("KVK_VESTIGINGSPROFIEL_API_KEY")
+    if (KVK_VESTIGINGSPROFIEL_API_KEY == "") {
+      stop("API key is missing. Set it using `kvk_set_api_key(vestigingsprofiel='your_key')`")
+    }
+  }
+
+  # Construct the dynamic URL based on parameters
+  url_path <- paste0(base_url, vestigingsnummer)
+
+  # Perform the API request with error handling
+  response <- tryCatch(
+    {
+      httr2::request(url_path) |>
+        httr2::req_headers(apikey = KVK_VESTIGINGSPROFIEL_API_KEY, Accept = "application/json") |>
+        httr2::req_url_query(geoData = tolower(as.character(geoData))) |>
+        httr2::req_perform() |>
+        httr2::resp_body_json() |>
+        list_to_tibble()
+    },
+    error = function(e) {
+      if (grepl("HTTP 404", e$message)) {
+        message("No results found for establishment number: ", vestigingsnummer)
+        return(NULL)
+      } else {
+        stop("Error retrieving establishment profile: ", e$message)
+      }
+    }
+  )
+
+  return(response)
+}
+
+#' Retrieve the Naamgeving for a given KvK number
+#'
+#' @description `r lifecycle::badge('experimental')`
+#'
+#'   This function retrieves the name information (`naamgeving`) for a given KvK
+#'   number (`kvkNummer`) using the KvK Naamgevingen API.
+#'
+#'   The function also supports the `test_environment` argument. When set to
+#'   `TRUE`, the function will query the KvK test API environment, providing a
+#'   set of fictitious test data.
+#'
+#' @param kvkNummer A string representing the KvK number for which the name
+#'   information is requested.
+#' @param test_environment A logical value indicating whether to use the test
+#'   environment (`TRUE`) or the production environment (`FALSE`). Defaults to
+#'   `FALSE`.
+#'
+#' @details The function retrieves data from the KvK Naamgevingen API.
+#'
+#' **Important:** If `test_environment = TRUE`, no actual API key is required. You will be using
+#'   test data from the KvK test environment.
+#'
+#' @return A tibble containing the retrieved name information.
+#'
+#' @examples
+#' \dontrun{
+#' # Retrieve naamgeving for a given KvK number
+#' naamgeving <- kvk_get_naamgeving(kvkNummer = "68750110")
+#'
+#' # Retrieve naamgeving from the test environment
+#' naamgeving_test <- kvk_get_naamgeving(kvkNummer = "68750110", test_environment = TRUE)
+#' }
+#'
+#' @export
+kvk_get_naamgeving <- function(kvkNummer, test_environment = FALSE) {
+
+  # Determine API URL and API key based on test_environment flag
+  if (test_environment) {
+    base_url <- "https://api.kvk.nl/test/api/v1/naamgevingen/kvknummer/"
+    KVK_NAAMGEVING_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    message("You are using the KvK test environment. Test data will be returned.")
+  } else {
+    base_url <- "https://api.kvk.nl/api/v1/naamgevingen/kvknummer/"
+    KVK_NAAMGEVING_API_KEY <- Sys.getenv("KVK_NAAMGEVING_API_KEY")
+    if (KVK_NAAMGEVING_API_KEY == "") {
+      stop("API key is missing. Set it using `kvk_set_api_key(naamgeving='your_key')`")
+    }
+  }
+
+  # Construct the dynamic URL based on parameters
+  url_path <- paste0(base_url, kvkNummer)
+
+  # Perform the API request with error handling
+  response <- tryCatch(
+    {
+      httr2::request(url_path) |>
+        httr2::req_headers(apikey = KVK_NAAMGEVING_API_KEY, Accept = "application/json") |>
+        httr2::req_perform() |>
+        httr2::resp_body_json() |>
+        list_to_tibble()
+    },
+    error = function(e) {
+      if (grepl("HTTP 404", e$message)) {
+        message("No results found for KvK number: ", kvkNummer)
+        return(NULL)
+      } else {
+        stop("Error retrieving name information: ", e$message)
+      }
+    }
+  )
+
+  return(response)
+}
+
+
+#' Convert a nested list to a tibble
+#'
+#' This function takes a nested list and converts it into a tibble. Each element
+#' of the list becomes a separate column in the tibble. If a nested list
+#' contains atomic elements of equal length, it is transformed into a tibble.
+#' Otherwise, it is stored as a list-column.
+#'
+#' @param lst A named list to be converted into a tibble.
+#'
+#' @return A tibble where each element of the list is represented as a column.
+#'   Nested lists with uniform atomic elements are converted into tibbles, while
+#'   other lists are stored as list-columns.
+#'
+#' @examples
+#' sample_list <- list(
+#'   id = "12345",
+#'   name = "Test Company",
+#'   employees = 10,
+#'   addresses = list(
+#'     list(street = "Main St", number = 1),
+#'     list(street = "Second St", number = 2)
+#'   )
+#' )
+#' list_to_tibble(sample_list)
+list_to_tibble <- function(lst) {
+  # Ensure input is a list
+  if (!base::is.list(lst)) stop("Input must be a list.")
+
+  # Function to process each element correctly
+  process_element <- function(x) {
+    if (base::is.atomic(x)) {
+      return(x)  # Directly include atomic values
+    } else if (base::is.list(x)) {
+      # If all elements are atomic and have the same length, convert to a tibble
+      if (base::all(base::sapply(x, base::is.atomic)) &&
+          base::length(base::unique(base::sapply(x, base::length))) == 1) {
+        return(tibble::as_tibble(x))
+      } else {
+        return(base::list(x))  # Otherwise, store as a list-column
+      }
+    } else {
+      return(base::as.character(x))  # Convert other types to character
+    }
+  }
+
+  # Apply conversion and ensure each list element becomes a separate tibble column
+  df <- tibble::tibble(!!!purrr::map(lst, process_element))
+
+  return(df)
 }

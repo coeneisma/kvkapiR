@@ -2,59 +2,32 @@
 % Please edit documentation in R/kvk_API.R
 \name{kvk_search}
 \alias{kvk_search}
-\title{Retrieve all results from the KvK Search API (up to 1.000 results)}
+\title{Retrieve all results from the KvK Search API (up to 1,000 results)}
 \usage{
-kvk_search(...)
+kvk_search(..., test_environment = FALSE)
 }
 \arguments{
-\item{...}{Named arguments passed to the API query (e.g., naam = "Koudum"). Available arguments are:
-\itemize{
-\item \code{kvkNummer}: Dutch KVK number. Consists of 8 digits.
-\item \code{rsin}: Legal Entities and Partnerships Identification Number.
-\item \code{vestigingsnummer}: Branch number. Unique number consisting of 12 digits.
-\item \code{naam}: The name under which an establishment or legal entity trades. This can be: active or inactive statutory name, trade name, or name.
-\item \code{straatnaam}
-\item \code{huisnummer}: Only in combination with postal code.
-\item \code{huisletter}: Only in combination with house number. Consists of 1 (alphabetic) character.
-\item \code{postcode}: Only in combination with house number.
-\item \code{plaats}
-\item \code{postbusnummer}: Only allowed in combination with postcode
-\item \code{type}: Filter by type: main branch, branch, and/or legal entity.  Combine multiple by using ‘&’. E.g. :   type=nevenvestiging&type=hoofdvestiging&type=rechtspersoon.
-\item \code{inclusiefInactieveRegistraties}: Possible values are "true" or "false". Default value is "false".
-}}
+\item{...}{Named arguments passed to the API query (e.g., naam = "Koudum").
+Available arguments can be found at
+\url{https://developers.kvk.nl/documentation/zoeken-api#input}.}
+
+\item{test_environment}{A logical value. If TRUE, uses the test environment
+instead of the live API. Defaults to FALSE.}
 }
 \value{
-A tibble containing the retrieved results with the following
-parameters:
-\itemize{
-\item \code{kvkNummer}: Dutch KVK number. Consists of 8 digits.
-\item \code{rsin}: If RSIN is also input.
-\item \code{vestigingsnummer}: Branch number. Unique number consisting of 12 digits.
-\item \code{naam}: The name under which a branch or legal entity trades. This field contains the (statutory) name or the first trade name. If you searched for a name that is not the statutory or first trade name, we will show the trade name you used for your search query.
-\item \code{adres}:  List which content indicates whether it's a correspondence or a visiting address, containing the following information:
-\itemize{
-\item \code{straatnaam}: Street name
-\item \code{huisnummer}: If postal code and house number are also input.
-\item \code{huisletter}: If postal code and house number are also input.
-\item \code{postcode}: If postal code and house number are also input.
-\item \code{plaats}: Place
-}
-\item \code{type}: Main branch, branch office, and/or legal entity.
-\item \code{actief}: Indicates whether a company/establishment/legal entity is registered (Yes) or deregistered (No).
-\item \code{vervallenNaam}: Contains the expired trade name or statutory name with which this search result was found.
-\item \code{links}: No links will be shown if the deregistration occurred before 22 May 2010 and if "active" is "false". Otherwise a List containing:
-\enumerate{
-\item Link to the first search result. 2. Link to Basisprofiel (based on KVK
-number). 3. Link to Vestigingsprofiel (based on branch number).
-}
-}
+A tibble containing the retrieved results. Possible parameters can be
+found under the \code{Results} section of
+\url{https://developers.kvk.nl/documentation/zoeken-api#output}.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 This function automatically paginates through the KvK API to collect
-available results. Due to API limitations, it retrieves a maximum of 1.000
-records.
+available results. Due to API limitations, it retrieves a maximum of 1,000
+records. When this happens, a warning will be displayed.
+
+If \code{test_environment = TRUE}, it switches to the KvK's test environment,
+using a mock API key for testing purposes.
 }
 \examples{
 
@@ -63,4 +36,8 @@ koudum
 
 rotterdam <- kvk_search(plaats = "Rotterdam")
 rotterdam
+
+# Use test environment
+test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+test_data
 }
