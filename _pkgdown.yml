@@ -5,3 +5,23 @@ template:
     bg: "#ffffff"
     fg: "#00526e"
     primary: "#d87a47"
+
+reference:
+- title: API keys
+  contents:
+  - kvk_set_api_key
+  - kvk_store_api_key
+
+- title: Query the KvK API
+  contents:
+  - kvk_search
+
+- title: Get profiles from the KvK API
+  contents:
+  - kvk_get_basisprofiel
+  - kvk_get_vestigingsprofiel
+  - kvk_get_naamgeving
+
+- title: internal
+  contents:
+  - list_to_tibble
