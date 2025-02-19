@@ -9,9 +9,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-The goal of kvkapiR is to provides a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) Search API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (<https://httr2.r-lib.org/articles/wrapping-apis.html>). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
 
-Currently, the package only provides access to the [KvK search API](https://developers.kvk.nl/apis/zoeken). Additional APIs are available; more details can be found on the  [on the developers website of the KvK](https://developers.kvk.nl/apis).
+The kvkapiR package provides a user-friendly interface to the Dutch Chamber of Commerce (KvK) Search API within the R programming environment. Built using the `httr2` package, it adheres to best practices for API wrappers in R, as outlined in the [httr2 documentation](https://httr2.r-lib.org/articles/wrapping-apis.html).
+
+This package simplifies authentication, request handling, and response parsing, making it easier to interact with the KvK API.
+
+Currently, kvkapiR only supports the [KvK search API](https://developers.kvk.nl/apis/zoeken). Additional KvK APIs are available, and more details can be found [on the developers website of the KvK](https://developers.kvk.nl/apis).
 
 
 ## Loading the package
@@ -20,13 +23,43 @@ Currently, the package only provides access to the [KvK search API](https://deve
 library(kvkapiR)
 ```
 
-## Searching the KvK API
+## Optaining an API key
 
-Dit package `kvkapiR` is niks anders dan een simpele wrapper om de Kvk-API. Hiernaast worden een aantal voorbeelden gegeven van mogelijke zoekopdrachten en het resultaat dat door de package wordt gegeven.
+To access the KvK API, you need an API key. You can apply for an API key and learn about different KvK APIs on the [KvK Developer Portal](https://developers.kvk.nl/apply-for-apis?step=api-overview).
+
+### Testing Environmet
+
+KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/apply-for-apis?step=api-overview).
+
+All functions in `kvkapiR` support testing mode via the `test_environment` argument, which is set to `FALSE` by default.
+
+## Setting Up the API Key in R
+
+### Temporary API Key (Current Session Only)
+
+If you only need the API key for the current session, use the `kvk_set_api_key()``` function.
+
+``` r
+kvk_set_api_key("put_your_api_key_here")
+```
+**⚠️ Note:** This only sets the key for the current R session. The key will be lost once you restart R.
+
+### Persistent API Key (Stored in `.Renviron`)
+
+If you want to store the API key permanently, use the `kvk_store_api_key()` function. This saves the key in the `.Renviron` file, making it persist across R sessions.
+
+``` r
+kvk_store_api_key("put_your_api_key_here")
+```
+**⚠️ Warning:** Only use this method if you can safely store your API key on your system.
+
+## Using the KvK API with `kvkapiR`
+
+The `kvkapiR` package acts as a simple wrapper around the KvK API. Below are examples demonstrating how to perform searches and handle API responses.
 
 ### Example 1: single variable, less then 1.000 records
 
-Lets start with searching for KvK registrations in [the village of Koudum](https://nl.wikipedia.org/wiki/Koudum). As this is a relative small village with less entries than the maximum (API limit) of 1.000 records, all records are retrieved:
+Lets search for KvK registrations in [the village of Koudum](https://nl.wikipedia.org/wiki/Koudum). Since this is a small village with fewer than *1.000* registered businesses (the API limit), all records are retrieved in one request.
 
 ```{r}
 koudum <- kvk_search(plaats = "Koudum")
@@ -35,16 +68,19 @@ koudum
 
 ### Example 2: single variable, more then 1.000 records
 
-The [city of Rotterdam](https://nl.wikipedia.org/wiki/Rotterdam) is much bigger than Koudum. So searching for all entries in Rotterdam will definately result in more then 1.000 records. When this happens, a warning will be displayed:
+The [city of Rotterdam](https://nl.wikipedia.org/wiki/Rotterdam) is significantly larger than Koudum. earching for all registrations in Rotterdam will return more than 1,000 records, exceeding the API limit. 
+When this happens, a warning is displayed:
 
 ```{r}
 rotterdam <- kvk_search(plaats = "Rotterdam")
 rotterdam
 ```
 
-### Example 3: multiple variables
+### Example 3: Searching with Multiple Criteria
 
-As described in the documentation of `search_kvk()`, there are multiple variables to search in. And you can combine them. For example, we will search for a record in Utrecht with a name that contains both `snackbar` and `hoek`:
+You can combine multiple search criteria in a query.
+
+For example, let's search for businesses in Utrecht where the name contains both `snackbar` and `hoek`:
 
 ```{r}
 snackbar <- kvk_search(plaats = "Utrecht", naam = "snackbar")
@@ -53,10 +89,16 @@ snackbar
 
 ### Example 4: search on adress
 
-It is possible to search on a specific adres. You will need both the postcal code and the house number. For example, are there any registrations on [this adress](https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A)? 
+It is possible to search for KvK registrations using a specific address. To do this, you need both the postal code and house number.
+For example, are there any business registrered at [this adress](https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A)? 
 
 ```{r}
 secret_adress <- kvk_search(postcode = "2594BD", huisnummer = "10")
 secret_adress
 ```
 
+## Conclusion
+
+The `kvkapiR` package provides a simple yet powerful interface for searching the KvK API in R. With built-in authentication handling, test environment support, and flexible query options, it streamlines access to Dutch business registration data.
+
+For more details, refer to the official [KvK API documentation](https://developers.kvk.nl/apis).

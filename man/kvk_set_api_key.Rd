@@ -2,47 +2,32 @@
 % Please edit documentation in R/kvk_API.R
 \name{kvk_set_api_key}
 \alias{kvk_set_api_key}
-\title{Set KvK API Key in .Renviron}
+\title{Set KvK API Key for the current session}
 \usage{
-kvk_set_api_key(KVK_API_KEY, overwrite = FALSE)
+kvk_set_api_key(KVK_API_KEY)
 }
 \arguments{
-\item{KVK_API_KEY}{A string containing the KvK API key to be stored in
-\code{.Renviron}.}
-
-\item{overwrite}{A logical value indicating whether to overwrite an existing
-\code{KVK_API_KEY}. Defaults to \code{FALSE}.}
+\item{KVK_API_KEY}{A string containing the KvK API key.}
 }
 \value{
-Invisibly returns \code{TRUE} if the key was added/updated, or \code{FALSE} if
-no change was made.
+Invisibly returns \code{TRUE} if the key was set.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-This function sets or updates the \code{KVK_API_KEY} environment variable in the
-\code{.Renviron} file. If the key already exists and \code{overwrite = FALSE}, no
-changes are made.
+This function sets the \code{KVK_API_KEY} environment variable for the \strong{current R session}
+using \code{Sys.setenv()}. The key will be available until the session ends.
 }
 \details{
-The function reads the \code{.Renviron} file, checks if a \code{KVK_API_KEY}
-entry exists, and:
-\itemize{
-\item If the key exists and \code{overwrite = FALSE}, it returns a message and does nothing.
-\item If the key exists and \code{overwrite = TRUE}, it replaces the existing key.
-\item If the key does not exist, it appends a new \code{KVK_API_KEY} entry to \code{.Renviron}.
+The function sets \code{KVK_API_KEY} using \code{Sys.setenv()}, making it available
+for the current session. However, it does \strong{not} persist across sessions.
 
-After setting the key, you may need to restart your R session for changes
-to take effect.
-}
+If you want to store the API key permanently, use \code{kvk_store_api_key()}.
 }
 \examples{
 \dontrun{
-# Set the API key if it is not already set
-set_KVK_API_KEY("abcd1234")
-
-# Overwrite an existing API key
-set_KVK_API_KEY("newkey5678", overwrite = TRUE)
+# Set the API key for the current session
+kvk_set_api_key("abcd1234")
 }
 
 }

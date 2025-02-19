@@ -8,18 +8,19 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-The goal of kvkapiR is to provides a convenient R programming language
-interface to the Dutch Chamber of Commerce (KvK) Search API. This
-package is built using the `httr2` package and follows best practices
-for wrapping APIs in R, as outlined in the httr2 documentation
-(<https://httr2.r-lib.org/articles/wrapping-apis.html>). It simplifies
-authentication, request handling, and response parsing when interacting
-with the KvK API.
+The kvkapiR package provides a user-friendly interface to the Dutch
+Chamber of Commerce (KvK) Search API within the R programming
+environment. Built using the `httr2` package, it adheres to best
+practices for API wrappers in R, as outlined in the [httr2
+documentation](https://httr2.r-lib.org/articles/wrapping-apis.html).
 
-Currently, the package only provides access to the [KvK search
-API](https://developers.kvk.nl/apis/zoeken). Additional APIs are
-available; more details can be found on the [on the developers website
-of the KvK](https://developers.kvk.nl/apis).
+This package simplifies authentication, request handling, and response
+parsing, making it easier to interact with the KvK API.
+
+Currently, kvkapiR only supports the [KvK search
+API](https://developers.kvk.nl/apis/zoeken). Additional KvK APIs are
+available, and more details can be found [on the developers website of
+the KvK](https://developers.kvk.nl/apis).
 
 ## Installation
 
@@ -48,7 +49,7 @@ library(kvkapiR)
 
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 512 × 6
+#> # A tibble: 511 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -61,7 +62,7 @@ koudum
 #>  8 01123666  000040288196     Winterberging IJzendoorn <named list> hoof… <list>
 #>  9 40001473  000000303062     De Sândobbe              <named list> hoof… <list>
 #> 10 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
-#> # ℹ 502 more rows
+#> # ℹ 501 more rows
 ```
 
 You can also combine multiple search parameters:
