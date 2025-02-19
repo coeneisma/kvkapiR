@@ -48,7 +48,7 @@ library(kvkapiR)
 
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 513 × 6
+#> # A tibble: 512 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -61,7 +61,7 @@ koudum
 #>  8 01123666  000040288196     Winterberging IJzendoorn <named list> hoof… <list>
 #>  9 40001473  000000303062     De Sândobbe              <named list> hoof… <list>
 #> 10 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
-#> # ℹ 503 more rows
+#> # ℹ 502 more rows
 ```
 
 You can also combine multiple search parameters:
