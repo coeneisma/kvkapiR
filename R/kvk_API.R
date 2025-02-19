@@ -1,72 +1,96 @@
-#' Set KvK API Key in .Renviron
+#' Set KvK API Key for the current session
+#'
 #' @description `r lifecycle::badge('experimental')`
 #'
-#' This function sets or updates the `KVK_API_KEY` environment variable in the
-#' `.Renviron` file. If the key already exists and `overwrite = FALSE`, no
-#' changes are made.
+#' This function sets the `KVK_API_KEY` environment variable for the **current R session**
+#' using `Sys.setenv()`. The key will be available until the session ends.
 #'
-#' @param KVK_API_KEY A string containing the KvK API key to be stored in
-#'   `.Renviron`.
-#' @param overwrite A logical value indicating whether to overwrite an existing
-#'   `KVK_API_KEY`. Defaults to `FALSE`.
+#' @param KVK_API_KEY A string containing the KvK API key.
 #'
-#' @details The function reads the `.Renviron` file, checks if a `KVK_API_KEY`
-#'   entry exists, and:
-#' - If the key exists and `overwrite = FALSE`, it returns a message and does nothing.
-#' - If the key exists and `overwrite = TRUE`, it replaces the existing key.
-#' - If the key does not exist, it appends a new `KVK_API_KEY` entry to `.Renviron`.
+#' @details The function sets `KVK_API_KEY` using `Sys.setenv()`, making it available
+#' for the current session. However, it does **not** persist across sessions.
 #'
-#'   After setting the key, you may need to restart your R session for changes
-#'   to take effect.
+#' If you want to store the API key permanently, use `kvk_store_api_key()`.
 #'
-#' @return Invisibly returns `TRUE` if the key was added/updated, or `FALSE` if
-#'   no change was made.
+#' @return Invisibly returns `TRUE` if the key was set.
 #'
 #' @examples
 #' \dontrun{
-#' # Set the API key if it is not already set
-#' set_KVK_API_KEY("abcd1234")
-#'
-#' # Overwrite an existing API key
-#' set_KVK_API_KEY("newkey5678", overwrite = TRUE)
+#' # Set the API key for the current session
+#' kvk_set_api_key("abcd1234")
 #' }
 #'
 #' @export
-kvk_set_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
+kvk_set_api_key <- function(KVK_API_KEY) {
+  Sys.setenv(KVK_API_KEY = KVK_API_KEY)
+  message("KVK_API_KEY has been set for this session.")
+  invisible(TRUE)
+}
+
+
+#' Store KvK API Key in .Renviron for persistent use
+#'
+#' @description `r lifecycle::badge('experimental')`
+#'
+#' This function saves the `KVK_API_KEY` to the `.Renviron` file, making it
+#' persist across R sessions. If an API key is already stored, you must set
+#' `overwrite = TRUE` to replace it.
+#'
+#' @param KVK_API_KEY A string containing the KvK API key.
+#' @param overwrite A logical value indicating whether to overwrite an existing
+#'   `KVK_API_KEY` entry in `.Renviron`. Defaults to `FALSE`.
+#'
+#' @details The function modifies `.Renviron` to store the API key permanently.
+#' - If the key exists and `overwrite = FALSE`, it returns an error.
+#' - If the key exists and `overwrite = TRUE`, it replaces the existing key.
+#' - If the key does not exist, it appends a new `KVK_API_KEY` entry to `.Renviron`.
+#'
+#' **Important:** You must restart R for the changes to take effect.
+#'
+#' @return Invisibly returns `TRUE` if the key was added or updated.
+#'
+#' @examples
+#' \dontrun{
+#' # Store the API key persistently (only if not already set)
+#' kvk_store_api_key("abcd1234")
+#'
+#' # Overwrite an existing API key
+#' kvk_store_api_key("newkey5678", overwrite = TRUE)
+#' }
+#'
+#' @export
+kvk_store_api_key <- function(KVK_API_KEY, overwrite = FALSE) {
   renviron_path <- file.path(Sys.getenv("HOME"), ".Renviron")
 
-  # Lees de inhoud van .Renviron als het bestand bestaat
+  # Maak een backup van .Renviron voor veiligheid
   if (file.exists(renviron_path)) {
+    file.copy(renviron_path, paste0(renviron_path, "_backup"), overwrite = TRUE)
     renviron_content <- readLines(renviron_path)
   } else {
     renviron_content <- character(0)
   }
 
-  # Kijk of er al een KVK_API_KEY regel bestaat
+  # Zoek naar bestaande API-key
   key_exists <- any(grepl("^KVK_API_KEY=", renviron_content))
 
   if (key_exists && !overwrite) {
-    message("KVK_API_KEY is already set. Use overwrite = TRUE to update it.")
-    return(invisible(FALSE))
+    stop("KVK_API_KEY already exists in .Renviron. Use overwrite = TRUE to update it.")
   }
 
-  # Maak de nieuwe regel
-  new_line <- paste0("KVK_API_KEY=", KVK_API_KEY)
+  # Filter oude versies van de sleutel eruit
+  renviron_content <- renviron_content[!grepl("^KVK_API_KEY=", renviron_content)]
 
-  if (key_exists && overwrite) {
-    # Overschrijf de bestaande KVK_API_KEY regel
-    renviron_content <- sub("^KVK_API_KEY=.*", new_line, renviron_content)
-  } else {
-    # Voeg de nieuwe KVK_API_KEY regel toe
-    renviron_content <- c(renviron_content, new_line)
-  }
+  # Voeg de nieuwe sleutel toe
+  renviron_content <- c(renviron_content, paste0("KVK_API_KEY=", KVK_API_KEY))
 
-  # Schrijf de nieuwe inhoud terug naar .Renviron
+  # Schrijf de gewijzigde inhoud terug
   writeLines(renviron_content, renviron_path)
 
-  message("KVK_API_KEY has been successfully set in .Renviron.")
-  return(invisible(TRUE))
+  message("KVK_API_KEY has been stored in .Renviron. Restart R for changes to take effect.")
+
+  invisible(TRUE)
 }
+
 
 
 #' Retrieve all results from the KvK Search API (up to 1.000 results)
