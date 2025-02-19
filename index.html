@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kvkapiR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,8 +61,9 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of kvkapiR is to provides a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) Search API. This package is built using the <code>httr2</code> package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (<a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link uri">https://httr2.r-lib.org/articles/wrapping-apis.html</a>). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.</p>
-<p>Currently, the package only provides access to the <a href="https://developers.kvk.nl/apis/zoeken" class="external-link">KvK search API</a>. Additional APIs are available; more details can be found on the <a href="https://developers.kvk.nl/apis" class="external-link">on the developers website of the KvK</a>.</p>
+<p>The kvkapiR package provides a user-friendly interface to the Dutch Chamber of Commerce (KvK) Search API within the R programming environment. Built using the <code>httr2</code> package, it adheres to best practices for API wrappers in R, as outlined in the <a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link">httr2 documentation</a>.</p>
+<p>This package simplifies authentication, request handling, and response parsing, making it easier to interact with the KvK API.</p>
+<p>Currently, kvkapiR only supports the <a href="https://developers.kvk.nl/apis/zoeken" class="external-link">KvK search API</a>. Additional KvK APIs are available, and more details can be found <a href="https://developers.kvk.nl/apis" class="external-link">on the developers website of the KvK</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -84,7 +85,7 @@
 <span></span>
 <span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; # A tibble: 513 × 6</span></span>
+<span><span class="co">#&gt; # A tibble: 511 × 6</span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                    &lt;list&gt;       &lt;chr&gt; &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  1 01036576  000007810083     Stichting Gemeenschapsc… &lt;named list&gt; neve… &lt;list&gt;</span></span>
@@ -97,7 +98,7 @@
 <span><span class="co">#&gt;  8 01123666  000040288196     Winterberging IJzendoorn &lt;named list&gt; hoof… &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  9 40001473  000000303062     De Sândobbe              &lt;named list&gt; hoof… &lt;list&gt;</span></span>
 <span><span class="co">#&gt; 10 01091668  000000678279     Multiservice Beheer en … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt; # ℹ 503 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt; # ℹ 501 more rows</span></span></code></pre></div>
 <p>You can also combine multiple search parameters:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://coeneisma.github.io/kvkapiR/">kvkapiR</a></span><span class="op">)</span></span>

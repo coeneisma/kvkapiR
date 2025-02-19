@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kvkapiR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,16 +65,22 @@
 
     
     
-<p>The goal of kvkapiR is to provides a convenient R programming
-language interface to the Dutch Chamber of Commerce (KvK) Search API.
-This package is built using the <code>httr2</code> package and follows
-best practices for wrapping APIs in R, as outlined in the httr2
-documentation (<a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link uri">https://httr2.r-lib.org/articles/wrapping-apis.html</a>). It
-simplifies authentication, request handling, and response parsing when
-interacting with the KvK API.</p>
-<p>Currently, the package only provides access to the <a href="https://developers.kvk.nl/apis/zoeken" class="external-link">KvK search API</a>.
-Additional APIs are available; more details can be found on the <a href="https://developers.kvk.nl/apis" class="external-link">on the developers website of the
-KvK</a>.</p>
+<p>The goal of kvkapiR is to provide a convenient R programming language
+interface to the Dutch Chamber of Commerce (KvK) APIs. This package is
+built using the httr2 package and follows best practices for wrapping
+APIs in R, as outlined in the <a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link">httr2
+documentation</a>. It simplifies authentication, request handling, and
+response parsing when interacting with the KvK API.</p>
+<p>Currently, the package provides access to the <a href="https://developers.kvk.nl/documentation#available-apis" class="external-link">following
+KvK APIs</a>:</p>
+<ul>
+<li>KvK Search API</li>
+<li>KvK Basisprofiel API</li>
+<li>KvK Vestigingsprofiel API</li>
+<li>KvK Naamgeving API</li>
+</ul>
+<p>More details can be found <a href="https://developers.kvk.nl/apis" class="external-link">on
+the developers website of the KvK</a>.</p>
 <div class="section level2">
 <h2 id="loading-the-package">Loading the package<a class="anchor" aria-label="anchor" href="#loading-the-package"></a>
 </h2>
@@ -82,22 +88,73 @@ KvK</a>.</p>
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://coeneisma.github.io/kvkapiR/">kvkapiR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="searching-the-kvk-api">Searching the KvK API<a class="anchor" aria-label="anchor" href="#searching-the-kvk-api"></a>
+<h2 id="api-keys">API keys<a class="anchor" aria-label="anchor" href="#api-keys"></a>
 </h2>
-<p>Dit package <code>kvkapiR</code> is niks anders dan een simpele
-wrapper om de Kvk-API. Hiernaast worden een aantal voorbeelden gegeven
-van mogelijke zoekopdrachten en het resultaat dat door de package wordt
-gegeven.</p>
+<div class="section level3">
+<h3 id="optaining-an-api-key">Optaining an API key<a class="anchor" aria-label="anchor" href="#optaining-an-api-key"></a>
+</h3>
+<p>To access the KvK API, you need an API key. You can apply for an API
+key and learn about different KvK APIs on the <a href="https://developers.kvk.nl/apply-for-apis?step=api-overview" class="external-link">KvK
+Developer Portal</a>.</p>
+</div>
+<div class="section level3">
+<h3 id="temporary-api-key-current-session-only">Temporary API Key (Current Session Only)<a class="anchor" aria-label="anchor" href="#temporary-api-key-current-session-only"></a>
+</h3>
+<p>If you only need an API key for the current session, use the
+`kvk_set_api_key()``` function.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_set_api_key.html">kvk_set_api_key</a></span><span class="op">(</span><span class="va">api_name</span>, <span class="va">api_key</span><span class="op">)</span></span></code></pre></div>
+<p>This <code>api_name</code> can be any of the following:</p>
+<ul>
+<li>“search”</li>
+<li>“basisprofiel”</li>
+<li>“vestigingsprofiel”</li>
+<li>“naamgeving”</li>
+</ul>
+<p><strong>⚠️ Note:</strong> This only sets the key for the current R
+session. The key will be lost once you restart R.</p>
+</div>
+<div class="section level3">
+<h3 id="persistent-api-key-stored-in--renviron">Persistent API Key (Stored in <code>.Renviron</code>)<a class="anchor" aria-label="anchor" href="#persistent-api-key-stored-in--renviron"></a>
+</h3>
+<p>If you want to store the API key permanently, use the
+<code><a href="../reference/kvk_store_api_key.html">kvk_store_api_key()</a></code> function. This saves the key in the
+<code>.Renviron</code> file, making it persist across R sessions.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_store_api_key.html">kvk_store_api_key</a></span><span class="op">(</span><span class="va">api_name</span>, <span class="va">api_key</span><span class="op">)</span></span></code></pre></div>
+<p>Restart R for the changes to take effect.</p>
+<p><strong>⚠️ Warning:</strong> Only use this method if you can safely
+store your API key on your system.</p>
+</div>
+<div class="section level3">
+<h3 id="testing-environmet">Testing Environmet<a class="anchor" aria-label="anchor" href="#testing-environmet"></a>
+</h3>
+<p>KvK provides a test environment where you can experiment with the API
+before using it in production. More information is available on the <a href="https://developers.kvk.nl/apply-for-apis?step=api-overview" class="external-link">KvK
+documentation page</a>.</p>
+<p>All functions in <code>kvkapiR</code> support testing mode via the
+<code>test_environment</code> argument, which is set to
+<code>FALSE</code> by default.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="search-the-kvk-api">Search the KvK API<a class="anchor" aria-label="anchor" href="#search-the-kvk-api"></a>
+</h2>
+<p>The <code><a href="../reference/kvk_search.html">kvk_search()</a></code> function is wrapper for the KvK Search
+API. It automatically paginates results (up to 1,000 records).</p>
+<p>Below are examples demonstrating how to perform searches and handle
+API responses.</p>
 <div class="section level3">
 <h3 id="example-1-single-variable-less-then-1-000-records">Example 1: single variable, less then 1.000 records<a class="anchor" aria-label="anchor" href="#example-1-single-variable-less-then-1-000-records"></a>
 </h3>
-<p>Lets start with searching for KvK registrations in <a href="https://nl.wikipedia.org/wiki/Koudum" class="external-link">the village of Koudum</a>.
-As this is a relative small village with less entries than the maximum
-(API limit) of 1.000 records, all records are retrieved:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Lets search for KvK registrations in <a href="https://nl.wikipedia.org/wiki/Koudum" class="external-link">the village of Koudum</a>.
+Since this is a small village with fewer than <em>1.000</em> registered
+businesses (the API limit), all records are retrieved in one
+request.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 513 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 511 × 6</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01036576  000007810083     Stichting Gemeenschapsc… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
@@ -110,16 +167,16 @@ As this is a relative small village with less entries than the maximum
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 01123666  000040288196     Winterberging IJzendoorn <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 40001473  000000303062     De Sândobbe              <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 01091668  000000678279     Multiservice Beheer en … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 503 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 501 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="example-2-single-variable-more-then-1-000-records">Example 2: single variable, more then 1.000 records<a class="anchor" aria-label="anchor" href="#example-2-single-variable-more-then-1-000-records"></a>
 </h3>
 <p>The <a href="https://nl.wikipedia.org/wiki/Rotterdam" class="external-link">city of
-Rotterdam</a> is much bigger than Koudum. So searching for all entries
-in Rotterdam will definately result in more then 1.000 records. When
-this happens, a warning will be displayed:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+Rotterdam</a> is significantly larger than Koudum. earching for all
+registrations in Rotterdam will return more than 1,000 records,
+exceeding the API limit. When this happens, a warning is displayed:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Warning in kvk_search(plaats = "Rotterdam"): API response contains more than</span></span>
 <span><span class="co">#&gt; 1,000 results. Only the first 1,000 will be retrieved.</span></span>
@@ -140,45 +197,43 @@ this happens, a warning will be displayed:</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 990 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="example-3-multiple-variables">Example 3: multiple variables<a class="anchor" aria-label="anchor" href="#example-3-multiple-variables"></a>
+<h3 id="example-3-searching-with-multiple-criteria">Example 3: Searching with Multiple Criteria<a class="anchor" aria-label="anchor" href="#example-3-searching-with-multiple-criteria"></a>
 </h3>
-<p>As described in the documentation of <code>search_kvk()</code>, there
-are multiple variables to search in. And you can combine them. For
-example, we will search for a record in Utrecht with a name that
+<p>You can combine multiple search criteria in a query.</p>
+<p>For example, let’s search for businesses in Utrecht where the name
 contains both <code>snackbar</code> and <code>hoek</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">snackbar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Utrecht"</span>, naam <span class="op">=</span> <span class="st">"snackbar"</span><span class="op">)</span></span>
 <span><span class="va">snackbar</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 19 × 7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 18 × 7</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 30055828  000001534106     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 30149968  000001373366     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 30061168  000007852940     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30126008  000003191338     <span style="color: #949494;">"</span>Griekse … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 91479894  000057155518     <span style="color: #949494;">"</span>De Snack… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 77162838  000044881207     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 30048901  000015639428     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 63545659  000032452004     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 60975784  000028183169     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 91242894  000002767961     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 30083297  000009193693     <span style="color: #949494;">"</span>Cafetari… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR HO…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 30050751  000007808208     <span style="color: #949494;">"</span>Petit-Re… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 30192953  000002554313     <span style="color: #949494;">"</span>Cafetari… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 30156975  000013513508     <span style="color: #949494;">"</span>Bestaria… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 86701452  000001472798     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar Li…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 59334843  000005957397     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 29036082  000020552270     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> 76537293  000044313047     <span style="color: #949494;">"</span>Biltstra… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">19</span> 76449548  000044233884     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 91479894  000057155518     <span style="color: #949494;">"</span>De Snack… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 77162838  000044881207     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 30048901  000015639428     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 63545659  000032452004     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 60975784  000028183169     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 91242894  000002767961     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 30083297  000009193693     <span style="color: #949494;">"</span>Cafetari… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR HO…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 30050751  000007808208     <span style="color: #949494;">"</span>Petit-Re… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 30192953  000002554313     <span style="color: #949494;">"</span>Cafetari… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 30156975  000013513508     <span style="color: #949494;">"</span>Bestaria… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 86701452  000001472798     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar Li…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 59334843  000005957397     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 29036082  000020552270     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 76537293  000044313047     <span style="color: #949494;">"</span>Biltstra… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> 76449548  000044233884     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="example-4-search-on-adress">Example 4: search on adress<a class="anchor" aria-label="anchor" href="#example-4-search-on-adress"></a>
 </h3>
-<p>It is possible to search on a specific adres. You will need both the
-postcal code and the house number. For example, are there any
-registrations on <a href="https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A" class="external-link">this adress</a>?</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<p>It is possible to search for KvK registrations using a specific
+address. To do this, you need both the postal code and house number. For
+example, are there any business registrered at <a href="https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A" class="external-link">this adress</a>?</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">secret_adress</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>postcode <span class="op">=</span> <span class="st">"2594BD"</span>, huisnummer <span class="op">=</span> <span class="st">"10"</span><span class="op">)</span></span>
 <span><span class="va">secret_adress</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
@@ -186,6 +241,73 @@ registrations on <a href="https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A" class="exte
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>    </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 57096317  000028603745     politie <span style="color: #949494;">&lt;named list [1]&gt;</span> nevenvestiging <span style="color: #949494;">&lt;list [2]&gt;</span></span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="retrieving-profiel-data">Retrieving Profiel Data<a class="anchor" aria-label="anchor" href="#retrieving-profiel-data"></a>
+</h2>
+<p>The package has the abbility to retrieve three types of profiles from
+the API:</p>
+<ul>
+<li>basisprofiel</li>
+<li>vestigingsprofiel</li>
+<li>naamgeving</li>
+</ul>
+<p>For these examples we will use the test invironment.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">donald</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"Donald"</span>, test_environment <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; You are using the KvK test environment. Test data will be returned.</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="basisprofiel">Basisprofiel<a class="anchor" aria-label="anchor" href="#basisprofiel"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_get_basisprofiel.html">kvk_get_basisprofiel</a></span><span class="op">(</span>kvkNummer <span class="op">=</span> <span class="va">donald</span><span class="op">$</span><span class="va">kvkNummer</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, test_environment <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; You are using the KvK test environment. Test data will be returned.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt;   kvkNummer indNonMailing naam     formeleRegistratieda…¹ materieleRegistratie…²</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 68750110  Ja            Test BV… 20170519               20170519              </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ abbreviated names: ¹​formeleRegistratiedatum,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   ²​materieleRegistratie$datumAanvang</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 more variables: totaalWerkzamePersonen &lt;int&gt;, statutaireNaam &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   handelsnamen &lt;list&gt;, sbiActiviteiten &lt;list&gt;, links &lt;list&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   `_embedded` &lt;list&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="vestigingsprofiel">Vestigingsprofiel<a class="anchor" aria-label="anchor" href="#vestigingsprofiel"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_get_vestigingsprofiel.html">kvk_get_vestigingsprofiel</a></span><span class="op">(</span>vestigingsnummer <span class="op">=</span> <span class="va">donald</span><span class="op">$</span><span class="va">vestigingsnummer</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, test_environment <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; You are using the KvK test environment. Test data will be returned.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 17</span></span></span>
+<span><span class="co">#&gt;   vestigingsnummer kvkNummer rsin      indNonMailing formeleRegistratiedatum</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 000037178601     68750110  857587973 Ja            20170519               </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 12 more variables: materieleRegistratie &lt;tibble[,1]&gt;, statutaireNaam &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   eersteHandelsnaam &lt;chr&gt;, indHoofdvestiging &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   indCommercieleVestiging &lt;chr&gt;, voltijdWerkzamePersonen &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   totaalWerkzamePersonen &lt;int&gt;, deeltijdWerkzamePersonen &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   handelsnamen &lt;list&gt;, adressen &lt;list&gt;, sbiActiviteiten &lt;list&gt;, links &lt;list&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="naamgeving">Naamgeving<a class="anchor" aria-label="anchor" href="#naamgeving"></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_get_naamgeving.html">kvk_get_naamgeving</a></span><span class="op">(</span>kvkNummer <span class="op">=</span> <span class="va">donald</span><span class="op">$</span><span class="va">kvkNummer</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, test_environment <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; You are using the KvK test environment. Test data will be returned.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 7</span></span></span>
+<span><span class="co">#&gt;   kvkNummer rsin      statutaireNaam naam          startdatum vestigingen links </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 68750110  857587973 Test BV Donald Test BV Dona… 20170519   <span style="color: #949494;">&lt;list [2]&gt;</span>  <span style="color: #949494;">&lt;list&gt;</span></span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>The <code>kvkapiR</code> package provides a simple yet powerful
+interface for searching the KvK API in R. With built-in authentication
+handling, test environment support, and flexible query options, it
+streamlines access to Dutch business registration data.</p>
+<p>For more details, refer to the official <a href="https://developers.kvk.nl/apis" class="external-link">KvK API documentation</a>.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
