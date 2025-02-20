@@ -61,9 +61,15 @@
 </div>
 <!-- badges: start -->
 
-<p>The kvkapiR package provides a user-friendly interface to the Dutch Chamber of Commerce (KvK) Search API within the R programming environment. Built using the <code>httr2</code> package, it adheres to best practices for API wrappers in R, as outlined in the <a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link">httr2 documentation</a>.</p>
-<p>This package simplifies authentication, request handling, and response parsing, making it easier to interact with the KvK API.</p>
-<p>Currently, kvkapiR only supports the <a href="https://developers.kvk.nl/apis/zoeken" class="external-link">KvK search API</a>. Additional KvK APIs are available, and more details can be found <a href="https://developers.kvk.nl/apis" class="external-link">on the developers website of the KvK</a>.</p>
+<p>The goal of kvkapiR is to provide a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) APIs. This package is built using the httr2 package and follows best practices for wrapping APIs in R, as outlined in the <a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link">httr2 documentation</a>. It simplifies authentication, request handling, and response parsing when interacting with the KvK API.</p>
+<p>Currently, the package provides access to the <a href="https://developers.kvk.nl/documentation#available-apis" class="external-link">following KvK APIs</a>:</p>
+<ul>
+<li>KvK Search API</li>
+<li>KvK Basisprofiel API</li>
+<li>KvK Vestigingsprofiel API</li>
+<li>KvK Naamgeving API</li>
+</ul>
+<p>More details can be found <a href="https://developers.kvk.nl/apis" class="external-link">on the developers website of the KvK</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
