@@ -35,7 +35,7 @@ To access the KvK API, you need an API key. You can apply for an API key and lea
 
 ### Temporary API Key (Current Session Only)
 
-If you only need an API key for the current session, use the `kvk_set_api_key()``` function. 
+If you only need an API key for the current session, use the `kvk_set_api_key()` function. 
 
 ``` r
 kvk_set_api_key(api_name, api_key)
@@ -115,7 +115,7 @@ secret_adress
 
 ## Retrieving Profiel Data
 
-The package has the abbility to retrieve three types of profiles from the API:
+The package has the abbility to retrieve three types of *profielen* from the API:
 
 * basisprofiel
 * vestigingsprofiel
