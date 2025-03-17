@@ -11,7 +11,7 @@ using Sys.setenv(). The key will be available until the session ends."><meta pro
 
     <a class="navbar-brand me-2" href="../index.html">kvkapiR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9003</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,20 +45,15 @@ using <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-lin
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kvk_set_api_key</span><span class="op">(</span><span class="va">api_name</span>, <span class="va">api_key</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">kvk_set_api_key</span><span class="op">(</span><span class="va">api_key</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-api-name">api_name<a class="anchor" aria-label="anchor" href="#arg-api-name"></a></dt>
-<dd><p>A string containing the name of the API. One of: "search",
-"basisprofiel", "vestigingsprofiel", "naamgeving".</p></dd>
-
-
-<dt id="arg-api-key">api_key<a class="anchor" aria-label="anchor" href="#arg-api-key"></a></dt>
-<dd><p>A string containing the API key for the specified API.</p></dd>
+<dl><dt id="arg-api-key">api_key<a class="anchor" aria-label="anchor" href="#arg-api-key"></a></dt>
+<dd><p>A string containing the API key.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -67,7 +62,7 @@ using <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-lin
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>The function sets the specified API key using <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv()</a></code>, making
+    <p>The function sets the API key using <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv()</a></code>, making
 it available for the current session. However, it does <strong>not</strong> persist
 across sessions.</p>
 <p>If you want to store the key permanently, use <code><a href="kvk_store_api_key.html">kvk_store_api_key()</a></code>.</p>
@@ -77,7 +72,7 @@ across sessions.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Set the API key for the current session</span></span></span>
-<span class="r-in"><span><span class="fu">kvk_set_api_key</span><span class="op">(</span><span class="st">"search"</span>, <span class="st">"abcd1234"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">kvk_set_api_key</span><span class="op">(</span><span class="st">"abcd1234"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
