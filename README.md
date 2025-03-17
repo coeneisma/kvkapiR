@@ -54,7 +54,7 @@ library(kvkapiR)
 
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 511 × 6
+#> # A tibble: 506 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -67,7 +67,7 @@ koudum
 #>  8 01123666  000040288196     Winterberging IJzendoorn <named list> hoof… <list>
 #>  9 40001473  000000303062     De Sândobbe              <named list> hoof… <list>
 #> 10 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
-#> # ℹ 501 more rows
+#> # ℹ 496 more rows
 ```
 
 You can also combine multiple search parameters:
@@ -77,7 +77,7 @@ library(kvkapiR)
 
 rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
 rotterdam
-#> # A tibble: 200 × 7
+#> # A tibble: 202 × 7
 #>    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam
 #>    <chr>     <chr>            <chr>      <list>       <chr> <list> <chr>        
 #>  1 24475068  000009219072     Wijkprakt… <named list> hoof… <list> <NA>         
@@ -85,12 +85,12 @@ rotterdam
 #>  3 24484189  000016351312     Sanitas H… <named list> neve… <list> <NA>         
 #>  4 24477358  000010787356     Van Schai… <named list> hoof… <list> <NA>         
 #>  5 66346339  000034979034     Huisartse… <named list> hoof… <list> <NA>         
-#>  6 54446538  000024210382     Huisartse… <named list> hoof… <list> <NA>         
-#>  7 62380281  000031391419     Huisartse… <named list> hoof… <list> <NA>         
+#>  6 62380281  000031391419     Huisartse… <named list> hoof… <list> <NA>         
+#>  7 54446538  000024210382     Huisartse… <named list> hoof… <list> <NA>         
 #>  8 24484189  000036373648     Sanitas H… <named list> hoof… <list> <NA>         
 #>  9 85464007  000051508060     itj huisa… <named list> hoof… <list> <NA>         
 #> 10 24476795  000010613765     Baggerman… <named list> hoof… <list> <NA>         
-#> # ℹ 190 more rows
+#> # ℹ 192 more rows
 ```
 
 See `vignette("kvkapiR")` for more examples and information about the

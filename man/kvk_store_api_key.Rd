@@ -4,13 +4,10 @@
 \alias{kvk_store_api_key}
 \title{Store KvK API Key in .Renviron for persistent use}
 \usage{
-kvk_store_api_key(api_name, api_key, overwrite = FALSE)
+kvk_store_api_key(api_key, overwrite = FALSE)
 }
 \arguments{
-\item{api_name}{A string containing the name of the API. One of: "search",
-"basisprofiel", "vestigingsprofiel", "naamgeving".}
-
-\item{api_key}{A string containing the API key for the specified API.}
+\item{api_key}{A string containing the API key.}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing
 API key entry in \code{.Renviron}. Defaults to \code{FALSE}.}
@@ -30,18 +27,18 @@ The function modifies \code{.Renviron} to store the API key permanently.
 \itemize{
 \item If the key exists and \code{overwrite = FALSE}, it returns an error.
 \item If the key exists and \code{overwrite = TRUE}, it replaces the existing key.
-\item If the key does not exist, it appends a new API key entry for the specified API to \code{.Renviron}.
+\item If the key does not exist, it appends a new API key entry to \code{.Renviron}.
 }
 
 \strong{Important:} You must restart R for the changes to take effect.
 }
 \examples{
 \dontrun{
-# Store the API key persistently for Search API
-kvk_store_api_key("search", "abcd1234")
+# Store the API key persistently
+kvk_store_api_key("abcd1234")
 
-# Overwrite an existing API key for Basisprofiel API
-kvk_store_api_key("basisprofiel", "newkey5678", overwrite = TRUE)
+# Overwrite an existing API key
+kvk_store_api_key("newkey5678", overwrite = TRUE)
 }
 
 }

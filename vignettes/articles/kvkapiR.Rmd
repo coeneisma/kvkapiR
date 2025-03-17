@@ -38,15 +38,8 @@ To access the KvK API, you need an API key. You can apply for an API key and lea
 If you only need an API key for the current session, use the `kvk_set_api_key()` function. 
 
 ``` r
-kvk_set_api_key(api_name, api_key)
+kvk_set_api_key(api_key = "your_api_key_here")
 ```
-
-This `api_name` can be any of the following:
-
-* "search"
-* "basisprofiel"
-* "vestigingsprofiel"
-* "naamgeving"
 
 **⚠️ Note:** This only sets the key for the current R session. The key will be lost once you restart R.
 
@@ -55,17 +48,24 @@ This `api_name` can be any of the following:
 If you want to store the API key permanently, use the `kvk_store_api_key()` function. This saves the key in the `.Renviron` file, making it persist across R sessions.
 
 ``` r
-kvk_store_api_key(api_name, api_key)
+kvk_store_api_key(api_key = "your_api_key_here")
 ```
-Restart R for the changes to take effect.
+To update an existing API key, set the `overwrite` parameter to `TRUE`:
+
+``` r 
+kvk_store_api_key(api_key = "your_new_api_key", overwrite = TRUE)
+```
+**⚠️ Important:** You must restart R for the changes to take effect.
 
 **⚠️ Warning:** Only use this method if you can safely store your API key on your system.
 
 ### Testing Environmet
 
-KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/apply-for-apis?step=api-overview).
+KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/documentation/testing).
 
 All functions in `kvkapiR` support testing mode via the `test_environment` argument, which is set to `FALSE` by default.
+
+**🦆 Tip:** The test environment contains fictional data based on characters from the Dutch comic magazine "Donald Duck". Try searching for names like "Donald" and "Dagobert" to see how the API works with sample data.
 
 ## Search the KvK API
 
@@ -82,9 +82,10 @@ koudum <- kvk_search(plaats = "Koudum")
 koudum
 ```
 
+
 ### Example 2: single variable, more then 1.000 records
 
-The [city of Rotterdam](https://nl.wikipedia.org/wiki/Rotterdam) is significantly larger than Koudum. earching for all registrations in Rotterdam will return more than 1,000 records, exceeding the API limit. 
+The [city of Rotterdam](https://nl.wikipedia.org/wiki/Rotterdam) is significantly larger than Koudum. Searching for all registrations in Rotterdam will return more than 1,000 records, exceeding the API limit. 
 When this happens, a warning is displayed:
 
 ```{r}
@@ -92,7 +93,19 @@ rotterdam <- kvk_search(plaats = "Rotterdam")
 rotterdam
 ```
 
-### Example 3: Searching with Multiple Criteria
+### Example 3: combining multiple search terms in variables
+
+You can combine multiple search terms in any parameter to refine your search. The API treats multiple words within a parameter as an AND operation by default.
+
+```{r}
+# Search for businesses with both "snackbar" and "hoekje" in their name
+snackbar_hoekje <- kvk_search(naam = "snackbar hoekje")
+snackbar_hoekje
+```
+
+
+
+### Example 4: Searching with Multiple Criteria
 
 You can combine multiple search criteria in a query.
 
@@ -103,7 +116,7 @@ snackbar <- kvk_search(plaats = "Utrecht", naam = "snackbar")
 snackbar
 ```
 
-### Example 4: search on adress
+### Example 5: search on adress
 
 It is possible to search for KvK registrations using a specific address. To do this, you need both the postal code and house number.
 For example, are there any business registrered at [this adress](https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A)? 

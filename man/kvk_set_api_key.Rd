@@ -4,13 +4,10 @@
 \alias{kvk_set_api_key}
 \title{Set KvK API Key for the current session}
 \usage{
-kvk_set_api_key(api_name, api_key)
+kvk_set_api_key(api_key)
 }
 \arguments{
-\item{api_name}{A string containing the name of the API. One of: "search",
-"basisprofiel", "vestigingsprofiel", "naamgeving".}
-
-\item{api_key}{A string containing the API key for the specified API.}
+\item{api_key}{A string containing the API key.}
 }
 \value{
 Invisibly returns \code{TRUE} if the key was set.
@@ -22,7 +19,7 @@ This function sets the specified KvK API key for the \strong{current R session}
 using \code{Sys.setenv()}. The key will be available until the session ends.
 }
 \details{
-The function sets the specified API key using \code{Sys.setenv()}, making
+The function sets the API key using \code{Sys.setenv()}, making
 it available for the current session. However, it does \strong{not} persist
 across sessions.
 
@@ -31,7 +28,7 @@ If you want to store the key permanently, use \code{kvk_store_api_key()}.
 \examples{
 \dontrun{
 # Set the API key for the current session
-kvk_set_api_key("search", "abcd1234")
+kvk_set_api_key("abcd1234")
 }
 
 }
