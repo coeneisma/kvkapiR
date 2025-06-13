@@ -16,9 +16,12 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 URL: https://coeneisma.github.io/kvkapiR/, https://github.com/coeneisma/kvkapiR/
 Imports: 
+    cli,
     dplyr,
     httr2,
     jsonlite,
     lifecycle,
+    purrr,
+    tibble,
     tidyr
 Config/Needs/website: rmarkdown
