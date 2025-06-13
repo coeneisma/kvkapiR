@@ -64,13 +64,16 @@
 #' @export
 kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, test_environment = FALSE) {
 
+  # Validate input
+  validate_kvk_nummer(kvkNummer)
+
   # Determine API URL and API key based on test_environment flag
   if (test_environment) {
-    base_url <- "https://api.kvk.nl/test/api/v1/basisprofielen/"
-    KVK_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    base_url <- paste0(KVK_TEST_BASE_URL, "/v1/basisprofielen/")
+    KVK_API_KEY <- KVK_TEST_API_KEY
     cli::cli_alert_info("You are using the KvK test environment. Test data will be returned.")
   } else {
-    base_url <- "https://api.kvk.nl/api/v1/basisprofielen/"
+    base_url <- paste0(KVK_PROD_BASE_URL, "/v1/basisprofielen/")
     KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
     if (KVK_API_KEY == "") {
       cli::cli_abort("API key is missing. Set it using `kvk_set_api_key('your_key')`")
@@ -179,13 +182,16 @@ kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, tes
 #' @export
 kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_environment = FALSE) {
 
+  # Validate input
+  validate_vestigingsnummer(vestigingsnummer)
+
   # Determine API URL and API key based on test_environment flag
   if (test_environment) {
-    base_url <- "https://api.kvk.nl/test/api/v1/vestigingsprofielen/"
-    KVK_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    base_url <- paste0(KVK_TEST_BASE_URL, "/v1/vestigingsprofielen/")
+    KVK_API_KEY <- KVK_TEST_API_KEY
     cli::cli_alert_info("You are using the KvK test environment. Test data will be returned.")
   } else {
-    base_url <- "https://api.kvk.nl/api/v1/vestigingsprofielen/"
+    base_url <- paste0(KVK_PROD_BASE_URL, "/v1/vestigingsprofielen/")
     KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
     if (KVK_API_KEY == "") {
       cli::cli_abort("API key is missing. Set it using `kvk_set_api_key('your_key')`")
@@ -269,13 +275,16 @@ kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_en
 #' @export
 kvk_get_naamgeving <- function(kvkNummer, test_environment = FALSE) {
 
+  # Validate input
+  validate_kvk_nummer(kvkNummer)
+
   # Determine API URL and API key based on test_environment flag
   if (test_environment) {
-    base_url <- "https://api.kvk.nl/test/api/v1/naamgevingen/kvknummer/"
-    KVK_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    base_url <- paste0(KVK_TEST_BASE_URL, "/v1/naamgevingen/kvknummer/")
+    KVK_API_KEY <- KVK_TEST_API_KEY
     cli::cli_alert_info("You are using the KvK test environment. Test data will be returned.")
   } else {
-    base_url <- "https://api.kvk.nl/api/v1/naamgevingen/kvknummer/"
+    base_url <- paste0(KVK_PROD_BASE_URL, "/v1/naamgevingen/kvknummer/")
     KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
     if (KVK_API_KEY == "") {
       cli::cli_abort("API key is missing. Set it using `kvk_set_api_key('your_key')`")
@@ -338,17 +347,7 @@ kvk_get_naamgeving <- function(kvkNummer, test_environment = FALSE) {
 #'   Nested lists with uniform atomic elements are converted into tibbles, while
 #'   other lists are stored as list-columns.
 #'
-#' @examples
-#' sample_list <- list(
-#'   id = "12345",
-#'   name = "Test Company",
-#'   employees = 10,
-#'   addresses = list(
-#'     list(street = "Main St", number = 1),
-#'     list(street = "Second St", number = 2)
-#'   )
-#' )
-#' list_to_tibble(sample_list)
+#' @keywords internal
 list_to_tibble <- function(lst) {
   # Ensure input is a list
   if (!base::is.list(lst)) stop("Input must be a list.")

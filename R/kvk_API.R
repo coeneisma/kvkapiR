@@ -1,3 +1,10 @@
+# Constants for KvK API
+KVK_TEST_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+KVK_TEST_BASE_URL <- "https://api.kvk.nl/test/api"
+KVK_PROD_BASE_URL <- "https://api.kvk.nl/api"
+KVK_MAX_RESULTS <- 1000L
+KVK_RESULTS_PER_PAGE <- 100L
+
 #' Set KvK API Key for the current session
 #'
 #' @description `r lifecycle::badge('experimental')`

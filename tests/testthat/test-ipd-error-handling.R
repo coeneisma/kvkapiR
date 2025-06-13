@@ -59,17 +59,15 @@ test_that("handle_kvk_http_error falls back to generic messages without response
 test_that("Integration: API functions show IPD error messages", {
   skip_if(Sys.getenv("KVK_API_KEY") == "", "No API key available")
   
-  # Test with invalid KvK number (too short)
-  expect_warning(
-    result <- kvk_get_basisprofiel("12345", test_environment = TRUE),
-    "The KvK number '12345' is not valid"
+  # Test with invalid KvK number format - now caught by input validation
+  expect_error(
+    kvk_get_basisprofiel("12345", test_environment = TRUE),
+    "kvkNummer must be 8 digits"
   )
-  expect_null(result)
   
-  # Test with invalid vestigingsnummer (too short)
-  expect_warning(
-    result <- kvk_get_vestigingsprofiel("12345", test_environment = TRUE),
-    "The branch number '12345' is not valid"
+  # Test with invalid vestigingsnummer format - now caught by input validation
+  expect_error(
+    kvk_get_vestigingsprofiel("12345", test_environment = TRUE),
+    "vestigingsnummer must be 12 digits"
   )
-  expect_null(result)
 })

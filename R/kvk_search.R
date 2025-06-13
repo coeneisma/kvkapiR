@@ -35,14 +35,14 @@ kvk_search <- function(..., test_environment = FALSE) {
 
   # Determine API URL and API key based on test environment flag
   if (test_environment) {
-    API_URL <- "https://api.kvk.nl/test/api/v2/zoeken"
-    KVK_API_KEY <- "l7xx1f2691f2520d487b902f4e0b57a0b197"
+    API_URL <- paste0(KVK_TEST_BASE_URL, "/v2/zoeken")
+    KVK_API_KEY <- KVK_TEST_API_KEY
     cli::cli_alert_info("You are using the KvK test environment. Test data will be returned.")
   } else {
     # Retrieve API key from environment variables for production use
     KVK_API_KEY <- Sys.getenv("KVK_API_KEY")
     if (KVK_API_KEY == "") cli::cli_abort("API key is missing. Set it using `kvk_set_api_key('your_key')`")
-    API_URL <- "https://api.kvk.nl/api/v2/zoeken"
+    API_URL <- paste0(KVK_PROD_BASE_URL, "/v2/zoeken")
   }
 
   # First request to determine total number of results, with error handling
@@ -75,30 +75,30 @@ kvk_search <- function(..., test_environment = FALSE) {
     return(NULL)
   }
 
-  # If more than 1,000 results, limit and show a warning
-  if (total_results > 1000) {
-    total_results <- 1000
-    cli::cli_alert_warning("API response contains more than 1,000 results. Only the first 1,000 will be retrieved.")
+  # If more than maximum results, limit and show a warning
+  if (total_results > KVK_MAX_RESULTS) {
+    total_results <- KVK_MAX_RESULTS
+    cli::cli_alert_warning("API response contains more than {KVK_MAX_RESULTS} results. Only the first {KVK_MAX_RESULTS} will be retrieved.")
   }
 
-  # Determine total number of pages (maximum 100)
-  total_pages <- min(ceiling(total_results / 100), 100)
+  # Determine total number of pages (maximum based on results per page)
+  total_pages <- min(ceiling(total_results / KVK_RESULTS_PER_PAGE), KVK_RESULTS_PER_PAGE)
 
   all_results <- list()
 
   # Loop through pages (up to max 100)
-  for (pagina in 1:total_pages) {
+  for (page in 1:total_pages) {
     request <- tryCatch(
       {
         httr2::request(API_URL) |>
           httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
-          httr2::req_url_query(resultatenPerPagina = 100, pagina = pagina, ...) |>
+          httr2::req_url_query(resultatenPerPagina = KVK_RESULTS_PER_PAGE, pagina = page, ...) |>
           httr2::req_perform() |>
           httr2::resp_body_json()
       },
       error = function(e) {
         if (grepl("HTTP 404", e$message)) {
-          cli::cli_alert_info("No results found on page {pagina}.")
+          cli::cli_alert_info("No results found on page {page}.")
           return(NULL)
         } else {
           cli::cli_abort(e$message)
@@ -121,8 +121,8 @@ kvk_search <- function(..., test_environment = FALSE) {
   }
 
   # Convert to tibble
-  data <- dplyr::tibble(inhoud = all_results) |>
-    tidyr::unnest_wider(col = inhoud)
+  data <- dplyr::tibble(content = all_results) |>
+    tidyr::unnest_wider(col = content)
 
   return(data)
 }

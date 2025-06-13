@@ -20,15 +20,4 @@ of the list becomes a separate column in the tibble. If a nested list
 contains atomic elements of equal length, it is transformed into a tibble.
 Otherwise, it is stored as a list-column.
 }
-\examples{
-sample_list <- list(
-  id = "12345",
-  name = "Test Company",
-  employees = 10,
-  addresses = list(
-    list(street = "Main St", number = 1),
-    list(street = "Second St", number = 2)
-  )
-)
-list_to_tibble(sample_list)
-}
+\keyword{internal}

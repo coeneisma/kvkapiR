@@ -67,7 +67,7 @@ test_that("kvk_search warns about >1000 results", {
   # cli::cli_alert_warning doesn't throw R warnings, so capture the message
   expect_message(
     result <- kvk_search(plaats = "Rotterdam"),
-    "API response contains more than 1,000 results"
+    "API response contains more than 1000 results"
   )
   
   # Should still return results (max 1000)
