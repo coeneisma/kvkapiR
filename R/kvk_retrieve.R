@@ -93,53 +93,43 @@ kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, tes
   }
 
   # Perform the API request with error handling
-  response <- tryCatch(
+  req <- httr2::request(url_path) |>
+    httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+    httr2::req_url_query(geoData = tolower(as.character(geoData))) |>
+    httr2::req_error(is_error = function(resp) FALSE)  # Don't throw on HTTP errors
+  
+  # Perform the request
+  resp <- tryCatch(
     {
-      httr2::request(url_path) |>
-        httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
-        httr2::req_url_query(geoData = tolower(as.character(geoData))) |>
-        httr2::req_perform() |>
-        httr2::resp_body_json() |>
-        list_to_tibble()
+      httr2::req_perform(req)
     },
     error = function(e) {
-      # Extract HTTP status code from error message
-      status_code <- NA
-      status_match <- regexpr("HTTP ([0-9]{3})", e$message)
-      if (status_match > 0) {
-        status_code <- as.numeric(substr(e$message,
-                                         status_match + 5,
-                                         status_match + 7))
-      }
-
-      # Provide specific error messages based on status code
-      if (status_code == 400) {
-        cli::cli_warn("Bad request (HTTP 400). The KVK number or parameters provided are invalid.")
-        return(NULL)
-      } else if (status_code == 401) {
-        cli::cli_warn("Unauthorized (HTTP 401). Your API key is missing or invalid, or you don't have access to the Basisprofiel API.")
-        return(NULL)
-      } else if (status_code == 403) {
-        cli::cli_warn("Forbidden (HTTP 403). You don't have permission to access this resource.")
-        return(NULL)
-      } else if (status_code == 404) {
-        cli::cli_alert_info("No results found (HTTP 404). No data available for KvK number: {.val {kvkNummer}}")
-        return(NULL)
-      } else if (status_code == 429) {
-        cli::cli_warn("Too many requests (HTTP 429). You have exceeded the rate limit.")
-        return(NULL)
-      } else if (status_code == 500) {
-        cli::cli_warn("Internal server error (HTTP 500). The KVK API is experiencing issues.")
-        return(NULL)
-      } else if (status_code == 503) {
-        cli::cli_warn("Service unavailable (HTTP 503). The KVK API is currently unavailable or undergoing maintenance.")
-        return(NULL)
-      } else {
-        cli::cli_abort("Error retrieving basis profile: {e$message}")
-      }
+      # For connection errors (not HTTP errors)
+      cli::cli_abort("Connection error accessing {api_name}: {e$message}")
+      return(NULL)
     }
   )
-
+  
+  # If we got no response, return NULL
+  if (is.null(resp)) {
+    return(NULL)
+  }
+  
+  # Check if the response is an error
+  if (httr2::resp_is_error(resp)) {
+    handle_kvk_http_error(
+      e = NULL,
+      api_name = "Basisprofiel API",
+      resource_id = kvkNummer,
+      resp = resp,
+      status_code = httr2::resp_status(resp)
+    )
+    return(NULL)
+  }
+  
+  # Parse successful response
+  response <- httr2::resp_body_json(resp) |> list_to_tibble()
+  
   return(response)
 }
 
@@ -203,25 +193,43 @@ kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_en
   }
 
   # Construct the API request with error handling
-  response <- tryCatch(
+  req <- httr2::request(paste0(base_url, vestigingsnummer)) |>
+    httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+    httr2::req_url_query(geoData = tolower(as.character(geoData))) |>
+    httr2::req_error(is_error = function(resp) FALSE)  # Don't throw on HTTP errors
+  
+  # Perform the request
+  resp <- tryCatch(
     {
-      httr2::request(paste0(base_url, vestigingsnummer)) |>
-        httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
-        httr2::req_url_query(geoData = tolower(as.character(geoData))) |>
-        httr2::req_perform() |>
-        httr2::resp_body_json() |>
-        list_to_tibble()
+      httr2::req_perform(req)
     },
     error = function(e) {
-      if (grepl("HTTP 404", e$message)) {
-        cli::cli_alert_info("No results found for vestigingsnummer: {.val {vestigingsnummer}}")
-        return(NULL)
-      } else {
-        cli::cli_abort("Error retrieving vestigingsprofiel: {e$message}")
-      }
+      # For connection errors (not HTTP errors)
+      cli::cli_abort("Connection error accessing {api_name}: {e$message}")
+      return(NULL)
     }
   )
-
+  
+  # If we got no response, return NULL
+  if (is.null(resp)) {
+    return(NULL)
+  }
+  
+  # Check if the response is an error
+  if (httr2::resp_is_error(resp)) {
+    handle_kvk_http_error(
+      e = NULL,
+      api_name = "Vestigingsprofiel API",
+      resource_id = vestigingsnummer,
+      resp = resp,
+      status_code = httr2::resp_status(resp)
+    )
+    return(NULL)
+  }
+  
+  # Parse successful response
+  response <- httr2::resp_body_json(resp) |> list_to_tibble()
+  
   return(response)
 }
 
@@ -278,52 +286,42 @@ kvk_get_naamgeving <- function(kvkNummer, test_environment = FALSE) {
   url_path <- paste0(base_url, kvkNummer)
 
   # Perform the API request with error handling
-  response <- tryCatch(
+  req <- httr2::request(url_path) |>
+    httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
+    httr2::req_error(is_error = function(resp) FALSE)  # Don't throw on HTTP errors
+  
+  # Perform the request
+  resp <- tryCatch(
     {
-      httr2::request(url_path) |>
-        httr2::req_headers(apikey = KVK_API_KEY, Accept = "application/json") |>
-        httr2::req_perform() |>
-        httr2::resp_body_json() |>
-        list_to_tibble()
+      httr2::req_perform(req)
     },
     error = function(e) {
-      # Extract HTTP status code from error message
-      status_code <- NA
-      status_match <- regexpr("HTTP ([0-9]{3})", e$message)
-      if (status_match > 0) {
-        status_code <- as.numeric(substr(e$message,
-                                         status_match + 5,
-                                         status_match + 7))
-      }
-
-      # Provide specific error messages based on status code
-      if (status_code == 400) {
-        cli::cli_warn("Bad request (HTTP 400). The KVK number provided is invalid or has incorrect format.")
-        return(NULL)
-      } else if (status_code == 401) {
-        cli::cli_warn("Unauthorized (HTTP 401). Your API key is missing or invalid, or you don't have access to the Naamgevingen API.")
-        return(NULL)
-      } else if (status_code == 403) {
-        cli::cli_warn("Forbidden (HTTP 403). You don't have permission to access this resource.")
-        return(NULL)
-      } else if (status_code == 404) {
-        cli::cli_alert_info("No results found (HTTP 404). No data available for KvK number: {.val {kvkNummer}}")
-        return(NULL)
-      } else if (status_code == 429) {
-        cli::cli_warn("Too many requests (HTTP 429). You have exceeded the rate limit.")
-        return(NULL)
-      } else if (status_code == 500) {
-        cli::cli_warn("Internal server error (HTTP 500). The KVK API is experiencing issues.")
-        return(NULL)
-      } else if (status_code == 503) {
-        cli::cli_warn("Service unavailable (HTTP 503). The KVK API is currently unavailable or undergoing maintenance.")
-        return(NULL)
-      } else {
-        cli::cli_abort("Error retrieving name information: {e$message}")
-      }
+      # For connection errors (not HTTP errors)
+      cli::cli_abort("Connection error accessing {api_name}: {e$message}")
+      return(NULL)
     }
   )
-
+  
+  # If we got no response, return NULL
+  if (is.null(resp)) {
+    return(NULL)
+  }
+  
+  # Check if the response is an error
+  if (httr2::resp_is_error(resp)) {
+    handle_kvk_http_error(
+      e = NULL,
+      api_name = "Naamgevingen API",
+      resource_id = kvkNummer,
+      resp = resp,
+      status_code = httr2::resp_status(resp)
+    )
+    return(NULL)
+  }
+  
+  # Parse successful response
+  response <- httr2::resp_body_json(resp) |> list_to_tibble()
+  
   return(response)
 }
 
