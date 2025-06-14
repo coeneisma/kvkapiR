@@ -7,19 +7,21 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+# Check if API key is available for conditional chunk execution
+has_api_key <- nzchar(Sys.getenv("KVK_API_KEY"))
 ```
 
 The goal of kvkapiR is to provide a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) APIs. This package is built using the httr2 package and follows best practices for wrapping APIs in R, as outlined in the [httr2 documentation](https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
 
-Currently, the package provides access to the [following KvK APIs](https://developers.kvk.nl/documentation#available-apis):
+The package provides access to [all the KvK APIs](https://developers.kvk.nl/documentation#available-apis):
 
 * KvK Search API
 * KvK Basisprofiel API
 * KvK Vestigingsprofiel API
 * KvK Naamgeving API
 
-More details can be found [on the developers website of the KvK](https://developers.kvk.nl/apis).
-
+More details on the API can be found [on the developers website of the KvK](https://developers.kvk.nl/apis).
 
 ## Loading the package
 
@@ -28,6 +30,13 @@ library(kvkapiR)
 ```
 
 ## API keys
+
+```{r, echo = FALSE, results = 'asis'}
+if (!has_api_key) {
+  cat("**Note:** No API key was found. The production API examples below will not be executed. ")
+  cat("To run all examples, please set your API key using `kvk_set_api_key()` or the test environment examples will still work.")
+}
+```
 
 ### Optaining an API key
 
@@ -77,7 +86,7 @@ Below are examples demonstrating how to perform searches and handle API response
 
 Lets search for KvK registrations in [the village of Koudum](https://nl.wikipedia.org/wiki/Koudum). Since this is a small village with fewer than *1.000* registered businesses (the API limit), all records are retrieved in one request.
 
-```{r}
+```{r, eval = has_api_key}
 koudum <- kvk_search(plaats = "Koudum")
 koudum
 ```
@@ -88,7 +97,7 @@ koudum
 The [city of Rotterdam](https://nl.wikipedia.org/wiki/Rotterdam) is significantly larger than Koudum. Searching for all registrations in Rotterdam will return more than 1,000 records, exceeding the API limit. 
 When this happens, a warning is displayed:
 
-```{r}
+```{r, eval = has_api_key}
 rotterdam <- kvk_search(plaats = "Rotterdam")
 rotterdam
 ```
@@ -97,7 +106,7 @@ rotterdam
 
 You can combine multiple search terms in any parameter to refine your search. The API treats multiple words within a parameter as an AND operation by default.
 
-```{r}
+```{r, eval = has_api_key}
 # Search for businesses with both "snackbar" and "hoekje" in their name
 snackbar_hoekje <- kvk_search(naam = "snackbar hoekje")
 snackbar_hoekje
@@ -111,7 +120,7 @@ You can combine multiple search criteria in a query.
 
 For example, let's search for businesses in Utrecht where the name contains both `snackbar` and `hoek`:
 
-```{r}
+```{r, eval = has_api_key}
 snackbar <- kvk_search(plaats = "Utrecht", naam = "snackbar")
 snackbar
 ```
@@ -121,7 +130,7 @@ snackbar
 It is possible to search for KvK registrations using a specific address. To do this, you need both the postal code and house number.
 For example, are there any business registrered at [this adress](https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A)? 
 
-```{r}
+```{r, eval = has_api_key}
 secret_adress <- kvk_search(postcode = "2594BD", huisnummer = "10")
 secret_adress
 ```

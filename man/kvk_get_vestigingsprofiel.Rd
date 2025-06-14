@@ -45,15 +45,24 @@ returned profile.
 test data from the KvK test environment.
 }
 \examples{
-\dontrun{
-# Retrieve vestigingsprofiel for a given establishment number without geo-data
-vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
-
-# Retrieve vestigingsprofiel with geo-data
-vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504", geoData = TRUE)
-
-# Retrieve vestigingsprofiel from the test environment
-vestigingsprofiel_test <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504", test_environment = TRUE)
+# Examples using the production API (requires API key)
+if (nzchar(Sys.getenv("KVK_API_KEY"))) {
+  # Retrieve vestigingsprofiel for a given establishment number
+  vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
+  print(vestigingsprofiel)
+  
+  # Retrieve vestigingsprofiel with geo-data
+  vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(
+    vestigingsnummer = "000038509504", 
+    geoData = TRUE
+  )
 }
+
+# Examples using test environment (no API key required)
+vestigingsprofiel_test <- kvk_get_vestigingsprofiel(
+  vestigingsnummer = "000019716893", 
+  test_environment = TRUE
+)
+print(vestigingsprofiel_test)
 
 }

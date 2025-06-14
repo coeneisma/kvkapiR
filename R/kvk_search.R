@@ -21,16 +21,18 @@
 #'
 #' @export
 #' @examples
-#' \dontrun{
-#' koudum <- kvk_search(plaats = "Koudum")
-#' koudum
-#'
-#' rotterdam <- kvk_search(plaats = "Rotterdam")
-#' rotterdam
-#'
-#' # Use test environment
-#' test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+#' # Examples using the production API (requires API key)
+#' if (nzchar(Sys.getenv("KVK_API_KEY"))) {
+#'   koudum <- kvk_search(plaats = "Koudum")
+#'   print(koudum)
+#'   
+#'   rotterdam <- kvk_search(plaats = "Rotterdam")
+#'   print(rotterdam)
 #' }
+#' 
+#' # Examples using test environment (no API key required)
+#' test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+#' print(test_data)
 kvk_search <- function(..., test_environment = FALSE) {
 
   # Determine API URL and API key based on test environment flag

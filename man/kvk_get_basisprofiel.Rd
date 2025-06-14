@@ -53,30 +53,22 @@ additional details, such as ownership information or business locations.
 test data from the KvK test environment.
 }
 \examples{
-\dontrun{
-# Retrieve basis profile for a given KvK number without geo-data
-basis_profile <- kvk_get_basisprofiel(kvkNummer = "12345678")
-
-# Retrieve basis profile with geo-data
-basis_profile_geo <- kvk_get_basisprofiel(kvkNummer = "12345678", geoData = TRUE)
-
-# Retrieve basis profile including owner information
-basis_profile_owner <- kvk_get_basisprofiel(kvkNummer = "12345678", include = "eigenaar")
-
-# Retrieve basis profile including owner and main establishment
-basis_profile_extended <- kvk_get_basisprofiel(
-  kvkNummer = "12345678",
-  include = c("eigenaar", "hoofdvestiging")
-)
-
-# Retrieve basis profile with all additional information
-basis_profile_complete <- kvk_get_basisprofiel(
-  kvkNummer = "12345678",
-  include = c("eigenaar", "hoofdvestiging", "vestigingen")
-)
-
-# Retrieve basis profile from the test environment
-basis_profile_test <- kvk_get_basisprofiel(kvkNummer = "12345678", test_environment = TRUE)
+# Examples using the production API (requires API key)
+if (nzchar(Sys.getenv("KVK_API_KEY"))) {
+  # Retrieve basis profile for a given KvK number without geo-data
+  basis_profile <- kvk_get_basisprofiel(kvkNummer = "69599084")
+  print(basis_profile)
+  
+  # Retrieve basis profile with geo-data
+  basis_profile_geo <- kvk_get_basisprofiel(kvkNummer = "69599084", geoData = TRUE)
+  
+  # Retrieve basis profile including owner information
+  basis_profile_owner <- kvk_get_basisprofiel(kvkNummer = "69599084", include = "eigenaar")
 }
+
+# Examples using test environment (no API key required)
+# These use the KvK test dataset with Donald Duck themed businesses
+basis_profile_test <- kvk_get_basisprofiel(kvkNummer = "68727720", test_environment = TRUE)
+print(basis_profile_test)
 
 }

@@ -30,14 +30,16 @@ If \code{test_environment = TRUE}, it switches to the KvK's test environment,
 using a mock API key for testing purposes.
 }
 \examples{
-\dontrun{
-koudum <- kvk_search(plaats = "Koudum")
-koudum
-
-rotterdam <- kvk_search(plaats = "Rotterdam")
-rotterdam
-
-# Use test environment
-test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+# Examples using the production API (requires API key)
+if (nzchar(Sys.getenv("KVK_API_KEY"))) {
+  koudum <- kvk_search(plaats = "Koudum")
+  print(koudum)
+  
+  rotterdam <- kvk_search(plaats = "Rotterdam")
+  print(rotterdam)
 }
+
+# Examples using test environment (no API key required)
+test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
+print(test_data)
 }

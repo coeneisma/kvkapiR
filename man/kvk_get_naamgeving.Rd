@@ -34,12 +34,15 @@ The function retrieves data from the KvK Naamgevingen API.
 test data from the KvK test environment.
 }
 \examples{
-\dontrun{
-# Retrieve naamgeving for a given KvK number
-naamgeving <- kvk_get_naamgeving(kvkNummer = "68750110")
-
-# Retrieve naamgeving from the test environment
-naamgeving_test <- kvk_get_naamgeving(kvkNummer = "68750110", test_environment = TRUE)
+# Examples using the production API (requires API key)
+if (nzchar(Sys.getenv("KVK_API_KEY"))) {
+  # Retrieve naamgeving for a given KvK number
+  naamgeving <- kvk_get_naamgeving(kvkNummer = "68750110")
+  print(naamgeving)
 }
+
+# Examples using test environment (no API key required)
+naamgeving_test <- kvk_get_naamgeving(kvkNummer = "68727720", test_environment = TRUE)
+print(naamgeving_test)
 
 }
