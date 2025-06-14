@@ -147,3 +147,219 @@ calculate_costs <- function(usage_data, monthly_fee = 6.20, cost_per_query = 0.0
     months_active = months_active
   )
 }
+
+#' Generate KvK API usage report
+#' 
+#' @description
+#' Display a summary of your KvK API usage and associated costs.
+#' This function provides insights into your API consumption patterns
+#' and helps track expenses.
+#' 
+#' @param format Character string specifying the output format:
+#'   - "summary" (default): Display a formatted summary in the console
+#'   - "tibble": Return usage data as a tibble with monthly aggregation
+#'   - "tidy": Return usage data in tidy format (one row per API call)
+#' @param year Integer, specific year to filter (default: NULL shows all years).
+#' @param monthly_fee Numeric, monthly API key connection fee in euros (default: 6.20)
+#' @param cost_per_query Numeric, cost per paid query in euros (default: 0.02)
+#' 
+#' @return Depends on format parameter:
+#'   - format="summary": NULL (invisible), displays summary in console
+#'   - format="tibble": A tibble with monthly usage statistics
+#'   - format="tidy": A tibble with all individual API calls
+#' 
+#' @export
+#' @examples
+#' \dontrun{
+#' # Display usage summary for current year
+#' kvk_usage_report()
+#' 
+#' # Get usage data as tibble
+#' usage_tibble <- kvk_usage_report(format = "tibble")
+#' 
+#' # Get raw usage data in tidy format
+#' usage_tidy <- kvk_usage_report(format = "tidy")
+#' 
+#' # Show all historical data
+#' kvk_usage_report(year = NULL)
+#' }
+kvk_usage_report <- function(format = c("summary", "tibble", "tidy"),
+                            year = NULL,
+                            monthly_fee = 6.20,
+                            cost_per_query = 0.02) {
+  
+  format <- match.arg(format)
+  
+  # Load usage data
+  usage_data <- load_usage_data()
+  
+  if (nrow(usage_data) == 0) {
+    if (format == "summary") {
+      cli::cli_alert_info("No API usage recorded yet.")
+      cli::cli_text("Usage tracking automatically records production API calls.")
+      cli::cli_text("Test environment calls are not tracked.")
+      return(invisible(NULL))
+    } else if (format == "tibble") {
+      # Return empty tibble with correct structure
+      return(tibble::tibble(
+        year = integer(),
+        month = integer(),
+        month_name = character(),
+        search = integer(),
+        basisprofiel = integer(),
+        vestigingsprofiel = integer(),
+        naamgeving = integer(),
+        total_calls = integer(),
+        paid_calls = integer(),
+        query_costs = numeric(),
+        base_cost = numeric(),
+        total_cost = numeric()
+      ))
+    } else { # tidy
+      # Return empty tibble with usage data structure
+      return(tibble::as_tibble(usage_data))
+    }
+  }
+  
+  # Filter by year if specified
+  if (!is.null(year)) {
+    if (is.numeric(year)) {
+      year <- as.integer(year)
+    }
+    usage_data <- usage_data[usage_data$year == year, ]
+    
+    if (nrow(usage_data) == 0) {
+      if (format == "summary") {
+        cli::cli_alert_info("No API usage recorded for year {year}.")
+        return(invisible(NULL))
+      } else {
+        # Return empty structure
+        return(kvk_usage_report(format = format, year = as.integer(format(Sys.Date(), "%Y"))))
+      }
+    }
+  }
+  
+  # Return tidy format if requested
+  if (format == "tidy") {
+    return(tibble::as_tibble(usage_data))
+  }
+  
+  # Prepare monthly aggregation
+  monthly_data <- prepare_monthly_usage(usage_data, monthly_fee, cost_per_query)
+  
+  # Return tibble format if requested
+  if (format == "tibble") {
+    return(monthly_data)
+  }
+  
+  # Otherwise display summary
+  display_usage_summary(usage_data, monthly_data, year, monthly_fee, cost_per_query)
+  
+  return(invisible(NULL))
+}
+
+#' Prepare monthly usage data
+#' 
+#' @param usage_data Data frame with usage records
+#' @param monthly_fee Monthly base fee
+#' @param cost_per_query Cost per paid query
+#' @return Tibble with monthly aggregated data
+#' @keywords internal
+prepare_monthly_usage <- function(usage_data, monthly_fee, cost_per_query) {
+  # Create year-month grouping
+  usage_data$year_month <- paste(usage_data$year, 
+                                sprintf("%02d", usage_data$month), 
+                                sep = "-")
+  
+  # Count calls by type per month
+  monthly_counts <- usage_data |>
+    dplyr::group_by(year, month, year_month) |>
+    dplyr::summarise(
+      search = sum(call_type == "search"),
+      basisprofiel = sum(call_type == "basisprofiel"),
+      vestigingsprofiel = sum(call_type == "vestigingsprofiel"),
+      naamgeving = sum(call_type == "naamgeving"),
+      .groups = "drop"
+    )
+  
+  # Calculate costs
+  monthly_counts$total_calls <- monthly_counts$search + monthly_counts$basisprofiel + 
+                               monthly_counts$vestigingsprofiel + monthly_counts$naamgeving
+  monthly_counts$paid_calls <- monthly_counts$basisprofiel + 
+                              monthly_counts$vestigingsprofiel + monthly_counts$naamgeving
+  monthly_counts$query_costs <- monthly_counts$paid_calls * cost_per_query
+  monthly_counts$base_cost <- monthly_fee
+  monthly_counts$total_cost <- monthly_counts$base_cost + monthly_counts$query_costs
+  
+  # Add month name for display
+  monthly_counts$month_name <- format(as.Date(paste0(monthly_counts$year_month, "-01")), "%B")
+  
+  # Select and order columns
+  monthly_counts <- monthly_counts |>
+    dplyr::select(year, month, month_name, search, basisprofiel, vestigingsprofiel, 
+                  naamgeving, total_calls, paid_calls, query_costs, base_cost, total_cost) |>
+    dplyr::arrange(year, month)
+  
+  return(monthly_counts)
+}
+
+#' Display usage summary in console
+#' 
+#' @param usage_data Raw usage data
+#' @param monthly_data Monthly aggregated data
+#' @param year Year filter (NULL for all)
+#' @param monthly_fee Monthly base fee
+#' @param cost_per_query Cost per paid query
+#' @keywords internal
+display_usage_summary <- function(usage_data, monthly_data, year, monthly_fee, cost_per_query) {
+  # Title
+  if (is.null(year)) {
+    cli::cli_h1("KvK API Usage Report (All Time)")
+  } else {
+    cli::cli_h1("KvK API Usage Report ({year})")
+  }
+  
+  # Monthly overview table
+  cli::cli_h2("Monthly Overview")
+  
+  # Create display table
+  display_data <- monthly_data |>
+    dplyr::mutate(
+      Month = paste(month_name, year),
+      Search = search,
+      Basisprofiel = basisprofiel,
+      Vestiging = vestigingsprofiel,
+      Naamgeving = naamgeving,
+      `Costs (€)` = sprintf("%.2f", total_cost)
+    ) |>
+    dplyr::select(Month, Search, Basisprofiel, Vestiging, Naamgeving, `Costs (€)`)
+  
+  # Print table
+  print(knitr::kable(display_data, format = "simple"))
+  
+  # Summary statistics
+  cli::cli_h2("Summary")
+  
+  # Calculate totals
+  total_costs_calc <- calculate_costs(usage_data, monthly_fee, cost_per_query)
+  
+  cli::cli_text("Total API calls: {.val {total_costs_calc$total_calls}} ",
+                "({.val {total_costs_calc$free_calls}} free, ",
+                "{.val {total_costs_calc$paid_calls}} paid)")
+  
+  if (!is.null(year)) {
+    cli::cli_text("Total costs {year}: {.val €{sprintf('%.2f', total_costs_calc$total_costs)}} ",
+                  "({.val €{sprintf('%.2f', total_costs_calc$base_costs)}} base + ",
+                  "{.val €{sprintf('%.2f', total_costs_calc$query_costs)}} queries)")
+  } else {
+    cli::cli_text("Total costs: {.val €{sprintf('%.2f', total_costs_calc$total_costs)}} ",
+                  "({.val €{sprintf('%.2f', total_costs_calc$base_costs)}} base + ",
+                  "{.val €{sprintf('%.2f', total_costs_calc$query_costs)}} queries)")
+  }
+  
+  # Show tracking info
+  cli::cli_h3("Tracking Information")
+  cli::cli_text("Usage data stored in: {.path {get_usage_file_path()}}")
+  cli::cli_text("Disable tracking: Set environment variable {.envvar KVKAPI_DISABLE_TRACKING=true}")
+  cli::cli_text("  In R: {.code Sys.setenv(KVKAPI_DISABLE_TRACKING = 'true')}")
+}
