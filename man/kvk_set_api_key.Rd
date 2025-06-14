@@ -13,8 +13,6 @@ kvk_set_api_key(api_key)
 Invisibly returns \code{TRUE} if the key was set.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function sets the specified KvK API key for the \strong{current R session}
 using \code{Sys.setenv()}. The key will be available until the session ends.
 }

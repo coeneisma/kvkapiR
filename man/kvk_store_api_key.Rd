@@ -16,8 +16,6 @@ API key entry in \code{.Renviron}. Defaults to \code{FALSE}.}
 Invisibly returns \code{TRUE} if the key was added or updated.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function saves the specified KvK API key to the \code{.Renviron} file,
 making it persist across R sessions. If an API key is already stored, you
 must set \code{overwrite = TRUE} to replace it.

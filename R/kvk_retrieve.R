@@ -1,6 +1,5 @@
 #' Retrieve the Basisprofiel for a given KvK number
 #'
-#' @description `r lifecycle::badge('experimental')`
 #'
 #'   This function retrieves the basis profile for a given KvK number
 #'   (`kvkNummer`) using the KvK Basisprofiel API. Users can also request
@@ -133,7 +132,6 @@ kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, tes
 
 #' Retrieve the Vestigingsprofiel for a given establishment number
 #'
-#' @description `r lifecycle::badge('experimental')`
 #'
 #'   This function retrieves the establishment profile (`vestigingsprofiel`) for
 #'   a given establishment number (`vestigingsnummer`) using the KvK
@@ -248,7 +246,6 @@ kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_en
 
 #' Retrieve the Naamgeving for a given KvK number
 #'
-#' @description `r lifecycle::badge('experimental')`
 #'
 #'   This function retrieves the name information (`naamgeving`) for a given KvK
 #'   number (`kvkNummer`) using the KvK Naamgevingen API.

@@ -7,7 +7,6 @@ KVK_RESULTS_PER_PAGE <- 100L
 
 #' Set KvK API Key for the current session
 #'
-#' @description `r lifecycle::badge('experimental')`
 #'
 #'   This function sets the specified KvK API key for the **current R session**
 #'   using `Sys.setenv()`. The key will be available until the session ends.
@@ -37,7 +36,6 @@ kvk_set_api_key <- function(api_key) {
 
 #' Store KvK API Key in .Renviron for persistent use
 #'
-#' @description `r lifecycle::badge('experimental')`
 #'
 #'   This function saves the specified KvK API key to the `.Renviron` file,
 #'   making it persist across R sessions. If an API key is already stored, you

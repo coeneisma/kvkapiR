@@ -32,18 +32,16 @@ A tibble containing the retrieved basis profile. If \code{geoData = TRUE},
 the returned tibble will also include geographical information.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function retrieves the basis profile for a given KvK number
 (\code{kvkNummer}) using the KvK Basisprofiel API. Users can also request
 additional data, such as owner information, main establishment, and other
 locations by specifying the \code{include} parameter.
-
+}
+\details{
 The function also supports the \code{test_environment} argument. When set to
 \code{TRUE}, the function will query the KvK test API environment, providing a
 set of fictitious test data.
-}
-\details{
+
 The function retrieves data from the KvK Basisprofiel API. If
 \code{geoData = TRUE}, geo-data (e.g., location data) will be included in the
 returned profile. The \code{include} parameter allows users to request

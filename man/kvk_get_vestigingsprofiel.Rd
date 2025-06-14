@@ -26,17 +26,15 @@ environment (\code{TRUE}) or the production environment (\code{FALSE}). Defaults
 A tibble containing the retrieved establishment profile. If \code{geoData = TRUE}, the returned tibble will also include geographical information.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function retrieves the establishment profile (\code{vestigingsprofiel}) for
 a given establishment number (\code{vestigingsnummer}) using the KvK
 Vestigingsprofiel API.
-
+}
+\details{
 The function also supports the \code{test_environment} argument. When set to
 \code{TRUE}, the function will query the KvK test API environment, providing a
 set of fictitious test data.
-}
-\details{
+
 The function retrieves data from the KvK Vestigingsprofiel API. If
 \code{geoData = TRUE}, geo-data (e.g., location data) will be included in the
 returned profile.

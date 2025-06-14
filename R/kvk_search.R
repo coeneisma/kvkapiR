@@ -1,6 +1,5 @@
 #' Retrieve all results from the KvK Search API (up to 1,000 results)
 #'
-#' @description `r lifecycle::badge('experimental')`
 #'
 #' This function automatically paginates through the KvK API to collect
 #' available results. Due to API limitations, it retrieves a maximum of 1,000

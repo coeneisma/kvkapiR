@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 
 The goal of kvkapiR is to provide a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) APIs. This package is built using the httr2 package and follows best practices for wrapping APIs in R, as outlined in the [httr2 documentation](https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
 
-Currently, the package provides access to the [following KvK APIs](https://developers.kvk.nl/documentation#available-apis):
+The package provides access to [all the KvK APIs](https://developers.kvk.nl/documentation#available-apis):
 
 * KvK Search API
 * KvK Basisprofiel API

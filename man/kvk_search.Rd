@@ -20,12 +20,11 @@ found under the \code{Results} section of
 \url{https://developers.kvk.nl/documentation/zoeken-api#output}.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function automatically paginates through the KvK API to collect
 available results. Due to API limitations, it retrieves a maximum of 1,000
 records. When this happens, a warning will be displayed.
-
+}
+\details{
 If \code{test_environment = TRUE}, it switches to the KvK's test environment,
 using a mock API key for testing purposes.
 }

@@ -18,16 +18,14 @@ environment (\code{TRUE}) or the production environment (\code{FALSE}). Defaults
 A tibble containing the retrieved name information.
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function retrieves the name information (\code{naamgeving}) for a given KvK
 number (\code{kvkNummer}) using the KvK Naamgevingen API.
-
+}
+\details{
 The function also supports the \code{test_environment} argument. When set to
 \code{TRUE}, the function will query the KvK test API environment, providing a
 set of fictitious test data.
-}
-\details{
+
 The function retrieves data from the KvK Naamgevingen API.
 
 \strong{Important:} If \code{test_environment = TRUE}, no actual API key is required. You will be using
