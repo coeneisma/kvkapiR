@@ -125,6 +125,9 @@ kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, tes
   # Parse successful response
   response <- httr2::resp_body_json(resp) |> list_to_tibble()
   
+  # Record successful API call for usage tracking
+  record_api_call("basisprofiel", test_environment)
+  
   return(response)
 }
 
@@ -237,6 +240,9 @@ kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_en
   # Parse successful response
   response <- httr2::resp_body_json(resp) |> list_to_tibble()
   
+  # Record successful API call for usage tracking
+  record_api_call("vestigingsprofiel", test_environment)
+  
   return(response)
 }
 
@@ -334,6 +340,9 @@ kvk_get_naamgeving <- function(kvkNummer, test_environment = FALSE) {
   
   # Parse successful response
   response <- httr2::resp_body_json(resp) |> list_to_tibble()
+  
+  # Record successful API call for usage tracking
+  record_api_call("naamgeving", test_environment)
   
   return(response)
 }

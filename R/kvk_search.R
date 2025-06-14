@@ -126,5 +126,9 @@ kvk_search <- function(..., test_environment = FALSE) {
   data <- dplyr::tibble(content = all_results) |>
     tidyr::unnest_wider(col = content)
 
+  # Record successful API call(s) for usage tracking
+  # Note: we record once per search, not per page
+  record_api_call("search", test_environment)
+
   return(data)
 }
