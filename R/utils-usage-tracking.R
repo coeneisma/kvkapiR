@@ -96,6 +96,9 @@ record_api_call <- function(call_type, test_environment = FALSE) {
   # Save updated data
   save_usage_data(usage_data)
   
+  # Check for alerts AFTER recording the new call
+  check_usage_alerts_realtime(usage_data, call_type)
+  
   invisible(NULL)
 }
 
@@ -604,6 +607,87 @@ check_usage_alerts <- function(usage_data, year = NULL) {
   
   if (alerts_triggered) {
     cli::cli_text("")  # Empty line for spacing
+  }
+  
+  return(invisible(NULL))
+}
+
+#' Check usage alerts in real-time when recording a call
+#' 
+#' @param usage_data Updated usage data including the new call
+#' @param call_type Type of the call just made
+#' @keywords internal
+check_usage_alerts_realtime <- function(usage_data, call_type) {
+  # Get alert settings
+  max_calls <- getOption("kvkapiR.alert_max_calls")
+  max_cost <- getOption("kvkapiR.alert_max_cost")
+  period <- getOption("kvkapiR.alert_period", "month")
+  
+  if (is.null(max_calls) && is.null(max_cost)) {
+    return(invisible(NULL))
+  }
+  
+  # Filter data based on period
+  current_date <- Sys.Date()
+  
+  if (period == "month") {
+    # Current month only
+    usage_subset <- usage_data[
+      usage_data$year == as.integer(format(current_date, "%Y")) &
+      usage_data$month == as.integer(format(current_date, "%m")),
+    ]
+    period_desc <- format(current_date, "%B %Y")
+  } else if (period == "year") {
+    # Current year
+    usage_subset <- usage_data[
+      usage_data$year == as.integer(format(current_date, "%Y")),
+    ]
+    period_desc <- as.character(format(current_date, "%Y"))
+  } else {
+    # Total (all data)
+    usage_subset <- usage_data
+    period_desc <- "all time"
+  }
+  
+  # Calculate current usage
+  costs <- calculate_costs(usage_subset)
+  
+  # Calculate usage BEFORE this call (for "just exceeded" detection)
+  usage_before <- usage_subset[seq_len(nrow(usage_subset) - 1), ]
+  costs_before <- if (nrow(usage_before) > 0) {
+    calculate_costs(usage_before)
+  } else {
+    list(total_calls = 0, total_costs = 0)
+  }
+  
+  # Check if we JUST exceeded the limits with this call
+  call_cost <- ifelse(call_type == "search", 0, 0.02)
+  call_desc <- ifelse(call_type == "search", "search (free)", 
+                     paste0(call_type, " (€0.02)"))
+  
+  # Check call limit
+  if (!is.null(max_calls)) {
+    if (costs_before$total_calls < max_calls && costs$total_calls >= max_calls) {
+      cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
+      cli::cli_alert_warning(paste0(
+        "{.alert USAGE LIMIT ALERT}: This {.val {call_desc}} call brings your total to ",
+        "{.val {costs$total_calls}} calls, exceeding the limit of {.val {max_calls}} for {period_desc}!"
+      ))
+      cli::cli_end()
+    }
+  }
+  
+  # Check cost limit
+  if (!is.null(max_cost)) {
+    if (costs_before$total_costs < max_cost && costs$total_costs >= max_cost) {
+      cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
+      cli::cli_alert_warning(paste0(
+        "{.alert COST LIMIT ALERT}: This {.val {call_desc}} call brings your total cost to ",
+        "{.val €{sprintf('%.2f', costs$total_costs)}}, exceeding the limit of {.val €{max_cost}} for {period_desc}!"
+      ))
+      cli::cli_text("  Consider using {.code kvk_usage_report()} to review your usage.")
+      cli::cli_end()
+    }
   }
   
   return(invisible(NULL))

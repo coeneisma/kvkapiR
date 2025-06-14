@@ -342,3 +342,62 @@ test_that("check_usage_alerts triggers correctly", {
     kvkapiR.alert_period = NULL
   )
 })
+
+test_that("real-time alerts trigger during record_api_call", {
+  temp_file <- tempfile(fileext = ".rds")
+  
+  # Save current options
+  old_calls <- getOption("kvkapiR.alert_max_calls")
+  old_cost <- getOption("kvkapiR.alert_max_cost")
+  old_period <- getOption("kvkapiR.alert_period")
+  
+  with_mocked_bindings(
+    get_usage_file_path = function() temp_file,
+    {
+      # Set low limits for testing
+      options(
+        kvkapiR.alert_max_calls = 2,
+        kvkapiR.alert_max_cost = 6.21,  # Just above base cost
+        kvkapiR.alert_period = "month"
+      )
+      
+      # First call should not trigger
+      expect_silent(record_api_call("search", FALSE))
+      
+      # Second call should trigger usage alert (limit is 2, this makes it 2)
+      expect_message(
+        record_api_call("search", FALSE),
+        "USAGE LIMIT ALERT"
+      )
+      
+      # Reset data for cost test
+      save_usage_data(data.frame(
+        timestamp = as.POSIXct(character(0)),
+        date = as.Date(character(0)),
+        year = integer(0),
+        month = integer(0),
+        call_type = character(0),
+        test_environment = logical(0),
+        stringsAsFactors = FALSE
+      ))
+      
+      # Add one search call (base cost only: €6.20) - should not trigger
+      expect_silent(record_api_call("search", FALSE))
+      
+      # Adding paid call should trigger cost alert (€6.20 + €0.02 = €6.22 > €6.21)
+      expect_message(
+        record_api_call("basisprofiel", FALSE),
+        "COST LIMIT ALERT"
+      )
+    }
+  )
+  
+  # Restore options
+  options(
+    kvkapiR.alert_max_calls = old_calls,
+    kvkapiR.alert_max_cost = old_cost,
+    kvkapiR.alert_period = old_period
+  )
+  
+  unlink(temp_file)
+})
