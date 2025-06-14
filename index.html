@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>An R Wrapper for the Dutch Chamber of Commerce API • kvkapiR</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" sizes="any" href="favicon.ico">
+<link rel="manifest" href="site.webmanifest">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -91,40 +90,40 @@
 <span></span>
 <span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; # A tibble: 506 × 6</span></span>
+<span><span class="co">#&gt; # A tibble: 509 × 6</span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                    &lt;list&gt;       &lt;chr&gt; &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  1 01036576  000007810083     Stichting Gemeenschapsc… &lt;named list&gt; neve… &lt;list&gt;</span></span>
-<span><span class="co">#&gt;  2 60112891  000045511098     Corriente 't Kofjehúske  &lt;named list&gt; neve… &lt;list&gt;</span></span>
-<span><span class="co">#&gt;  3 92692966  000032358083     M. de Boer               &lt;named list&gt; neve… &lt;list&gt;</span></span>
+<span><span class="co">#&gt;  2 92692966  000032358083     M. de Boer               &lt;named list&gt; neve… &lt;list&gt;</span></span>
+<span><span class="co">#&gt;  3 60112891  000045511098     Corriente 't Kofjehúske  &lt;named list&gt; neve… &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  4 40005051  000021251479     Bogerman                 &lt;named list&gt; neve… &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  5 30168016  000057781184     It Fûgelnêst             &lt;named list&gt; neve… &lt;list&gt;</span></span>
-<span><span class="co">#&gt;  6 58496505  000027833429     HFK Verhuur              &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt;  7 62724843  000031708129     De Klink Exploitatie B.… &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt;  8 01123666  000040288196     Winterberging IJzendoorn &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt;  9 40001473  000000303062     De Sândobbe              &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt; 10 01091668  000000678279     Multiservice Beheer en … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt; # ℹ 496 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt;  6 01123666  000040288196     Winterberging IJzendoorn &lt;named list&gt; hoof… &lt;list&gt;</span></span>
+<span><span class="co">#&gt;  7 58496505  000027833429     HFK Verhuur              &lt;named list&gt; hoof… &lt;list&gt;</span></span>
+<span><span class="co">#&gt;  8 62724843  000031708129     De Klink Exploitatie B.… &lt;named list&gt; hoof… &lt;list&gt;</span></span>
+<span><span class="co">#&gt;  9 01091668  000000678279     Multiservice Beheer en … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
+<span><span class="co">#&gt; 10 41005555  000021707499     Stichting Jongerenwerk … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
+<span><span class="co">#&gt; # ℹ 499 more rows</span></span></code></pre></div>
 <p>You can also combine multiple search parameters:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://coeneisma.github.io/kvkapiR/">kvkapiR</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"huisartsen"</span>, plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span>
 <span><span class="va">rotterdam</span></span>
-<span><span class="co">#&gt; # A tibble: 202 × 7</span></span>
+<span><span class="co">#&gt; # A tibble: 200 × 7</span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;      &lt;list&gt;       &lt;chr&gt; &lt;list&gt; &lt;chr&gt;        </span></span>
 <span><span class="co">#&gt;  1 24475068  000009219072     Wijkprakt… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
 <span><span class="co">#&gt;  2 81943938  000048204625     Jans Huis… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  3 24484189  000016351312     Sanitas H… &lt;named list&gt; neve… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  4 24477358  000010787356     Van Schai… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  5 66346339  000034979034     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  6 62380281  000031391419     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  7 54446538  000024210382     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  8 24484189  000036373648     Sanitas H… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  9 85464007  000051508060     itj huisa… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt; 10 24476795  000010613765     Baggerman… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt; # ℹ 192 more rows</span></span></code></pre></div>
+<span><span class="co">#&gt;  3 24477358  000010787356     Van Schai… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt;  4 24484189  000016351312     Sanitas H… &lt;named list&gt; neve… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt;  5 97110795  000062375466     Dante Hui… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt;  6 66346339  000034979034     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt;  7 62380281  000031391419     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt;  8 54446538  000024210382     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt;  9 24484189  000036373648     Sanitas H… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt; 10 85464007  000051508060     itj huisa… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
+<span><span class="co">#&gt; # ℹ 190 more rows</span></span></code></pre></div>
 <p>See <code>vignette("kvkapiR")</code> for more examples and information about the usage of this package.</p>
 </div>
 </div>
@@ -154,13 +153,14 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Coen Eisma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0007-9001-2572" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Coen Eisma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0007-9001-2572" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://github.com/coeneisma/kvkapiR/actions" class="external-link"><img src="https://github.com/coeneisma/kvkapiR/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
@@ -174,7 +174,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

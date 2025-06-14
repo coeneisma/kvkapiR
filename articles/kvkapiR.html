@@ -6,12 +6,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>kvkapiR • kvkapiR</title>
-<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
-<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
-<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
-<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
+<!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="../favicon-96x96.png">
+<link rel="icon" type="”image/svg+xml”" href="../favicon.svg">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" sizes="any" href="../favicon.ico">
+<link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -71,7 +70,7 @@ built using the httr2 package and follows best practices for wrapping
 APIs in R, as outlined in the <a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link">httr2
 documentation</a>. It simplifies authentication, request handling, and
 response parsing when interacting with the KvK API.</p>
-<p>Currently, the package provides access to the <a href="https://developers.kvk.nl/documentation#available-apis" class="external-link">following
+<p>The package provides access to <a href="https://developers.kvk.nl/documentation#available-apis" class="external-link">all the
 KvK APIs</a>:</p>
 <ul>
 <li>KvK Search API</li>
@@ -79,8 +78,8 @@ KvK APIs</a>:</p>
 <li>KvK Vestigingsprofiel API</li>
 <li>KvK Naamgeving API</li>
 </ul>
-<p>More details can be found <a href="https://developers.kvk.nl/apis" class="external-link">on
-the developers website of the KvK</a>.</p>
+<p>More details on the API can be found <a href="https://developers.kvk.nl/apis" class="external-link">on the developers website of the
+KvK</a>.</p>
 <div class="section level2">
 <h2 id="loading-the-package">Loading the package<a class="anchor" aria-label="anchor" href="#loading-the-package"></a>
 </h2>
@@ -156,20 +155,20 @@ request.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 506 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 510 × 6</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01036576  000007810083     Stichting Gemeenschapsc… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 60112891  000045511098     Corriente 't Kofjehúske  <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 92692966  000032358083     M. de Boer               <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 92692966  000032358083     M. de Boer               <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 60112891  000045511098     Corriente 't Kofjehúske  <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 40005051  000021251479     Bogerman                 <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 30168016  000057781184     It Fûgelnêst             <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 58496505  000027833429     HFK Verhuur              <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 62724843  000031708129     De Klink Exploitatie B.… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 01123666  000040288196     Winterberging IJzendoorn <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 40001473  000000303062     De Sândobbe              <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 01091668  000000678279     Multiservice Beheer en … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 496 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 01123666  000040288196     Winterberging IJzendoorn <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 58496505  000027833429     HFK Verhuur              <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 62724843  000031708129     De Klink Exploitatie B.… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 01091668  000000678279     Multiservice Beheer en … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 41005555  000021707499     Stichting Jongerenwerk … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 500 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="example-2-single-variable-more-then-1-000-records">Example 2: single variable, more then 1.000 records<a class="anchor" aria-label="anchor" href="#example-2-single-variable-more-then-1-000-records"></a>
@@ -180,21 +179,21 @@ registrations in Rotterdam will return more than 1,000 records,
 exceeding the API limit. When this happens, a warning is displayed:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> API response contains more than 1,000 results. Only the first 1,000 will be retrieved.</span></span>
+<span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> API response contains more than 1000 results. Only the first 1000 will be retrieved.</span></span>
 <span><span class="va">rotterdam</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,000 × 6</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 24483298  000023336749     Klooster Afrikaander     <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 34360247  000022666397     UWV WERKbedrijf Rotterd… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 24483298  000022493352     Gemeentewerken Rotterda… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 30019112  000022201726     Albron Campus Catering   <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 41126601  000023151153     Albert Schweitzer Groep… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 24335233  000010150471     Shop Rosie               <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 24483298  000022962077     GGD Rotterdam-Rijnmond   <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 55999271  000025728989     Ouderfonds o.b.s. Bloem… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 41125508  000025656058     Dikkertje Dap Centrum    <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 40342002  000023539585     Sint Michael Basisschool <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 30019112  000022201726     Albron Campus Catering   <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 41126601  000023151153     Albert Schweitzer Groep… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 24483298  000023336749     Klooster Afrikaander     <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 34360247  000022666397     UWV WERKbedrijf Rotterd… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 24483298  000022493352     Gemeentewerken Rotterda… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 24104827  000020343264     Simonis Verf B.V.        <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 24335233  000010150471     Shop Rosie               <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 24483298  000022962077     GGD Rotterdam-Rijnmond   <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 34238535  000060066164     Levéo Groep B.V.         <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 27295998  000059996013     Temporary Works Design … <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 990 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -219,12 +218,12 @@ operation by default.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 01048627  000003587142     Snackwage… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR 'T…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 09053061  000006155480     Cafetaria… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR 'T…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 33167324  000003928373     Cafetaria… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar/Av…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 01117517  <span style="color: #BB0000;">NA</span>               Snackbar … <span style="color: #949494;">&lt;NULL&gt;</span>       rech… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 06046872  000014471450     Toon´s et… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR 'T…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 34148178  000002749122     Grillroom… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 81885326  000014587653     Snackbar … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 08714826  <span style="color: #BB0000;">NA</span>               V.O.F. Sn… <span style="color: #949494;">&lt;NULL&gt;</span>       rech… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 01047770  000019937814     Jack's Ca… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR \"…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 06046872  000014471450     Toon´s et… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR 'T…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 34148178  000002749122     Grillroom… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 81885326  000014587653     Snackbar … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 01047770  000019937814     Jack's Ca… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR \"…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 01117517  <span style="color: #BB0000;">NA</span>               Snackbar … <span style="color: #949494;">&lt;NULL&gt;</span>       rech… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 08714826  <span style="color: #BB0000;">NA</span>               V.O.F. Sn… <span style="color: #949494;">&lt;NULL&gt;</span>       rech… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 06046872  <span style="color: #BB0000;">NA</span>               Toon´s et… <span style="color: #949494;">&lt;NULL&gt;</span>       rech… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>SNACKBAR 'T…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 04034441  <span style="color: #BB0000;">NA</span>               Klaver 4 … <span style="color: #949494;">&lt;NULL&gt;</span>       rech… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
@@ -237,7 +236,7 @@ contains both <code>snackbar</code> and <code>hoek</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">snackbar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Utrecht"</span>, naam <span class="op">=</span> <span class="st">"snackbar"</span><span class="op">)</span></span>
 <span><span class="va">snackbar</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 18 × 7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 17 × 7</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 30055828  000001534106     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
@@ -253,11 +252,10 @@ contains both <code>snackbar</code> and <code>hoek</code>:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 30050751  000007808208     <span style="color: #949494;">"</span>Petit-Re… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 30192953  000002554313     <span style="color: #949494;">"</span>Cafetari… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 30156975  000013513508     <span style="color: #949494;">"</span>Bestaria… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 86701452  000001472798     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar Li…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 59334843  000005957397     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span>          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 29036082  000020552270     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 76537293  000044313047     <span style="color: #949494;">"</span>Biltstra… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">18</span> 76449548  000044233884     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 86470833  000005957397     <span style="color: #949494;">"</span>Giros<span style="color: #949494;">"</span>    <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar Gi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 29036082  000020552270     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 76537293  000044313047     <span style="color: #949494;">"</span>Biltstra… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 76449548  000044233884     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="example-5-search-on-adress">Example 5: search on adress<a class="anchor" aria-label="anchor" href="#example-5-search-on-adress"></a>
@@ -352,7 +350,7 @@ streamlines access to Dutch business registration data.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
