@@ -255,6 +255,9 @@ kvk_usage_report <- function(format = c("summary", "tibble", "tidy"),
   # Otherwise display summary
   display_usage_summary(usage_data, monthly_data, year, monthly_fee, cost_per_query)
   
+  # Check for alerts
+  check_usage_alerts(usage_data, year)
+  
   return(invisible(NULL))
 }
 
@@ -362,4 +365,246 @@ display_usage_summary <- function(usage_data, monthly_data, year, monthly_fee, c
   cli::cli_text("Usage data stored in: {.path {get_usage_file_path()}}")
   cli::cli_text("Disable tracking: Set environment variable {.envvar KVKAPI_DISABLE_TRACKING=true}")
   cli::cli_text("  In R: {.code Sys.setenv(KVKAPI_DISABLE_TRACKING = 'true')}")
+}
+
+#' Reset KvK API usage statistics
+#' 
+#' @description
+#' Remove all stored API usage data. This action cannot be undone.
+#' 
+#' @param confirm Logical, require confirmation before deleting (default: TRUE).
+#'   Set to FALSE to skip confirmation prompt.
+#' 
+#' @return Logical, TRUE if data was successfully reset, FALSE otherwise.
+#' 
+#' @export
+#' @examples
+#' \dontrun{
+#' # Reset with confirmation prompt
+#' kvk_reset_usage()
+#' 
+#' # Reset without confirmation (use with caution)
+#' kvk_reset_usage(confirm = FALSE)
+#' }
+kvk_reset_usage <- function(confirm = TRUE) {
+  usage_file <- get_usage_file_path()
+  
+  if (!file.exists(usage_file)) {
+    cli::cli_alert_info("No usage data found to reset.")
+    return(invisible(FALSE))
+  }
+  
+  # Get current stats before deletion
+  usage_data <- load_usage_data()
+  stats <- calculate_costs(usage_data)
+  
+  if (confirm) {
+    cli::cli_alert_warning("This will delete all API usage history:")
+    cli::cli_text("  • {.val {stats$total_calls}} API calls recorded")
+    cli::cli_text("  • {.val €{sprintf('%.2f', stats$total_costs)}} in tracked costs")
+    cli::cli_text("  • Data from {.val {stats$months_active}} month(s)")
+    
+    if (!interactive()) {
+      cli::cli_abort("Cannot reset usage data in non-interactive mode. Use {.code confirm = FALSE} to force reset.")
+    }
+    
+    # Use menu for cleaner interaction
+    response <- utils::menu(
+      choices = c("Yes, delete all usage data", "No, keep the data"),
+      title = "\nAre you sure you want to continue?"
+    )
+    
+    if (response != 1) {
+      cli::cli_alert_info("Reset cancelled.")
+      return(invisible(FALSE))
+    }
+  }
+  
+  # Delete the file
+  file.remove(usage_file)
+  cli::cli_alert_success("Usage data has been reset.")
+  
+  return(invisible(TRUE))
+}
+
+#' Export KvK API usage data
+#' 
+#' @description
+#' Export usage data to a CSV file for external analysis or record keeping.
+#' 
+#' @param file Character string, path to export file. If NULL (default),
+#'   exports to "kvk_usage_YYYY-MM-DD.csv" in current directory.
+#' @param format Character string, data format to export:
+#'   - "tidy": Raw usage data (one row per API call)
+#'   - "monthly": Monthly aggregated data
+#' 
+#' @return Character string with the path to the exported file (invisible).
+#' 
+#' @export
+#' @examples
+#' \dontrun{
+#' # Export to default filename
+#' kvk_export_usage()
+#' 
+#' # Export to specific file
+#' kvk_export_usage("my_usage_data.csv")
+#' 
+#' # Export monthly summary
+#' kvk_export_usage(format = "monthly")
+#' }
+kvk_export_usage <- function(file = NULL, format = c("tidy", "monthly")) {
+  format <- match.arg(format)
+  
+  # Load usage data
+  usage_data <- load_usage_data()
+  
+  if (nrow(usage_data) == 0) {
+    cli::cli_alert_info("No usage data to export.")
+    return(invisible(NULL))
+  }
+  
+  # Prepare data based on format
+  if (format == "tidy") {
+    export_data <- usage_data
+  } else {
+    export_data <- prepare_monthly_usage(usage_data, 6.20, 0.02)
+  }
+  
+  # Determine filename
+  if (is.null(file)) {
+    file <- sprintf("kvk_usage_%s.csv", format(Sys.Date(), "%Y-%m-%d"))
+  }
+  
+  # Export to CSV
+  utils::write.csv(export_data, file, row.names = FALSE)
+  
+  cli::cli_alert_success("Usage data exported to: {.path {file}}")
+  cli::cli_text("  Format: {.val {format}}")
+  cli::cli_text("  Records: {.val {nrow(export_data)}}")
+  
+  return(invisible(file))
+}
+
+#' Set usage alert thresholds
+#' 
+#' @description
+#' Configure alerts for when API usage exceeds specified thresholds.
+#' Alerts are shown when calling kvk_usage_report().
+#' 
+#' @param max_calls Integer, maximum number of API calls before alert.
+#'   Set to NULL to disable call limit alert.
+#' @param max_cost Numeric, maximum cost in euros before alert.
+#'   Set to NULL to disable cost limit alert.
+#' @param period Character string, period for limits:
+#'   - "month": Limits apply per calendar month
+#'   - "year": Limits apply per calendar year
+#'   - "total": Limits apply to all-time usage
+#' 
+#' @return NULL (invisible). Alerts are stored as options.
+#' 
+#' @export
+#' @examples
+#' \dontrun{
+#' # Set monthly limit of 100 calls
+#' kvk_usage_alert(max_calls = 100, period = "month")
+#' 
+#' # Set yearly cost limit of €50
+#' kvk_usage_alert(max_cost = 50, period = "year")
+#' 
+#' # Set both limits
+#' kvk_usage_alert(max_calls = 500, max_cost = 25, period = "month")
+#' 
+#' # Disable alerts
+#' kvk_usage_alert(max_calls = NULL, max_cost = NULL)
+#' }
+kvk_usage_alert <- function(max_calls = NULL, max_cost = NULL, 
+                           period = c("month", "year", "total")) {
+  period <- match.arg(period)
+  
+  # Store in options
+  options(
+    kvkapiR.alert_max_calls = max_calls,
+    kvkapiR.alert_max_cost = max_cost,
+    kvkapiR.alert_period = period
+  )
+  
+  # Show confirmation
+  if (is.null(max_calls) && is.null(max_cost)) {
+    cli::cli_alert_success("Usage alerts disabled.")
+  } else {
+    cli::cli_alert_success("Usage alerts configured:")
+    if (!is.null(max_calls)) {
+      cli::cli_text("  • Max calls: {.val {max_calls}} per {period}")
+    }
+    if (!is.null(max_cost)) {
+      cli::cli_text("  • Max cost: {.val €{max_cost}} per {period}")
+    }
+  }
+  
+  return(invisible(NULL))
+}
+
+#' Check usage against alert thresholds
+#' 
+#' @param usage_data Data frame with usage data
+#' @param year Optional year filter
+#' @keywords internal
+check_usage_alerts <- function(usage_data, year = NULL) {
+  # Get alert settings
+  max_calls <- getOption("kvkapiR.alert_max_calls")
+  max_cost <- getOption("kvkapiR.alert_max_cost")
+  period <- getOption("kvkapiR.alert_period", "month")
+  
+  if (is.null(max_calls) && is.null(max_cost)) {
+    return(invisible(NULL))
+  }
+  
+  # Filter data based on period and year
+  current_date <- Sys.Date()
+  
+  if (period == "month") {
+    # Current month only
+    usage_subset <- usage_data[
+      usage_data$year == as.integer(format(current_date, "%Y")) &
+      usage_data$month == as.integer(format(current_date, "%m")),
+    ]
+    period_desc <- format(current_date, "%B %Y")
+  } else if (period == "year") {
+    # Current year or specified year
+    target_year <- ifelse(is.null(year), 
+                         as.integer(format(current_date, "%Y")), 
+                         year)
+    usage_subset <- usage_data[usage_data$year == target_year, ]
+    period_desc <- as.character(target_year)
+  } else {
+    # Total (all data)
+    usage_subset <- usage_data
+    period_desc <- "all time"
+  }
+  
+  if (nrow(usage_subset) == 0) {
+    return(invisible(NULL))
+  }
+  
+  # Calculate current usage
+  costs <- calculate_costs(usage_subset)
+  
+  # Check thresholds
+  alerts_triggered <- FALSE
+  
+  if (!is.null(max_calls) && costs$total_calls > max_calls) {
+    cli::cli_alert_warning("Usage alert: {.val {costs$total_calls}} calls exceeds limit of {.val {max_calls}} for {period_desc}")
+    alerts_triggered <- TRUE
+  }
+  
+  if (!is.null(max_cost) && costs$total_costs > max_cost) {
+    cli::cli_alert_warning("Cost alert: {.val €{sprintf('%.2f', costs$total_costs)}} exceeds limit of {.val €{max_cost}} for {period_desc}")
+    alerts_triggered <- TRUE
+  }
+  
+  if (alerts_triggered) {
+    cli::cli_text("")  # Empty line for spacing
+  }
+  
+  return(invisible(NULL))
 }
