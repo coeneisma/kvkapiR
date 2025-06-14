@@ -30,7 +30,7 @@ If \code{test_environment = TRUE}, it switches to the KvK's test environment,
 using a mock API key for testing purposes.
 }
 \examples{
-
+\dontrun{
 koudum <- kvk_search(plaats = "Koudum")
 koudum
 
@@ -39,5 +39,5 @@ rotterdam
 
 # Use test environment
 test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
-test_data
+}
 }

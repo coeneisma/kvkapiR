@@ -21,7 +21,7 @@
 #'
 #' @export
 #' @examples
-#'
+#' \dontrun{
 #' koudum <- kvk_search(plaats = "Koudum")
 #' koudum
 #'
@@ -30,7 +30,7 @@
 #'
 #' # Use test environment
 #' test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
-#' test_data
+#' }
 kvk_search <- function(..., test_environment = FALSE) {
 
   # Determine API URL and API key based on test environment flag
