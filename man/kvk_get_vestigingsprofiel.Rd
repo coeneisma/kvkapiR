@@ -43,18 +43,17 @@ returned profile.
 test data from the KvK test environment.
 }
 \examples{
+\dontshow{if (nzchar(Sys.getenv("KVK_API_KEY"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Examples using the production API (requires API key)
-if (nzchar(Sys.getenv("KVK_API_KEY"))) {
-  # Retrieve vestigingsprofiel for a given establishment number
-  vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
-  print(vestigingsprofiel)
-  
-  # Retrieve vestigingsprofiel with geo-data
-  vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(
-    vestigingsnummer = "000038509504", 
-    geoData = TRUE
-  )
-}
+# Retrieve vestigingsprofiel for a given establishment number
+vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
+print(vestigingsprofiel)
+
+# Retrieve vestigingsprofiel with geo-data
+vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(
+  vestigingsnummer = "000038509504", 
+  geoData = TRUE
+)
 
 # Examples using test environment (no API key required)
 vestigingsprofiel_test <- kvk_get_vestigingsprofiel(
@@ -62,5 +61,5 @@ vestigingsprofiel_test <- kvk_get_vestigingsprofiel(
   test_environment = TRUE
 )
 print(vestigingsprofiel_test)
-
+\dontshow{\}) # examplesIf}
 }

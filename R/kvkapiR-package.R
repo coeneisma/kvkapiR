@@ -16,4 +16,15 @@ utils::globalVariables(c(
   "Month", "Search", "Basisprofiel", "Vestiging", "Naamgeving", "Costs (EUR)"
 ))
 
+.onAttach <- function(libname, pkgname) {
+  # Show usage tracking info on first load
+  if (interactive() && is.null(getOption("kvkapiR.usage_tracking_opted_in"))) {
+    packageStartupMessage(
+      "Welcome to kvkapiR! This package can track your API usage to help monitor costs.\n",
+      "You'll be asked about this when making your first API call.\n",
+      "To disable tracking, use: Sys.setenv(KVKAPI_DISABLE_TRACKING = 'true')"
+    )
+  }
+}
+
 NULL

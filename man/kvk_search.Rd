@@ -29,16 +29,16 @@ If \code{test_environment = TRUE}, it switches to the KvK's test environment,
 using a mock API key for testing purposes.
 }
 \examples{
+\dontshow{if (nzchar(Sys.getenv("KVK_API_KEY"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Examples using the production API (requires API key)
-if (nzchar(Sys.getenv("KVK_API_KEY"))) {
-  koudum <- kvk_search(plaats = "Koudum")
-  print(koudum)
-  
-  rotterdam <- kvk_search(plaats = "Rotterdam")
-  print(rotterdam)
-}
+koudum <- kvk_search(plaats = "Koudum")
+print(koudum)
+
+rotterdam <- kvk_search(plaats = "Rotterdam")
+print(rotterdam)
 
 # Examples using test environment (no API key required)
 test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)
 print(test_data)
+\dontshow{\}) # examplesIf}
 }

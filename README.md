@@ -5,9 +5,9 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/kvkapiR)](https://CRAN.R-project.org/package=kvkapiR)
 [![R-CMD-check](https://github.com/coeneisma/kvkapiR/workflows/R-CMD-check/badge.svg)](https://github.com/coeneisma/kvkapiR/actions)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of kvkapiR is to provide a convenient R programming language
@@ -18,7 +18,7 @@ documentation](https://httr2.r-lib.org/articles/wrapping-apis.html). It
 simplifies authentication, request handling, and response parsing when
 interacting with the KvK API.
 
-Currently, the package provides access to the [following KvK
+The package provides access to [all the KvK
 APIs](https://developers.kvk.nl/documentation#available-apis):
 
 - KvK Search API
@@ -31,7 +31,15 @@ KvK](https://developers.kvk.nl/apis).
 
 ## Installation
 
-You can install the development version of `kvkapiR` from
+The package has been submitted to CRAN for review. Once it’s accepted
+and the CRAN status badge above shows “CRAN: OK”, you can install the
+stable version from CRAN with:
+
+``` r
+install.packages("kvkapiR")
+```
+
+Until then, you can install the current stable version from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -46,17 +54,43 @@ To install the latest development version:
 devtools::install_github("coeneisma/kvkapiR", ref = "development")
 ```
 
-## Example
+## Setting up API Access
 
-Here are basic examples demonstrating how to use the `kvk_search()`
-function to retrieve KvK registrations:
+### API Key
+
+To use the KvK API, you need an API key. You can apply for one at the
+[KvK Developer
+Portal](https://developers.kvk.nl/apply-for-apis?step=api-overview).
+
+``` r
+# Set API key for current session
+kvk_set_api_key("your_api_key_here")
+
+# Or store permanently in .Renviron
+kvk_store_api_key("your_api_key_here")
+```
+
+### Test Environment
+
+The package includes support for the KvK test environment with fictional
+Donald Duck data:
+
+``` r
+# No API key needed for test environment
+test_results <- kvk_search(naam = "Donald Duck", test_environment = TRUE)
+```
+
+## Basic Usage
+
+### Search for Businesses
 
 ``` r
 library(kvkapiR)
 
+# Search by location
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 509 × 6
+#> # A tibble: 510 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -69,31 +103,83 @@ koudum
 #>  8 62724843  000031708129     De Klink Exploitatie B.… <named list> hoof… <list>
 #>  9 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
 #> 10 41005555  000021707499     Stichting Jongerenwerk … <named list> hoof… <list>
-#> # ℹ 499 more rows
-```
+#> # ℹ 500 more rows
 
-You can also combine multiple search parameters:
-
-``` r
-library(kvkapiR)
-
-rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
-rotterdam
-#> # A tibble: 200 × 7
+# Combine search criteria
+snackbar <- kvk_search(naam = "snackbar", plaats = "Utrecht")
+snackbar
+#> # A tibble: 17 × 7
 #>    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam
 #>    <chr>     <chr>            <chr>      <list>       <chr> <list> <chr>        
-#>  1 24475068  000009219072     Wijkprakt… <named list> hoof… <list> <NA>         
-#>  2 81943938  000048204625     Jans Huis… <named list> hoof… <list> <NA>         
-#>  3 24477358  000010787356     Van Schai… <named list> hoof… <list> <NA>         
-#>  4 24484189  000016351312     Sanitas H… <named list> neve… <list> <NA>         
-#>  5 97110795  000062375466     Dante Hui… <named list> hoof… <list> <NA>         
-#>  6 66346339  000034979034     Huisartse… <named list> hoof… <list> <NA>         
-#>  7 62380281  000031391419     Huisartse… <named list> hoof… <list> <NA>         
-#>  8 54446538  000024210382     Huisartse… <named list> hoof… <list> <NA>         
-#>  9 24484189  000036373648     Sanitas H… <named list> hoof… <list> <NA>         
-#> 10 85464007  000051508060     itj huisa… <named list> hoof… <list> <NA>         
-#> # ℹ 190 more rows
+#>  1 30055828  000001534106     "Snackbar… <named list> hoof… <list>  <NA>        
+#>  2 30149968  000001373366     "Snackbar… <named list> hoof… <list>  <NA>        
+#>  3 30061168  000007852940     "Snackbar… <named list> hoof… <list>  <NA>        
+#>  4 91479894  000057155518     "De Snack… <named list> hoof… <list>  <NA>        
+#>  5 77162838  000044881207     "Snackbar… <named list> hoof… <list>  <NA>        
+#>  6 30048901  000015639428     "Snackbar… <named list> neve… <list>  <NA>        
+#>  7 63545659  000032452004     "Snackbar… <named list> hoof… <list>  <NA>        
+#>  8 60975784  000028183169     "Snackbar… <named list> hoof… <list>  <NA>        
+#>  9 91242894  000002767961     "Snackbar… <named list> hoof… <list>  <NA>        
+#> 10 30083297  000009193693     "Cafetari… <named list> hoof… <list> "SNACKBAR HO…
+#> 11 30050751  000007808208     "Petit-Re… <named list> hoof… <list> "Snackbar \"…
+#> 12 30192953  000002554313     "Cafetari… <named list> hoof… <list> "Snackbar de…
+#> 13 30156975  000013513508     "Bestaria… <named list> hoof… <list> "Snackbar \"…
+#> 14 86470833  000005957397     "Giros"    <named list> neve… <list> "Snackbar Gi…
+#> 15 29036082  000020552270     "Restaura… <named list> hoof… <list> "Snackbar de…
+#> 16 76537293  000044313047     "Biltstra… <named list> hoof… <list> "Snackbar de…
+#> 17 76449548  000044233884     "Snackbar… <named list> hoof… <list>  <NA>
+
+# Search by address
+address_search <- kvk_search(postcode = "2594BD", huisnummer = "10")
+
+# Filter by business type (multiple types allowed)
+mixed_types <- kvk_search(
+  plaats = "Amsterdam",
+  type = "hoofdvestiging",
+  type = "rechtspersoon"
+)
+#> ! API response contains more than 1000 results. Only the first 1000 will be retrieved.
 ```
 
-See `vignette("kvkapiR")` for more examples and information about the
-usage of this package.
+### Retrieve Detailed Profiles
+
+Each profile retrieval costs EUR 0.02 (free for government
+organizations):
+
+``` r
+# Get basic company profile (using a social organization)
+profile <- kvk_get_basisprofiel("01036576")
+
+# Get establishment details
+establishment <- kvk_get_vestigingsprofiel("000007810083")
+
+# Get name history
+names <- kvk_get_naamgeving("01036576")
+```
+
+## Usage Tracking and Cost Management
+
+The package automatically tracks API usage and costs:
+
+``` r
+# View usage report
+kvk_usage_report()
+
+# Set cost alerts
+kvk_usage_alert(max_cost = 25, period = "month")
+
+# Export usage data
+kvk_export_usage("my_usage.csv", format = "monthly")
+```
+
+### Pricing
+
+- **Monthly base fee**: EUR 6.20 (if any API calls are made)
+- **Search API**: Free
+- **Profile APIs**: EUR 0.02 per call
+- **Government organizations**: All API calls are free
+
+## More Information
+
+For detailed examples and advanced usage, see `vignette("kvkapiR")` or
+visit the [package website](https://coeneisma.github.io/kvkapiR/).

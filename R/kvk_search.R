@@ -19,15 +19,13 @@
 #'   [https://developers.kvk.nl/documentation/zoeken-api#output]().
 #'
 #' @export
-#' @examples
+#' @examplesIf nzchar(Sys.getenv("KVK_API_KEY"))
 #' # Examples using the production API (requires API key)
-#' if (nzchar(Sys.getenv("KVK_API_KEY"))) {
-#'   koudum <- kvk_search(plaats = "Koudum")
-#'   print(koudum)
-#'   
-#'   rotterdam <- kvk_search(plaats = "Rotterdam")
-#'   print(rotterdam)
-#' }
+#' koudum <- kvk_search(plaats = "Koudum")
+#' print(koudum)
+#' 
+#' rotterdam <- kvk_search(plaats = "Rotterdam")
+#' print(rotterdam)
 #' 
 #' # Examples using test environment (no API key required)
 #' test_data <- kvk_search(plaats = "Utrecht", test_environment = TRUE)

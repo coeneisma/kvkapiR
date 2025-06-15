@@ -2,26 +2,59 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{kvk_reset_usage}
 \alias{kvk_reset_usage}
-\title{Reset KvK API usage statistics}
+\title{Reset usage tracking data}
 \usage{
-kvk_reset_usage(confirm = TRUE)
-}
-\arguments{
-\item{confirm}{Logical, require confirmation before deleting (default: TRUE).
-Set to FALSE to skip confirmation prompt.}
+kvk_reset_usage()
 }
 \value{
-Logical, TRUE if data was successfully reset, FALSE otherwise.
+Invisibly returns NULL. The function is called for its side effect
+of deleting the usage data file.
 }
 \description{
-Remove all stored API usage data. This action cannot be undone.
+Permanently delete all stored API usage data. This action cannot be undone
+and will clear your entire usage history including call counts, timestamps,
+and cost calculations.
+}
+\details{
+This function removes the usage tracking file from your user data directory.
+After reset:
+\itemize{
+\item All usage history is permanently deleted
+\item \code{\link{kvk_usage_report}} will show no data
+\item Cost calculations will restart from zero
+\item Usage alerts will use the new baseline
+}
+
+The function only affects stored usage data. It does not change:
+\itemize{
+\item Usage alert settings (these are stored in R options)
+\item API key configuration
+\item Package preferences
+}
+
+This can be useful for:
+\itemize{
+\item Starting fresh tracking after a billing period
+\item Clearing test data before production use
+\item Privacy reasons when sharing a computer
+\item Troubleshooting usage tracking issues
+}
 }
 \examples{
-\dontrun{
-# Reset with confirmation prompt
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Clear all usage history
 kvk_reset_usage()
 
-# Reset without confirmation (use with caution)
-kvk_reset_usage(confirm = FALSE)
+# Verify reset worked
+kvk_usage_report()  # Should show "No usage data found"
+
+# Usage tracking will restart with new API calls
+results <- kvk_search(plaats = "Amsterdam")
+kvk_usage_report()  # Will show the new call
+\dontshow{\}) # examplesIf}
 }
+\seealso{
+\code{\link{kvk_usage_report}} for viewing current usage,
+\code{\link{kvk_export_usage}} for backing up data before reset,
+\code{\link{kvk_usage_alert}} for setting usage limits
 }

@@ -2,54 +2,73 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{kvk_usage_report}
 \alias{kvk_usage_report}
-\title{Generate KvK API usage report}
+\title{Generate API usage report}
 \usage{
-kvk_usage_report(
-  format = c("summary", "tibble", "tidy"),
-  year = NULL,
-  monthly_fee = 6.2,
-  cost_per_query = 0.02
-)
+kvk_usage_report(format = "summary", year = NULL, month = NULL)
 }
 \arguments{
-\item{format}{Character string specifying the output format:
+\item{format}{Character string specifying output format:
 \itemize{
-\item "summary" (default): Display a formatted summary in the console
-\item "tibble": Return usage data as a tibble with monthly aggregation
-\item "tidy": Return usage data in tidy format (one row per API call)
+\item \code{"summary"} (default): Human-readable console output with
+costs and call counts
+\item \code{"tibble"}: Monthly aggregated data as a tibble, one row per month
+\item \code{"tidy"}: Detailed data with one row per API call, suitable
+for analysis and visualization
 }}
 
-\item{year}{Integer, specific year to filter (default: NULL shows all years).}
+\item{year}{Integer year to filter results (e.g., 2025). If NULL, shows all years.}
 
-\item{monthly_fee}{Numeric, monthly API key connection fee in euros (default: 6.20)}
-
-\item{cost_per_query}{Numeric, cost per paid query in euros (default: 0.02)}
+\item{month}{Integer month (1-12) to filter results. Only used when year is also specified.}
 }
 \value{
-Depends on format parameter:
 \itemize{
-\item format="summary": NULL (invisible), displays summary in console
-\item format="tibble": A tibble with monthly usage statistics
-\item format="tidy": A tibble with all individual API calls
+\item \code{format = "summary"}: Invisible NULL (output printed to console)
+\item \code{format = "tibble"}: A tibble with monthly usage summary
+\item \code{format = "tidy"}: A tibble with detailed call-by-call data
 }
 }
 \description{
-Display a summary of your KvK API usage and associated costs.
-This function provides insights into your API consumption patterns
-and helps track expenses.
+Display or return API usage statistics and costs in various formats.
+This function helps you monitor your KvK API usage and associated costs.
+}
+\details{
+The summary format displays:
+\itemize{
+\item API call counts by type (search calls are free)
+\item Cost breakdown including monthly base fee (EUR 6.20) and query costs (EUR 0.02 per profile call)
+\item Total costs and number of active months
+}
+
+The tibble format provides monthly aggregated data suitable for reporting and analysis.
+The tidy format provides raw call data perfect for creating custom visualizations.
+
+Only production API calls are included in reports. Test environment calls are not tracked or reported.
 }
 \examples{
-\dontrun{
-# Display usage summary for current year
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Display human-readable summary
 kvk_usage_report()
 
-# Get usage data as tibble
-usage_tibble <- kvk_usage_report(format = "tibble")
+# Get monthly summary as tibble
+monthly_data <- kvk_usage_report(format = "tibble")
+print(monthly_data)
 
-# Get raw usage data in tidy format
-usage_tidy <- kvk_usage_report(format = "tidy")
+# Get detailed call data for visualization
+library(ggplot2)
+call_data <- kvk_usage_report(format = "tidy")
+ggplot(call_data, aes(x = date, fill = call_type)) +
+  geom_bar() +
+  labs(title = "API Usage Over Time")
+  
+# View specific month
+kvk_usage_report(year = 2025, month = 6)
 
-# Show all historical data
-kvk_usage_report(year = NULL)
+# View entire year
+kvk_usage_report(year = 2025)
+\dontshow{\}) # examplesIf}
 }
+\seealso{
+\code{\link{kvk_usage_alert}} for setting usage limits,
+\code{\link{kvk_export_usage}} for exporting data to CSV,
+\code{\link{kvk_reset_usage}} for clearing usage history
 }

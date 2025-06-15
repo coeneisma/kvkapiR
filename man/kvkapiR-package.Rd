@@ -4,20 +4,21 @@
 \name{kvkapiR-package}
 \alias{kvkapiR}
 \alias{kvkapiR-package}
-\title{kvkapiR: An R Wrapper for the Dutch Chamber of Commerce API}
+\title{kvkapiR: Interface to the Dutch Chamber of Commerce (KvK) API}
 \description{
-Provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
+Access business registration data from the Dutch Chamber of Commerce (Kamer van Koophandel, KvK) through their official API. Search for companies by name, location, or registration number. Retrieve detailed business profiles, establishment information, and company name histories. Built on 'httr2' for robust API interaction with automatic pagination, error handling, and usage tracking.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://coeneisma.github.io/kvkapiR/}
   \item \url{https://github.com/coeneisma/kvkapiR/}
+  \item Report bugs at \url{https://github.com/coeneisma/kvkapiR/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Coen Eisma \email{coeneisma@gmail.com} (\href{https://orcid.org/0009-0007-9001-2572}{ORCID})
+\strong{Maintainer}: Coen Eisma \email{coeneisma@gmail.com} (\href{https://orcid.org/0009-0007-9001-2572}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

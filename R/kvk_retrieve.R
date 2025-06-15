@@ -33,19 +33,17 @@
 #' @return A tibble containing the retrieved basis profile. If `geoData = TRUE`,
 #'   the returned tibble will also include geographical information.
 #'
-#' @examples
+#' @examplesIf nzchar(Sys.getenv("KVK_API_KEY"))
 #' # Examples using the production API (requires API key)
-#' if (nzchar(Sys.getenv("KVK_API_KEY"))) {
-#'   # Retrieve basis profile for a given KvK number without geo-data
-#'   basis_profile <- kvk_get_basisprofiel(kvkNummer = "69599084")
-#'   print(basis_profile)
-#'   
-#'   # Retrieve basis profile with geo-data
-#'   basis_profile_geo <- kvk_get_basisprofiel(kvkNummer = "69599084", geoData = TRUE)
-#'   
-#'   # Retrieve basis profile including owner information
-#'   basis_profile_owner <- kvk_get_basisprofiel(kvkNummer = "69599084", include = "eigenaar")
-#' }
+#' # Retrieve basis profile for a given KvK number without geo-data
+#' basis_profile <- kvk_get_basisprofiel(kvkNummer = "69599084")
+#' print(basis_profile)
+#' 
+#' # Retrieve basis profile with geo-data
+#' basis_profile_geo <- kvk_get_basisprofiel(kvkNummer = "69599084", geoData = TRUE)
+#' 
+#' # Retrieve basis profile including owner information
+#' basis_profile_owner <- kvk_get_basisprofiel(kvkNummer = "69599084", include = "eigenaar")
 #' 
 #' # Examples using test environment (no API key required)
 #' # These use the KvK test dataset with Donald Duck themed businesses
@@ -160,19 +158,17 @@ kvk_get_basisprofiel <- function(kvkNummer, geoData = FALSE, include = NULL, tes
 #' @return A tibble containing the retrieved establishment profile. If `geoData
 #'   = TRUE`, the returned tibble will also include geographical information.
 #'
-#' @examples
+#' @examplesIf nzchar(Sys.getenv("KVK_API_KEY"))
 #' # Examples using the production API (requires API key)
-#' if (nzchar(Sys.getenv("KVK_API_KEY"))) {
-#'   # Retrieve vestigingsprofiel for a given establishment number
-#'   vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
-#'   print(vestigingsprofiel)
-#'   
-#'   # Retrieve vestigingsprofiel with geo-data
-#'   vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(
-#'     vestigingsnummer = "000038509504", 
-#'     geoData = TRUE
-#'   )
-#' }
+#' # Retrieve vestigingsprofiel for a given establishment number
+#' vestigingsprofiel <- kvk_get_vestigingsprofiel(vestigingsnummer = "000038509504")
+#' print(vestigingsprofiel)
+#' 
+#' # Retrieve vestigingsprofiel with geo-data
+#' vestigingsprofiel_geo <- kvk_get_vestigingsprofiel(
+#'   vestigingsnummer = "000038509504", 
+#'   geoData = TRUE
+#' )
 #' 
 #' # Examples using test environment (no API key required)
 #' vestigingsprofiel_test <- kvk_get_vestigingsprofiel(
@@ -267,13 +263,11 @@ kvk_get_vestigingsprofiel <- function(vestigingsnummer, geoData = FALSE, test_en
 #'
 #' @return A tibble containing the retrieved name information.
 #'
-#' @examples
+#' @examplesIf nzchar(Sys.getenv("KVK_API_KEY"))
 #' # Examples using the production API (requires API key)
-#' if (nzchar(Sys.getenv("KVK_API_KEY"))) {
-#'   # Retrieve naamgeving for a given KvK number
-#'   naamgeving <- kvk_get_naamgeving(kvkNummer = "68750110")
-#'   print(naamgeving)
-#' }
+#' # Retrieve naamgeving for a given KvK number
+#' naamgeving <- kvk_get_naamgeving(kvkNummer = "68750110")
+#' print(naamgeving)
 #' 
 #' # Examples using test environment (no API key required)
 #' naamgeving_test <- kvk_get_naamgeving(kvkNummer = "68727720", test_environment = TRUE)

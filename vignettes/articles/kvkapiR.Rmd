@@ -23,6 +23,8 @@ The package provides access to [all the KvK APIs](https://developers.kvk.nl/docu
 
 More details on the API can be found [on the developers website of the KvK](https://developers.kvk.nl/apis).
 
+**📋 Important Note:** This package is developed independently and is not officially affiliated with or endorsed by the Dutch Chamber of Commerce (Kamer van Koophandel). It provides an unofficial interface to their public APIs.
+
 ## Loading the package
 
 ```{r}
@@ -68,13 +70,6 @@ kvk_store_api_key(api_key = "your_new_api_key", overwrite = TRUE)
 
 **⚠️ Warning:** Only use this method if you can safely store your API key on your system.
 
-### Testing Environmet
-
-KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/documentation/testing).
-
-All functions in `kvkapiR` support testing mode via the `test_environment` argument, which is set to `FALSE` by default.
-
-**🦆 Tip:** The test environment contains fictional data based on characters from the Dutch comic magazine "Donald Duck". Try searching for names like "Donald" and "Dagobert" to see how the API works with sample data.
 
 ## Search the KvK API
 
@@ -125,54 +120,271 @@ snackbar <- kvk_search(plaats = "Utrecht", naam = "snackbar")
 snackbar
 ```
 
-### Example 5: search on adress
+### Example 5: Filtering by Business Type
 
-It is possible to search for KvK registrations using a specific address. To do this, you need both the postal code and house number.
-For example, are there any business registrered at [this adress](https://maps.app.goo.gl/KJhYVDH3fV8cxWJ2A)? 
+The API allows filtering by business type using the `type` parameter. You can search for:
+
+- `hoofdvestiging` (main branch)
+- `nevenvestiging` (secondary branch)  
+- `rechtspersoon` (legal entity)
+
+You can also combine multiple types by passing the `type` parameter multiple times:
 
 ```{r, eval = has_api_key}
-secret_adress <- kvk_search(postcode = "2594BD", huisnummer = "10")
-secret_adress
+# Search for both main branches AND legal entities in Amsterdam
+mixed_types <- kvk_search(
+  plaats = "Amsterdam",
+  type = "hoofdvestiging",
+  type = "rechtspersoon"
+)
+mixed_types
 ```
 
-## Retrieving Profiel Data
+### Example 6: Search by Address
 
-The package has the abbility to retrieve three types of *profielen* from the API:
+You can search for businesses at a specific address using different combinations:
 
-* basisprofiel
-* vestigingsprofiel
-* naamgeving
+#### Full address search (postcode + house number):
+```{r, eval = has_api_key}
+# Search businesses at a specific address
+secret_address <- kvk_search(postcode = "2594BD", huisnummer = "10")
+secret_address
+```
 
-For these examples we will use the test invironment.
+#### Street name only search:
+```{r, eval = has_api_key}
+# Search all businesses on a specific street
+street_businesses <- kvk_search(straatnaam = "Bezuidenhoutseweg", plaats = "Den Haag")
+street_businesses
+```
+
+## Retrieving Profile Data
+
+The package provides functions to retrieve three types of detailed profiles from the API:
+
+* **Basisprofiel** (Basic Profile) - General company information
+* **Vestigingsprofiel** (Establishment Profile) - Detailed branch/location information
+* **Naamgeving** (Name History) - Historical company names
+
+**💰 Note:** Each profile retrieval costs EUR 0.02 per call (except for government organizations - see below).
+
+### Production Examples
+
+Here we retrieve real data from the production API:
+
+#### Basisprofiel
+
+The basic profile contains general company information:
+
+```{r, eval = has_api_key}
+# Get basic profile for a social organization (Stichting Gemeenschapscentrum Koudum)
+stichting_profile <- kvk_get_basisprofiel(kvkNummer = "01036576")
+stichting_profile
+```
+
+#### Vestigingsprofiel
+
+The establishment profile provides detailed information about a specific location, including geographical data:
+
+```{r, eval = has_api_key}
+# Get establishment profile for the same organization
+stichting_vestiging <- kvk_get_vestigingsprofiel(vestigingsnummer = "000007810083")
+stichting_vestiging
+
+# The vestigingsprofiel contains geographical data for mapping and analysis
+# Access coordinates through the nested 'adressen' column:
+if (nrow(stichting_vestiging) > 0 && length(stichting_vestiging$adressen[[1]]) > 0) {
+  address_data <- stichting_vestiging$adressen[[1]]
+  if ("geoData" %in% names(address_data)) {
+    geo_info <- address_data$geoData
+    cat("Geographical coordinates available for mapping and spatial analysis\n")
+  }
+}
+```
+
+#### Naamgeving
+
+The name history shows all historical names of a company:
+
+```{r, eval = has_api_key}
+# Get name history
+stichting_names <- kvk_get_naamgeving(kvkNummer = "01036576")
+stichting_names
+```
+
+
+## Usage Tracking and Cost Management
+
+The kvkapiR package includes automatic usage tracking to help you monitor API calls and costs.
+
+### View Usage Report
+
+Use `kvk_usage_report()` to see your API usage and costs in multiple formats:
 
 ```{r}
+# View summary report (default format)
+kvk_usage_report()
+
+# Get detailed tibble format for data analysis
+usage_data <- kvk_usage_report(format = "tibble")
+usage_data
+
+# Get tidy format for visualization and analysis
+usage_tidy <- kvk_usage_report(format = "tidy")
+usage_tidy
+
+# View specific month
+kvk_usage_report(year = 2025, month = 6)
+```
+
+The different output formats serve different purposes:
+
+- **"summary"** (default): Human-readable overview with costs and totals
+- **"tibble"**: Structured data frame for analysis, one row per month
+- **"tidy"**: Long format with one row per API call, perfect for creating visualizations
+
+The report shows:
+
+- Monthly base fee: EUR 6.20
+- Per-query costs: EUR 0.02 for profile retrievals (search is free)
+- Total costs and call counts by type
+
+### Set Usage Alerts
+
+Protect against unexpected costs with usage alerts:
+
+```{r}
+# Set monthly cost limit of EUR 25
+kvk_usage_alert(max_cost = 25, period = "month")
+
+# Set call count limit
+kvk_usage_alert(max_calls = 500, period = "month")
+
+# Set yearly limit
+kvk_usage_alert(max_cost = 300, period = "year")
+```
+
+When limits are exceeded, you'll see:
+
+- **First alert**: Warning when limit is reached
+- **Reminder alerts**: Notifications for continued usage over limits
+
+### Export Usage Data
+
+Export your usage history for external analysis:
+
+```{r, eval = FALSE}
+# Export as tidy format (one row per call)
+kvk_export_usage("my_usage.csv", format = "tidy")
+
+# Export as monthly summary
+kvk_export_usage("monthly_summary.csv", format = "monthly")
+```
+
+### Usage Tracking Privacy and Control
+
+**Privacy-First Design**: kvkapiR respects your privacy with the following safeguards:
+
+- **Opt-in Only**: You'll be asked for permission before any tracking begins
+- **Local Storage**: All data stays on your computer (in your user directory)
+- **No External Transmission**: Nothing is sent to external servers
+- **Easy to Disable**: Multiple ways to turn off tracking
+
+**First Time Setup**: When you make your first API call, you'll see:
+```
+Enable usage tracking? (yes/no):
+```
+
+**Control Options**:
+
+```{r, eval = FALSE}
+# Permanently disable tracking
+Sys.setenv(KVKAPI_DISABLE_TRACKING = "true")
+
+# Enable tracking programmatically
+options(kvkapiR.usage_tracking_opted_in = TRUE)
+
+# Disable tracking programmatically  
+options(kvkapiR.usage_tracking_opted_in = FALSE)
+```
+
+**Data Location**: Usage data is stored in your user directory using `tools::R_user_dir("kvkapiR", "data")` for R 4.0+ or `~/.kvkapiR/` for older versions.
+
+## Cost Information
+
+**⚠️ Important:** The costs mentioned below are charged by the Dutch Chamber of Commerce (KvK) for API usage. These costs may change in the future, and any updates will be reflected in future versions of this package.
+
+### Pricing Structure
+
+- **Monthly base fee**: EUR 6.20 (charged if any API calls are made)
+- **Search API**: Free
+- **Profile APIs**: EUR 0.02 per call (basisprofiel, vestigingsprofiel, naamgeving)
+
+### Government Organizations
+
+Government organizations are exempt from all API costs and can use all APIs without incurring charges.
+
+## Test Environment
+
+KvK provides a test environment where you can experiment with the API before using it in production. More information is available on the [KvK documentation page](https://developers.kvk.nl/documentation/testing).
+
+All search and profile retrieval functions in `kvkapiR` support testing mode via the `test_environment` argument, which is set to `FALSE` by default.
+
+**🦆 Tip:** The test environment contains fictional data based on characters from the Dutch comic magazine "Donald Duck". Try searching for names like "Donald" and "Dagobert" to see how the API works with sample data.
+
+The test environment:
+
+- Uses a different base URL: `https://api.kvk.nl/test/api/`
+- Contains fictional business data for testing purposes
+- Does not require an API key (the package uses a built-in test key)
+- Has the same functionality and endpoints as production
+- Does not incur any costs
+- Does not count towards usage tracking
+- Displays informative messages for each API call, indicating test environment usage
+
+**Note:** When using the test environment, each API call displays a message like:
+```
+ℹ You are using the KvK test environment. Test data will be returned.
+```
+
+### Test Environment Examples
+
+```{r}
+# Search in test environment - no API key needed
+# Note: You'll see a message indicating test environment usage
+test_results <- kvk_search(naam = "Donald", test_environment = TRUE)
+test_results
+
+# Get test profiles - no costs incurred
 donald <- kvk_search(naam = "Donald", test_environment = TRUE)
+test_basisprofiel <- kvk_get_basisprofiel(
+  kvkNummer = donald$kvkNummer[1], 
+  test_environment = TRUE
+)
+test_basisprofiel
+
+test_vestigingsprofiel <- kvk_get_vestigingsprofiel(
+  vestigingsnummer = donald$vestigingsnummer[1], 
+  test_environment = TRUE
+)
+test_vestigingsprofiel
+
+test_naamgeving <- kvk_get_naamgeving(
+  kvkNummer = donald$kvkNummer[1], 
+  test_environment = TRUE
+)
+test_naamgeving
 ```
-
-
-### Basisprofiel
-
-```{r}
-kvk_get_basisprofiel(kvkNummer = donald$kvkNummer[1], test_environment = TRUE)
-```
-
-
-### Vestigingsprofiel
-
-
-```{r}
-kvk_get_vestigingsprofiel(vestigingsnummer = donald$vestigingsnummer[1], test_environment = TRUE)
-```
-
-### Naamgeving
-
-```{r}
-kvk_get_naamgeving(kvkNummer = donald$kvkNummer[1], test_environment = TRUE)
-```
-
 
 ## Conclusion
 
-The `kvkapiR` package provides a simple yet powerful interface for searching the KvK API in R. With built-in authentication handling, test environment support, and flexible query options, it streamlines access to Dutch business registration data.
+The `kvkapiR` package provides a comprehensive interface for accessing KvK business data in R with:
+
+- Simple authentication management
+- Full API coverage (search and profile retrieval)
+- Test environment support for development
+- Automatic usage tracking and cost monitoring
+- Flexible search options including multiple filters
+- Government organization fee exemption
 
 For more details, refer to the official [KvK API documentation](https://developers.kvk.nl/apis).

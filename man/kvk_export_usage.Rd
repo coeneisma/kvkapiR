@@ -2,35 +2,72 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{kvk_export_usage}
 \alias{kvk_export_usage}
-\title{Export KvK API usage data}
+\title{Export usage data to CSV file}
 \usage{
-kvk_export_usage(file = NULL, format = c("tidy", "monthly"))
+kvk_export_usage(file_path, format = "tidy")
 }
 \arguments{
-\item{file}{Character string, path to export file. If NULL (default),
-exports to "kvk_usage_YYYY-MM-DD.csv" in current directory.}
+\item{file_path}{Character string specifying the path where the CSV file
+should be saved. Can include relative or absolute paths. The file will
+be created if it doesn't exist, or overwritten if it does.}
 
-\item{format}{Character string, data format to export:
+\item{format}{Character string specifying the export format:
 \itemize{
-\item "tidy": Raw usage data (one row per API call)
-\item "monthly": Monthly aggregated data
+\item \code{"tidy"} (default): One row per API call with detailed information
+including timestamp, date, call type, and other metadata. Perfect for
+creating custom visualizations and detailed analysis.
+\item \code{"monthly"}: Aggregated monthly summary with call counts by type
+and cost calculations. Ideal for reporting and budget tracking.
 }}
 }
 \value{
-Character string with the path to the exported file (invisible).
+Invisibly returns NULL. The function is called for its side effect
+of creating a CSV file.
 }
 \description{
-Export usage data to a CSV file for external analysis or record keeping.
+Export your KvK API usage data to a CSV file for external analysis,
+reporting, or record keeping. Choose between detailed call-by-call data
+or monthly aggregated summaries.
+}
+\details{
+The exported data only includes production API calls. Test environment calls
+are not included in the export.
+
+\strong{Tidy format} includes these columns:
+\itemize{
+\item \code{timestamp}: Exact time of the API call
+\item \code{date}: Date of the API call
+\item \code{year}, \code{month}: Extracted date components
+\item \code{call_type}: Type of API call (search, basisprofiel, etc.)
+\item \code{test_environment}: Always FALSE for production calls
+}
+
+\strong{Monthly format} includes these columns:
+\itemize{
+\item \code{Year}, \code{Month}: Time period
+\item \code{Search}, \code{Basisprofiel}, \code{Vestiging}, \code{Naamgeving}: Call counts by type
+\item \code{Costs (EUR)}: Total costs including base fee and query charges
+}
 }
 \examples{
-\dontrun{
-# Export to default filename
-kvk_export_usage()
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Export detailed call data for analysis
+kvk_export_usage("my_api_usage.csv", format = "tidy")
 
-# Export to specific file
-kvk_export_usage("my_usage_data.csv")
+# Export monthly summary for reporting
+kvk_export_usage("monthly_report.csv", format = "monthly")
 
-# Export monthly summary
-kvk_export_usage(format = "monthly")
+# Export to specific directory
+kvk_export_usage("reports/2025_usage.csv", format = "tidy")
+
+# Use in data analysis workflow
+kvk_export_usage("temp_usage.csv", format = "tidy")
+usage_data <- read.csv("temp_usage.csv")
+# Perform custom analysis...
+\dontshow{\}) # examplesIf}
 }
+\seealso{
+\code{\link{kvk_usage_report}} for viewing usage in R,
+\code{\link{kvk_usage_alert}} for setting usage limits,
+\code{\link{kvk_reset_usage}} for clearing usage history
 }

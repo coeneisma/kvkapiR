@@ -7,7 +7,7 @@
 save_usage_data(usage_data)
 }
 \arguments{
-\item{usage_data}{Data frame with usage data}
+\item{usage_data}{Data frame with usage data to save}
 }
 \description{
 Save usage data to disk

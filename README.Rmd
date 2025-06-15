@@ -16,9 +16,8 @@ knitr::opts_chunk$set(
 # kvkapiR
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/kvkapiR)](https://CRAN.R-project.org/package=kvkapiR)
 [![R-CMD-check](https://github.com/coeneisma/kvkapiR/workflows/R-CMD-check/badge.svg)](https://github.com/coeneisma/kvkapiR/actions)
-`r lifecycle::badge('experimental')`
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of kvkapiR is to provide a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) APIs. This package is built using the httr2 package and follows best practices for wrapping APIs in R, as outlined in the [httr2 documentation](https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.
@@ -34,7 +33,13 @@ More details can be found [on the developers website of the KvK](https://develop
 
 ## Installation
 
-You can install the development version of `kvkapiR` from [GitHub](https://github.com/) with:
+The package has been submitted to CRAN for review. Once it's accepted and the CRAN status badge above shows "CRAN: OK", you can install the stable version from CRAN with:
+
+``` r
+install.packages("kvkapiR")
+```
+
+Until then, you can install the current stable version from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -48,24 +53,91 @@ To install the latest development version:
 devtools::install_github("coeneisma/kvkapiR", ref = "development")
 ```
 
-## Example
+## Setting up API Access
 
-Here are basic examples demonstrating how to use the `kvk_search()` function to retrieve KvK registrations:
+### API Key
+
+To use the KvK API, you need an API key. You can apply for one at the [KvK Developer Portal](https://developers.kvk.nl/apply-for-apis?step=api-overview).
+
+```r
+# Set API key for current session
+kvk_set_api_key("your_api_key_here")
+
+# Or store permanently in .Renviron
+kvk_store_api_key("your_api_key_here")
+```
+
+### Test Environment
+
+The package includes support for the KvK test environment with fictional Donald Duck data:
+
+```r
+# No API key needed for test environment
+test_results <- kvk_search(naam = "Donald Duck", test_environment = TRUE)
+```
+
+## Basic Usage
+
+### Search for Businesses
 
 ```{r example}
 library(kvkapiR)
 
+# Search by location
 koudum <- kvk_search(plaats = "Koudum")
 koudum
+
+# Combine search criteria
+snackbar <- kvk_search(naam = "snackbar", plaats = "Utrecht")
+snackbar
+
+# Search by address
+address_search <- kvk_search(postcode = "2594BD", huisnummer = "10")
+
+# Filter by business type (multiple types allowed)
+mixed_types <- kvk_search(
+  plaats = "Amsterdam",
+  type = "hoofdvestiging",
+  type = "rechtspersoon"
+)
 ```
 
-You can also combine multiple search parameters:
+### Retrieve Detailed Profiles
 
-```{r}
-library(kvkapiR)
+Each profile retrieval costs EUR 0.02 (free for government organizations):
 
-rotterdam <- kvk_search(naam = "huisartsen", plaats = "Rotterdam")
-rotterdam
+```{r, eval = FALSE}
+# Get basic company profile (using a social organization)
+profile <- kvk_get_basisprofiel("01036576")
+
+# Get establishment details
+establishment <- kvk_get_vestigingsprofiel("000007810083")
+
+# Get name history
+names <- kvk_get_naamgeving("01036576")
 ```
 
-See `vignette("kvkapiR")` for more examples and information about the usage of this package.
+## Usage Tracking and Cost Management
+
+The package automatically tracks API usage and costs:
+
+```{r, eval = FALSE}
+# View usage report
+kvk_usage_report()
+
+# Set cost alerts
+kvk_usage_alert(max_cost = 25, period = "month")
+
+# Export usage data
+kvk_export_usage("my_usage.csv", format = "monthly")
+```
+
+### Pricing
+- **Monthly base fee**: EUR 6.20 (if any API calls are made)
+- **Search API**: Free
+- **Profile APIs**: EUR 0.02 per call
+- **Government organizations**: All API calls are free
+
+## More Information
+
+For detailed examples and advanced usage, see `vignette("kvkapiR")` or visit the [package website](https://coeneisma.github.io/kvkapiR/).

@@ -2,21 +2,17 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{prepare_monthly_usage}
 \alias{prepare_monthly_usage}
-\title{Prepare monthly usage data}
+\title{Prepare monthly usage summary}
 \usage{
-prepare_monthly_usage(usage_data, monthly_fee, cost_per_query)
+prepare_monthly_usage(usage_data)
 }
 \arguments{
-\item{usage_data}{Data frame with usage records}
-
-\item{monthly_fee}{Monthly base fee}
-
-\item{cost_per_query}{Cost per paid query}
+\item{usage_data}{Data frame with usage data}
 }
 \value{
-Tibble with monthly aggregated data
+Tibble with monthly summary
 }
 \description{
-Prepare monthly usage data
+Prepare monthly usage summary
 }
 \keyword{internal}

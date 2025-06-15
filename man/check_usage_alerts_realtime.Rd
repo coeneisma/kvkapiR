@@ -2,16 +2,16 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{check_usage_alerts_realtime}
 \alias{check_usage_alerts_realtime}
-\title{Check usage alerts in real-time when recording a call}
+\title{Check usage alerts in real-time}
 \usage{
-check_usage_alerts_realtime(usage_data, call_type)
+check_usage_alerts_realtime(usage_data, current_call_type)
 }
 \arguments{
-\item{usage_data}{Updated usage data including the new call}
+\item{usage_data}{Data frame with current usage data}
 
-\item{call_type}{Type of the call just made}
+\item{current_call_type}{Character string of the call type just made}
 }
 \description{
-Check usage alerts in real-time when recording a call
+Check usage alerts in real-time
 }
 \keyword{internal}

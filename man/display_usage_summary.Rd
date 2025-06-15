@@ -2,28 +2,18 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{display_usage_summary}
 \alias{display_usage_summary}
-\title{Display usage summary in console}
+\title{Display usage summary}
 \usage{
-display_usage_summary(
-  usage_data,
-  monthly_data,
-  year,
-  monthly_fee,
-  cost_per_query
-)
+display_usage_summary(usage_data, year = NULL, month = NULL)
 }
 \arguments{
-\item{usage_data}{Raw usage data}
+\item{usage_data}{Data frame with usage data}
 
-\item{monthly_data}{Monthly aggregated data}
+\item{year}{Optional year to filter by}
 
-\item{year}{Year filter (NULL for all)}
-
-\item{monthly_fee}{Monthly base fee}
-
-\item{cost_per_query}{Cost per paid query}
+\item{month}{Optional month to filter by}
 }
 \description{
-Display usage summary in console
+Display usage summary
 }
 \keyword{internal}
