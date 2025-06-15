@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">kvkapiR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,14 +33,34 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="kvkapir-development-version">kvkapiR (development version)<a class="anchor" aria-label="anchor" href="#kvkapir-development-version"></a></h2>
-<ul><li>Initial setup of package.</li>
+<h2 class="pkg-version" data-toc-text="0.1.0" id="kvkapir-010">kvkapiR 0.1.0<a class="anchor" aria-label="anchor" href="#kvkapir-010"></a></h2>
+<p>First CRAN release.</p>
+<div class="section level3">
+<h3 id="new-features-0-1-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-0"></a></h3>
+<ul><li>
+<code><a href="../reference/kvk_search.html">kvk_search()</a></code> searches the Dutch Chamber of Commerce (KvK) business registry with automatic pagination up to 1,000 results.</li>
 <li>
-<code>pkgdown</code> site genereated with custom KvK color scheme.</li>
-<li>Added multiple examples to <code>vignette("kvkapiR")</code>
-</li>
+<code><a href="../reference/kvk_get_basisprofiel.html">kvk_get_basisprofiel()</a></code>, <code><a href="../reference/kvk_get_vestigingsprofiel.html">kvk_get_vestigingsprofiel()</a></code>, and <code><a href="../reference/kvk_get_naamgeving.html">kvk_get_naamgeving()</a></code> retrieve detailed business profiles, establishment information, and company name histories.</li>
+<li>
+<code><a href="../reference/kvk_usage_report.html">kvk_usage_report()</a></code> displays API usage statistics and costs with multiple output formats.</li>
+<li>
+<code><a href="../reference/kvk_usage_alert.html">kvk_usage_alert()</a></code> sets usage and cost limits with real-time alerts.</li>
+<li>
+<code><a href="../reference/kvk_export_usage.html">kvk_export_usage()</a></code> exports usage data to CSV in tidy or monthly formats.</li>
+<li>
+<code><a href="../reference/kvk_reset_usage.html">kvk_reset_usage()</a></code> clears usage tracking history.</li>
+<li>All functions support test environment via <code>test_environment = TRUE</code> for cost-free testing.</li>
+<li>Search functions support multiple business types in single query and street-only search.</li>
+<li>Automatic error handling with user-friendly messages and Dutch IPD code translations.</li>
 </ul></div>
-  </main></div>
+<div class="section level3">
+<h3 id="documentation-0-1-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-0"></a></h3>
+<ul><li>Added comprehensive vignette with practical examples and cost information.</li>
+<li>Added pkgdown website with custom KvK color scheme.</li>
+</ul></div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

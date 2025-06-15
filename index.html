@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>An R Wrapper for the Dutch Chamber of Commerce API • kvkapiR</title>
+<title>Interface to the Dutch Chamber of Commerce (KvK) API • kvkapiR</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
 <link rel="icon" type="”image/svg+xml”" href="favicon.svg">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -15,9 +15,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="An R Wrapper for the Dutch Chamber of Commerce API">
-<meta name="description" content="Provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.">
-<meta property="og:description" content="Provides a convenient interface to the Dutch Chamber of Commerce (KvK) API. This package is built using the `httr2` package and follows best practices for wrapping APIs in R, as outlined in the httr2 documentation (https://httr2.r-lib.org/articles/wrapping-apis.html). It simplifies authentication, request handling, and response parsing when interacting with the KvK API.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Interface to the Dutch Chamber of Commerce (KvK) API">
+<meta name="description" content="Access business registration data from the Dutch Chamber of Commerce (Kamer van Koophandel, KvK) through their official API. Search for companies by name, location, or registration number. Retrieve detailed business profiles, establishment information, and company name histories. Built on httr2 for robust API interaction with automatic pagination, error handling, and usage tracking.">
+<meta property="og:description" content="Access business registration data from the Dutch Chamber of Commerce (Kamer van Koophandel, KvK) through their official API. Search for companies by name, location, or registration number. Retrieve detailed business profiles, establishment information, and company name histories. Built on httr2 for robust API interaction with automatic pagination, error handling, and usage tracking.">
 <meta property="og:image" content="https://coeneisma.github.io/kvkapiR/logo.svg">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">kvkapiR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +61,7 @@
 <!-- badges: start -->
 
 <p>The goal of kvkapiR is to provide a convenient R programming language interface to the Dutch Chamber of Commerce (KvK) APIs. This package is built using the httr2 package and follows best practices for wrapping APIs in R, as outlined in the <a href="https://httr2.r-lib.org/articles/wrapping-apis.html" class="external-link">httr2 documentation</a>. It simplifies authentication, request handling, and response parsing when interacting with the KvK API.</p>
-<p>Currently, the package provides access to the <a href="https://developers.kvk.nl/documentation#available-apis" class="external-link">following KvK APIs</a>:</p>
+<p>The package provides access to <a href="https://developers.kvk.nl/documentation#available-apis" class="external-link">all the KvK APIs</a>:</p>
 <ul>
 <li>KvK Search API</li>
 <li>KvK Basisprofiel API</li>
@@ -72,25 +72,54 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of <code>kvkapiR</code> from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<p>The package has been submitted to CRAN for review. Once it’s accepted and the CRAN status badge above shows “CRAN: OK”, you can install the stable version from CRAN with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"kvkapiR"</span><span class="op">)</span></span></code></pre></div>
+<p>Until then, you can install the current stable version from <a href="https://github.com/" class="external-link">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"coeneisma/kvkapiR"</span><span class="op">)</span></span></code></pre></div>
 <p>To install the latest development version:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"coeneisma/kvkapiR"</span>, ref <span class="op">=</span> <span class="st">"development"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="setting-up-api-access">Setting up API Access<a class="anchor" aria-label="anchor" href="#setting-up-api-access"></a>
 </h2>
-<p>Here are basic examples demonstrating how to use the <code><a href="reference/kvk_search.html">kvk_search()</a></code> function to retrieve KvK registrations:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="api-key">API Key<a class="anchor" aria-label="anchor" href="#api-key"></a>
+</h3>
+<p>To use the KvK API, you need an API key. You can apply for one at the <a href="https://developers.kvk.nl/apply-for-apis?step=api-overview" class="external-link">KvK Developer Portal</a>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Set API key for current session</span></span>
+<span><span class="fu"><a href="reference/kvk_set_api_key.html">kvk_set_api_key</a></span><span class="op">(</span><span class="st">"your_api_key_here"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or store permanently in .Renviron</span></span>
+<span><span class="fu"><a href="reference/kvk_store_api_key.html">kvk_store_api_key</a></span><span class="op">(</span><span class="st">"your_api_key_here"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="test-environment">Test Environment<a class="anchor" aria-label="anchor" href="#test-environment"></a>
+</h3>
+<p>The package includes support for the KvK test environment with fictional Donald Duck data:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># No API key needed for test environment</span></span>
+<span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"Donald Duck"</span>, test_environment <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+</h2>
+<div class="section level3">
+<h3 id="search-for-businesses">Search for Businesses<a class="anchor" aria-label="anchor" href="#search-for-businesses"></a>
+</h3>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://coeneisma.github.io/kvkapiR/">kvkapiR</a></span><span class="op">)</span></span>
 <span></span>
+<span><span class="co"># Search by location</span></span>
 <span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; # A tibble: 509 × 6</span></span>
+<span><span class="co">#&gt; # A tibble: 510 × 6</span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;                    &lt;list&gt;       &lt;chr&gt; &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  1 01036576  000007810083     Stichting Gemeenschapsc… &lt;named list&gt; neve… &lt;list&gt;</span></span>
@@ -103,34 +132,97 @@
 <span><span class="co">#&gt;  8 62724843  000031708129     De Klink Exploitatie B.… &lt;named list&gt; hoof… &lt;list&gt;</span></span>
 <span><span class="co">#&gt;  9 01091668  000000678279     Multiservice Beheer en … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
 <span><span class="co">#&gt; 10 41005555  000021707499     Stichting Jongerenwerk … &lt;named list&gt; hoof… &lt;list&gt;</span></span>
-<span><span class="co">#&gt; # ℹ 499 more rows</span></span></code></pre></div>
-<p>You can also combine multiple search parameters:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://coeneisma.github.io/kvkapiR/">kvkapiR</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; # ℹ 500 more rows</span></span>
 <span></span>
-<span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"huisartsen"</span>, plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span>
-<span><span class="va">rotterdam</span></span>
-<span><span class="co">#&gt; # A tibble: 200 × 7</span></span>
+<span><span class="co"># Combine search criteria</span></span>
+<span><span class="va">snackbar</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"snackbar"</span>, plaats <span class="op">=</span> <span class="st">"Utrecht"</span><span class="op">)</span></span>
+<span><span class="va">snackbar</span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 7</span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam       adres        type  links  vervallenNaam</span></span>
 <span><span class="co">#&gt;    &lt;chr&gt;     &lt;chr&gt;            &lt;chr&gt;      &lt;list&gt;       &lt;chr&gt; &lt;list&gt; &lt;chr&gt;        </span></span>
-<span><span class="co">#&gt;  1 24475068  000009219072     Wijkprakt… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  2 81943938  000048204625     Jans Huis… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  3 24477358  000010787356     Van Schai… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  4 24484189  000016351312     Sanitas H… &lt;named list&gt; neve… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  5 97110795  000062375466     Dante Hui… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  6 66346339  000034979034     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  7 62380281  000031391419     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  8 54446538  000024210382     Huisartse… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt;  9 24484189  000036373648     Sanitas H… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt; 10 85464007  000051508060     itj huisa… &lt;named list&gt; hoof… &lt;list&gt; &lt;NA&gt;         </span></span>
-<span><span class="co">#&gt; # ℹ 190 more rows</span></span></code></pre></div>
-<p>See <code>vignette("kvkapiR")</code> for more examples and information about the usage of this package.</p>
+<span><span class="co">#&gt;  1 30055828  000001534106     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  2 30149968  000001373366     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  3 30061168  000007852940     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  4 91479894  000057155518     "De Snack… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  5 77162838  000044881207     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  6 30048901  000015639428     "Snackbar… &lt;named list&gt; neve… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  7 63545659  000032452004     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  8 60975784  000028183169     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt;  9 91242894  000002767961     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;        </span></span>
+<span><span class="co">#&gt; 10 30083297  000009193693     "Cafetari… &lt;named list&gt; hoof… &lt;list&gt; "SNACKBAR HO…</span></span>
+<span><span class="co">#&gt; 11 30050751  000007808208     "Petit-Re… &lt;named list&gt; hoof… &lt;list&gt; "Snackbar \"…</span></span>
+<span><span class="co">#&gt; 12 30192953  000002554313     "Cafetari… &lt;named list&gt; hoof… &lt;list&gt; "Snackbar de…</span></span>
+<span><span class="co">#&gt; 13 30156975  000013513508     "Bestaria… &lt;named list&gt; hoof… &lt;list&gt; "Snackbar \"…</span></span>
+<span><span class="co">#&gt; 14 86470833  000005957397     "Giros"    &lt;named list&gt; neve… &lt;list&gt; "Snackbar Gi…</span></span>
+<span><span class="co">#&gt; 15 29036082  000020552270     "Restaura… &lt;named list&gt; hoof… &lt;list&gt; "Snackbar de…</span></span>
+<span><span class="co">#&gt; 16 76537293  000044313047     "Biltstra… &lt;named list&gt; hoof… &lt;list&gt; "Snackbar de…</span></span>
+<span><span class="co">#&gt; 17 76449548  000044233884     "Snackbar… &lt;named list&gt; hoof… &lt;list&gt;  &lt;NA&gt;</span></span>
+<span></span>
+<span><span class="co"># Search by address</span></span>
+<span><span class="va">address_search</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>postcode <span class="op">=</span> <span class="st">"2594BD"</span>, huisnummer <span class="op">=</span> <span class="st">"10"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Filter by business type (multiple types allowed)</span></span>
+<span><span class="va">mixed_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_search.html">kvk_search</a></span><span class="op">(</span></span>
+<span>  plaats <span class="op">=</span> <span class="st">"Amsterdam"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"hoofdvestiging"</span>,</span>
+<span>  type <span class="op">=</span> <span class="st">"rechtspersoon"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co">#&gt; ! API response contains more than 1000 results. Only the first 1000 will be retrieved.</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="retrieve-detailed-profiles">Retrieve Detailed Profiles<a class="anchor" aria-label="anchor" href="#retrieve-detailed-profiles"></a>
+</h3>
+<p>Each profile retrieval costs EUR 0.02 (free for government organizations):</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get basic company profile (using a social organization)</span></span>
+<span><span class="va">profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_get_basisprofiel.html">kvk_get_basisprofiel</a></span><span class="op">(</span><span class="st">"01036576"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get establishment details</span></span>
+<span><span class="va">establishment</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_get_vestigingsprofiel.html">kvk_get_vestigingsprofiel</a></span><span class="op">(</span><span class="st">"000007810083"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get name history</span></span>
+<span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/kvk_get_naamgeving.html">kvk_get_naamgeving</a></span><span class="op">(</span><span class="st">"01036576"</span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="usage-tracking-and-cost-management">Usage Tracking and Cost Management<a class="anchor" aria-label="anchor" href="#usage-tracking-and-cost-management"></a>
+</h2>
+<p>The package automatically tracks API usage and costs:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># View usage report</span></span>
+<span><span class="fu"><a href="reference/kvk_usage_report.html">kvk_usage_report</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Set cost alerts</span></span>
+<span><span class="fu"><a href="reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_cost <span class="op">=</span> <span class="fl">25</span>, period <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Export usage data</span></span>
+<span><span class="fu"><a href="reference/kvk_export_usage.html">kvk_export_usage</a></span><span class="op">(</span><span class="st">"my_usage.csv"</span>, format <span class="op">=</span> <span class="st">"monthly"</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="pricing">Pricing<a class="anchor" aria-label="anchor" href="#pricing"></a>
+</h3>
+<ul>
+<li>
+<strong>Monthly base fee</strong>: EUR 6.20 (if any API calls are made)</li>
+<li>
+<strong>Search API</strong>: Free</li>
+<li>
+<strong>Profile APIs</strong>: EUR 0.02 per call</li>
+<li>
+<strong>Government organizations</strong>: All API calls are free</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="more-information">More Information<a class="anchor" aria-label="anchor" href="#more-information"></a>
+</h2>
+<p>For detailed examples and advanced usage, see <code>vignette("kvkapiR")</code> or visit the <a href="https://coeneisma.github.io/kvkapiR/">package website</a>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/coeneisma/kvkapiR/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/coeneisma/kvkapiR/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -153,15 +245,15 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Coen Eisma <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0009-0007-9001-2572" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Coen Eisma <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0009-0007-9001-2572" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=kvkapiR" class="external-link"><img src="https://www.r-pkg.org/badges/version/kvkapiR" alt="CRAN status"></a></li>
 <li><a href="https://github.com/coeneisma/kvkapiR/actions" class="external-link"><img src="https://github.com/coeneisma/kvkapiR/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
 
