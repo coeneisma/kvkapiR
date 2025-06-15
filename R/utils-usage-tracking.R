@@ -354,13 +354,13 @@ display_usage_summary <- function(usage_data, monthly_data, year, monthly_fee, c
                 "{.val {total_costs_calc$paid_calls}} paid)")
   
   if (!is.null(year)) {
-    cli::cli_text("Total costs {year}: {.val EUR{sprintf('%.2f', total_costs_calc$total_costs)}} ",
-                  "({.val EUR{sprintf('%.2f', total_costs_calc$base_costs)}} base + ",
-                  "{.val EUR{sprintf('%.2f', total_costs_calc$query_costs)}} queries)")
+    cli::cli_text("Total costs {year}: {.val EUR {sprintf('%.2f', total_costs_calc$total_costs)}} ",
+                  "({.val EUR {sprintf('%.2f', total_costs_calc$base_costs)}} base + ",
+                  "{.val EUR {sprintf('%.2f', total_costs_calc$query_costs)}} queries)")
   } else {
-    cli::cli_text("Total costs: {.val EUR{sprintf('%.2f', total_costs_calc$total_costs)}} ",
-                  "({.val EUR{sprintf('%.2f', total_costs_calc$base_costs)}} base + ",
-                  "{.val EUR{sprintf('%.2f', total_costs_calc$query_costs)}} queries)")
+    cli::cli_text("Total costs: {.val EUR {sprintf('%.2f', total_costs_calc$total_costs)}} ",
+                  "({.val EUR {sprintf('%.2f', total_costs_calc$base_costs)}} base + ",
+                  "{.val EUR {sprintf('%.2f', total_costs_calc$query_costs)}} queries)")
   }
   
   # Show tracking info
@@ -404,7 +404,7 @@ kvk_reset_usage <- function(confirm = TRUE) {
   if (confirm) {
     cli::cli_alert_warning("This will delete all API usage history:")
     cli::cli_text("  * {.val {stats$total_calls}} API calls recorded")
-    cli::cli_text("  * {.val EUR{sprintf('%.2f', stats$total_costs)}} in tracked costs")
+    cli::cli_text("  * {.val EUR {sprintf('%.2f', stats$total_costs)}} in tracked costs")
     cli::cli_text("  * Data from {.val {stats$months_active}} month(s)")
     
     if (!interactive()) {
@@ -511,7 +511,7 @@ kvk_export_usage <- function(file = NULL, format = c("tidy", "monthly")) {
 #' # Set monthly limit of 100 calls
 #' kvk_usage_alert(max_calls = 100, period = "month")
 #' 
-#' # Set yearly cost limit of EUR50
+#' # Set yearly cost limit of EUR 50
 #' kvk_usage_alert(max_cost = 50, period = "year")
 #' 
 #' # Set both limits
@@ -540,7 +540,7 @@ kvk_usage_alert <- function(max_calls = NULL, max_cost = NULL,
       cli::cli_text("  * Max calls: {.val {max_calls}} per {period}")
     }
     if (!is.null(max_cost)) {
-      cli::cli_text("  * Max cost: {.val EUR{max_cost}} per {period}")
+      cli::cli_text("  * Max cost: {.val EUR {max_cost}} per {period}")
     }
   }
   
@@ -601,7 +601,7 @@ check_usage_alerts <- function(usage_data, year = NULL) {
   }
   
   if (!is.null(max_cost) && costs$total_costs > max_cost) {
-    cli::cli_alert_warning("Cost alert: {.val EUR{sprintf('%.2f', costs$total_costs)}} exceeds limit of {.val EUR{max_cost}} for {period_desc}")
+    cli::cli_alert_warning("Cost alert: {.val EUR {sprintf('%.2f', costs$total_costs)}} exceeds limit of {.val EUR {max_cost}} for {period_desc}")
     alerts_triggered <- TRUE
   }
   
@@ -663,7 +663,7 @@ check_usage_alerts_realtime <- function(usage_data, call_type) {
   # Check if we JUST exceeded the limits with this call
   call_cost <- ifelse(call_type == "search", 0, 0.02)
   call_desc <- ifelse(call_type == "search", "search (free)", 
-                     paste0(call_type, " (EUR0.02)"))
+                     paste0(call_type, " (EUR 0.02)"))
   
   # Check call limit
   if (!is.null(max_calls)) {
@@ -696,7 +696,7 @@ check_usage_alerts_realtime <- function(usage_data, call_type) {
         cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
         cli::cli_alert_warning(paste0(
           "{.alert COST LIMIT ALERT}: This {.val {call_desc}} call brings your total cost to ",
-          "{.val EUR{sprintf('%.2f', costs$total_costs)}}, exceeding the limit of {.val EUR{max_cost}} for {period_desc}!"
+          "{.val EUR {sprintf('%.2f', costs$total_costs)}}, exceeding the limit of {.val EUR {max_cost}} for {period_desc}!"
         ))
         cli::cli_text("  Consider using {.code kvk_usage_report()} to review your usage.")
         cli::cli_end()
@@ -704,7 +704,7 @@ check_usage_alerts_realtime <- function(usage_data, call_type) {
         # Already exceeded - show reminder
         cli::cli_alert_warning(paste0(
           "Cost limit reminder: This {.val {call_desc}} call brings your total to ",
-          "{.val EUR{sprintf('%.2f', costs$total_costs)}}, which exceeds your limit of {.val EUR{max_cost}} for {period_desc}."
+          "{.val EUR {sprintf('%.2f', costs$total_costs)}}, which exceeds your limit of {.val EUR {max_cost}} for {period_desc}."
         ))
       }
     }

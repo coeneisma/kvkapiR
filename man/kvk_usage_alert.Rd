@@ -36,7 +36,7 @@ Alerts are shown when calling kvk_usage_report().
 # Set monthly limit of 100 calls
 kvk_usage_alert(max_calls = 100, period = "month")
 
-# Set yearly cost limit of EUR50
+# Set yearly cost limit of EUR 50
 kvk_usage_alert(max_cost = 50, period = "year")
 
 # Set both limits
