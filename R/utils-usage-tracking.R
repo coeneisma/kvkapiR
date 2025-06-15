@@ -667,26 +667,46 @@ check_usage_alerts_realtime <- function(usage_data, call_type) {
   
   # Check call limit
   if (!is.null(max_calls)) {
-    if (costs_before$total_calls < max_calls && costs$total_calls >= max_calls) {
-      cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
-      cli::cli_alert_warning(paste0(
-        "{.alert USAGE LIMIT ALERT}: This {.val {call_desc}} call brings your total to ",
-        "{.val {costs$total_calls}} calls, exceeding the limit of {.val {max_calls}} for {period_desc}!"
-      ))
-      cli::cli_end()
+    if (costs$total_calls >= max_calls) {
+      # First time reaching or exceeding the limit
+      if (costs_before$total_calls < max_calls) {
+        cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
+        cli::cli_alert_warning(paste0(
+          "{.alert USAGE LIMIT ALERT}: This {.val {call_desc}} call brings your total to ",
+          "{.val {costs$total_calls}} calls, ",
+          ifelse(costs$total_calls == max_calls, "reaching", "exceeding"),
+          " the limit of {.val {max_calls}} for {period_desc}!"
+        ))
+        cli::cli_end()
+      } else {
+        # Already at or over limit - show reminder
+        cli::cli_alert_warning(paste0(
+          "Usage limit reminder: This {.val {call_desc}} call brings your total to ",
+          "{.val {costs$total_calls}} calls, which exceeds your limit of {.val {max_calls}} for {period_desc}."
+        ))
+      }
     }
   }
   
   # Check cost limit
   if (!is.null(max_cost)) {
-    if (costs_before$total_costs < max_cost && costs$total_costs >= max_cost) {
-      cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
-      cli::cli_alert_warning(paste0(
-        "{.alert COST LIMIT ALERT}: This {.val {call_desc}} call brings your total cost to ",
-        "{.val EUR{sprintf('%.2f', costs$total_costs)}}, exceeding the limit of {.val EUR{max_cost}} for {period_desc}!"
-      ))
-      cli::cli_text("  Consider using {.code kvk_usage_report()} to review your usage.")
-      cli::cli_end()
+    if (costs$total_costs > max_cost) {
+      # First time exceeding the limit
+      if (costs_before$total_costs < max_cost) {
+        cli::cli_div(theme = list(span.alert = list(color = "red", "font-weight" = "bold")))
+        cli::cli_alert_warning(paste0(
+          "{.alert COST LIMIT ALERT}: This {.val {call_desc}} call brings your total cost to ",
+          "{.val EUR{sprintf('%.2f', costs$total_costs)}}, exceeding the limit of {.val EUR{max_cost}} for {period_desc}!"
+        ))
+        cli::cli_text("  Consider using {.code kvk_usage_report()} to review your usage.")
+        cli::cli_end()
+      } else {
+        # Already exceeded - show reminder
+        cli::cli_alert_warning(paste0(
+          "Cost limit reminder: This {.val {call_desc}} call brings your total to ",
+          "{.val EUR{sprintf('%.2f', costs$total_costs)}}, which exceeds your limit of {.val EUR{max_cost}} for {period_desc}."
+        ))
+      }
     }
   }
   

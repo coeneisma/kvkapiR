@@ -370,6 +370,12 @@ test_that("real-time alerts trigger during record_api_call", {
         "USAGE LIMIT ALERT"
       )
       
+      # Third call should show reminder message
+      expect_message(
+        record_api_call("search", FALSE),
+        "Usage limit reminder"
+      )
+      
       # Reset data for cost test
       save_usage_data(data.frame(
         timestamp = as.POSIXct(character(0)),
@@ -388,6 +394,12 @@ test_that("real-time alerts trigger during record_api_call", {
       expect_message(
         record_api_call("basisprofiel", FALSE),
         "COST LIMIT ALERT"
+      )
+      
+      # Second paid call should show reminder message
+      expect_message(
+        record_api_call("vestigingsprofiel", FALSE),
+        "Cost limit reminder"
       )
     }
   )
