@@ -53,12 +53,9 @@ kvk_usage_report()
 monthly_data <- kvk_usage_report(format = "tibble")
 print(monthly_data)
 
-# Get detailed call data for visualization
-library(ggplot2)
+# Get detailed call data for custom analysis
 call_data <- kvk_usage_report(format = "tidy")
-ggplot(call_data, aes(x = date, fill = call_type)) +
-  geom_bar() +
-  labs(title = "API Usage Over Time")
+head(call_data)
   
 # View specific month
 kvk_usage_report(year = 2025, month = 6)
