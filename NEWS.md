@@ -1,4 +1,4 @@
-# kvkapiR 0.1.0
+# kvkapiR 0.1.2
 
 First CRAN release.
 

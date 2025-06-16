@@ -1,6 +1,6 @@
 Package: kvkapiR
 Title: Interface to the Dutch Chamber of Commerce (KvK) API
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Coen", "Eisma", , "coeneisma@gmail.com", role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0009-0007-9001-2572"))

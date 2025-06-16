@@ -60,9 +60,9 @@ test_that("NULL values are handled", {
     
     result <- kvkapiR:::list_to_tibble(input)
     expect_s3_class(result, "tbl_df")
-    # NULL fields are included but have NA value
+    # NULL fields are included but become empty/length 0
     expect_true("field2" %in% names(result))
-    expect_true(is.na(result$field2))
+    expect_equal(length(result$field2), 0)
     expect_true(is.list(result$field3))
 })
 
