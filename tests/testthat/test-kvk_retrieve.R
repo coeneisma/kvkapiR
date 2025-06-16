@@ -74,6 +74,21 @@ test_that("kvk_get_vestigingsprofiel works with test environment", {
   }
 })
 
+test_that("kvk_get_vestigingsprofiel handles websites field without names", {
+  skip_if(Sys.getenv("KVK_API_KEY") == "", "API key not available")
+  
+  # This specific vestigingsnummer has a websites field that caused the error
+  result <- kvk_get_vestigingsprofiel("000022666397")
+  
+  if (!is.null(result)) {
+    expect_s3_class(result, "tbl_df")
+    # The websites field should be stored as a list-column if it has no names
+    if ("websites" %in% names(result)) {
+      expect_true(is.list(result$websites))
+    }
+  }
+})
+
 test_that("kvk_get_naamgeving works with test environment", {
   Sys.unsetenv("KVK_API_KEY")
   

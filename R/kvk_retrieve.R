@@ -364,6 +364,10 @@ list_to_tibble <- function(lst) {
       # If all elements are atomic and have the same length, convert to a tibble
       if (base::all(base::sapply(x, base::is.atomic)) &&
           base::length(base::unique(base::sapply(x, base::length))) == 1) {
+        # Check if the list has names, if not treat as a list-column
+        if (is.null(names(x)) || any(names(x) == "")) {
+          return(base::list(x))
+        }
         return(tibble::as_tibble(x))
       } else {
         return(base::list(x))  # Otherwise, store as a list-column
