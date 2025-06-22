@@ -27,14 +27,12 @@ KVK_RESULTS_PER_PAGE <- 100L
 #'
 #' @return Invisibly returns `TRUE` if the key was set.
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' # Set the API key for the current session
 #' kvk_set_api_key("abcd1234")
 #' 
 #' # To store permanently, add this line to .Renviron:
 #' # KVK_API_KEY=your_actual_api_key_here
-#' }
 #'
 #' @export
 kvk_set_api_key <- function(api_key) {

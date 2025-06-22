@@ -32,8 +32,8 @@ KvK](https://developers.kvk.nl/apis).
 ## Installation
 
 The package has been submitted to CRAN for review. Once it’s accepted
-and the CRAN status badge above shows “CRAN: OK”, you can install the
-stable version from CRAN with:
+and the CRAN status badge shows “CRAN: OK”, you can install the stable
+version from CRAN with:
 
 ``` r
 install.packages("kvkapiR")

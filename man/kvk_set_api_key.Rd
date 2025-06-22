@@ -31,12 +31,11 @@ You can edit your .Renviron file by running:
 After adding the key, restart R for the changes to take effect.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Set the API key for the current session
 kvk_set_api_key("abcd1234")
 
 # To store permanently, add this line to .Renviron:
 # KVK_API_KEY=your_actual_api_key_here
-}
-
+\dontshow{\}) # examplesIf}
 }
