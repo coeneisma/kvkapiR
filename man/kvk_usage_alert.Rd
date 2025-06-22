@@ -2,33 +2,32 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{kvk_usage_alert}
 \alias{kvk_usage_alert}
-\title{Set usage and cost alerts}
+\title{Set usage and cost alerts for current session}
 \usage{
-kvk_usage_alert(max_calls = NULL, max_cost = NULL, period = "month")
+kvk_usage_alert(max_calls = NULL, max_cost = NULL)
 }
 \arguments{
-\item{max_calls}{Integer maximum number of API calls before triggering alerts.
-When reached, you'll see a danger alert. Continued usage beyond this limit
-will show reminder warnings.}
+\item{max_calls}{Integer maximum number of paid API calls before triggering alerts,
+or NULL to disable call alerts. Only basisprofiel, vestigingsprofiel, and
+naamgeving calls count towards this limit. Search calls are free and do not count.
+When reached, you'll see a danger alert. Continued usage beyond this limit will
+show reminder warnings.}
 
-\item{max_cost}{Numeric or character maximum cost before triggering alerts.
-Can be specified as a number (e.g., 25) or string (e.g., "EUR 25").
-Costs include both the monthly base fee (EUR 6.20) and per-query charges (EUR 0.02).}
-
-\item{period}{Character string specifying the alert period:
-\itemize{
-\item \code{"month"} (default): Monitor usage within each calendar month
-\item \code{"year"}: Monitor usage within each calendar year
-\item \code{"total"}: Monitor cumulative usage across all time
-}}
+\item{max_cost}{Numeric maximum cost in euros before triggering alerts, or NULL
+to disable cost alerts. For example, 5.45 represents EUR 5.45. Costs are
+calculated as EUR 0.02 per paid API call (search calls are free).}
+}
+\value{
+No return value, called for side effects. Sets usage alert options
+for the current session.
 }
 \description{
-Configure automatic alerts to monitor your KvK API usage and prevent
-unexpected costs. Alerts are triggered in real-time when you exceed
-the specified limits during API calls.
+Configure automatic alerts to monitor your KvK API usage within the current
+R session. Alerts are triggered in real-time when you exceed the specified
+limits during API calls.
 }
 \details{
-Usage alerts help you stay within budget and monitor API consumption patterns.
+Usage alerts help you control API consumption within your current R session.
 When limits are exceeded, the package displays informative messages:
 
 \itemize{
@@ -36,28 +35,26 @@ When limits are exceeded, the package displays informative messages:
 \item \strong{Reminder alerts}: Warning messages for continued usage over limits
 }
 
-Alert settings are stored in R options for the current session and will apply
-to all subsequent API calls. You must specify at least one of \code{max_calls}
-or \code{max_cost}.
+Alert settings are stored in R options and apply only to the current session.
+All alert configurations are automatically reset when you restart R.
+To disable all alerts within the current session, call the function with both
+parameters set to NULL: \code{kvk_usage_alert()}.
 
 Only production API calls count towards limits. Test environment calls are ignored.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Set monthly call limit
-kvk_usage_alert(max_calls = 100, period = "month")
+# Set session limit for paid calls only (search calls don't count)
+kvk_usage_alert(max_calls = 100)
 
-# Set monthly cost limit  
-kvk_usage_alert(max_cost = 25, period = "month")
+# Set session cost limit to EUR 5.00
+kvk_usage_alert(max_cost = 5.00)
 
-# Set both call and cost limits
-kvk_usage_alert(max_calls = 500, max_cost = "EUR 50", period = "month")
+# Set both paid call and cost limits (EUR 10.50)
+kvk_usage_alert(max_calls = 500, max_cost = 10.50)
 
-# Set yearly limits for annual budget planning
-kvk_usage_alert(max_cost = 300, period = "year")
-
-# Monitor total cumulative usage
-kvk_usage_alert(max_calls = 1000, period = "total")
+# Disable all alerts for this session
+kvk_usage_alert()
 \dontshow{\}) # examplesIf}
 }
 \seealso{

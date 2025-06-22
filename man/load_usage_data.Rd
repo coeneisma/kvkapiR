@@ -2,14 +2,14 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{load_usage_data}
 \alias{load_usage_data}
-\title{Load usage data from disk}
+\title{Load usage data from session storage}
 \usage{
 load_usage_data()
 }
 \value{
-Data frame with usage history, or empty data frame if no data exists
+Data frame with usage history from current session
 }
 \description{
-Load usage data from disk
+Load usage data from session storage
 }
 \keyword{internal}

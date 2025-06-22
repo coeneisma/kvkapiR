@@ -18,15 +18,25 @@ using \code{Sys.setenv()}. The key will be available until the session ends.
 }
 \details{
 The function sets the API key using \code{Sys.setenv()}, making
-it available for the current session. However, it does \strong{not} persist
-across sessions.
+it available for the current session only.
 
-If you want to store the key permanently, use \code{kvk_store_api_key()}.
+To store your API key permanently across R sessions, add the following
+line to your .Renviron file:
+
+\code{KVK_API_KEY=l7xxYourActualApiKeyHere1234567890abcdef}
+
+You can edit your .Renviron file by running:
+\code{usethis::edit_r_environ()}
+
+After adding the key, restart R for the changes to take effect.
 }
 \examples{
 \dontrun{
 # Set the API key for the current session
 kvk_set_api_key("abcd1234")
+
+# To store permanently, add this line to .Renviron:
+# KVK_API_KEY=your_actual_api_key_here
 }
 
 }

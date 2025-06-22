@@ -2,66 +2,50 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{kvk_usage_report}
 \alias{kvk_usage_report}
-\title{Generate API usage report}
+\title{Generate API usage report for current session}
 \usage{
-kvk_usage_report(format = "summary", year = NULL, month = NULL)
+kvk_usage_report(format = "summary")
 }
 \arguments{
 \item{format}{Character string specifying output format:
 \itemize{
 \item \code{"summary"} (default): Human-readable console output with
-costs and call counts
-\item \code{"tibble"}: Monthly aggregated data as a tibble, one row per month
-\item \code{"tidy"}: Detailed data with one row per API call, suitable
+costs and call counts for this session
+\item \code{"tibble"}: Structured summary data as a tibble
+\item \code{"detailed"}: Detailed data with one row per API call, suitable
 for analysis and visualization
 }}
-
-\item{year}{Integer year to filter results (e.g., 2025). If NULL, shows all years.}
-
-\item{month}{Integer month (1-12) to filter results. Only used when year is also specified.}
 }
 \value{
 \itemize{
 \item \code{format = "summary"}: Invisible NULL (output printed to console)
-\item \code{format = "tibble"}: A tibble with monthly usage summary
-\item \code{format = "tidy"}: A tibble with detailed call-by-call data
+\item \code{format = "tibble"}: A tibble with session usage summary
+\item \code{format = "detailed"}: A tibble with detailed call-by-call data
 }
 }
 \description{
-Display or return API usage statistics and costs in various formats.
+Display or return API usage statistics and costs for the current R session.
 This function helps you monitor your KvK API usage and associated costs.
 }
 \details{
-The summary format displays:
-\itemize{
-\item API call counts by type (search calls are free)
-\item Cost breakdown including monthly base fee (EUR 6.20) and query costs (EUR 0.02 per profile call)
-\item Total costs and number of active months
-}
+The summary format displays API call counts and costs for the current R session only.
+All usage data is session-based and will be reset when you restart R.
+Search calls are free, while profile calls cost EUR 0.02 each.
 
-The tibble format provides monthly aggregated data suitable for reporting and analysis.
-The tidy format provides raw call data perfect for creating custom visualizations.
-
-Only production API calls are included in reports. Test environment calls are not tracked or reported.
+Only production API calls are included in reports. Test environment calls are not tracked.
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # Display human-readable summary
 kvk_usage_report()
 
-# Get monthly summary as tibble
-monthly_data <- kvk_usage_report(format = "tibble")
-print(monthly_data)
+# Get structured summary as tibble
+summary_data <- kvk_usage_report(format = "tibble")
+print(summary_data)
 
 # Get detailed call data for custom analysis
-call_data <- kvk_usage_report(format = "tidy")
+call_data <- kvk_usage_report(format = "detailed")
 head(call_data)
-  
-# View specific month
-kvk_usage_report(year = 2025, month = 6)
-
-# View entire year
-kvk_usage_report(year = 2025)
 \dontshow{\}) # examplesIf}
 }
 \seealso{

@@ -3,6 +3,7 @@
 
 ## usethis namespace: start
 #' @importFrom lifecycle deprecated
+#' @importFrom tibble tibble as_tibble
 ## usethis namespace: end
 
 # Global variable bindings to avoid R CMD check NOTEs
@@ -20,8 +21,8 @@ utils::globalVariables(c(
   # Show usage tracking info on first load
   if (interactive() && is.null(getOption("kvkapiR.usage_tracking_opted_in"))) {
     packageStartupMessage(
-      "Welcome to kvkapiR! This package can track your API usage to help monitor costs.\n",
-      "You'll be asked about this when making your first API call.\n",
+      "Welcome to kvkapiR! This package automatically tracks your API usage to help monitor costs.\n",
+      "Usage data is stored in memory for your current session only.\n",
       "To disable tracking, use: Sys.setenv(KVKAPI_DISABLE_TRACKING = 'true')"
     )
   }

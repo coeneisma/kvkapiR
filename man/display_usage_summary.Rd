@@ -4,14 +4,10 @@
 \alias{display_usage_summary}
 \title{Display usage summary}
 \usage{
-display_usage_summary(usage_data, year = NULL, month = NULL)
+display_usage_summary(usage_data)
 }
 \arguments{
 \item{usage_data}{Data frame with usage data}
-
-\item{year}{Optional year to filter by}
-
-\item{month}{Optional month to filter by}
 }
 \description{
 Display usage summary

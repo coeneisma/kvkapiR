@@ -66,8 +66,8 @@ Portal](https://developers.kvk.nl/apply-for-apis?step=api-overview).
 # Set API key for current session
 kvk_set_api_key("your_api_key_here")
 
-# Or store permanently in .Renviron
-kvk_store_api_key("your_api_key_here")
+# Or add to .Renviron file manually:
+# KVK_API_KEY=your_api_key_here
 ```
 
 ### Test Environment
@@ -90,7 +90,7 @@ library(kvkapiR)
 # Search by location
 koudum <- kvk_search(plaats = "Koudum")
 koudum
-#> # A tibble: 510 × 6
+#> # A tibble: 512 × 6
 #>    kvkNummer vestigingsnummer naam                     adres        type  links 
 #>    <chr>     <chr>            <chr>                    <list>       <chr> <list>
 #>  1 01036576  000007810083     Stichting Gemeenschapsc… <named list> neve… <list>
@@ -103,7 +103,7 @@ koudum
 #>  8 62724843  000031708129     De Klink Exploitatie B.… <named list> hoof… <list>
 #>  9 01091668  000000678279     Multiservice Beheer en … <named list> hoof… <list>
 #> 10 41005555  000021707499     Stichting Jongerenwerk … <named list> hoof… <list>
-#> # ℹ 500 more rows
+#> # ℹ 502 more rows
 
 # Combine search criteria
 snackbar <- kvk_search(naam = "snackbar", plaats = "Utrecht")
@@ -124,7 +124,7 @@ snackbar
 #> 11 30050751  000007808208     "Petit-Re… <named list> hoof… <list> "Snackbar \"…
 #> 12 30192953  000002554313     "Cafetari… <named list> hoof… <list> "Snackbar de…
 #> 13 30156975  000013513508     "Bestaria… <named list> hoof… <list> "Snackbar \"…
-#> 14 86470833  000005957397     "Giros"    <named list> neve… <list> "Snackbar Gi…
+#> 14 86470833  000005957397     "Giros"    <named list> hoof… <list> "Snackbar Gi…
 #> 15 29036082  000020552270     "Restaura… <named list> hoof… <list> "Snackbar de…
 #> 16 76537293  000044313047     "Biltstra… <named list> hoof… <list> "Snackbar de…
 #> 17 76449548  000044233884     "Snackbar… <named list> hoof… <list>  <NA>
@@ -159,25 +159,27 @@ names <- kvk_get_naamgeving("01036576")
 
 ## Usage Tracking and Cost Management
 
-The package automatically tracks API usage and costs:
+The package includes automatic session-based usage tracking:
 
 ``` r
-# View usage report
+# View current session usage
 kvk_usage_report()
 
-# Set cost alerts
-kvk_usage_alert(max_cost = 25, period = "month")
+# Set session alerts
+kvk_usage_alert(max_cost = 5.00)
 
-# Export usage data
-kvk_export_usage("my_usage.csv", format = "monthly")
+# Export session data
+kvk_export_usage("session_usage.csv")
 ```
 
 ### Pricing
 
-- **Monthly base fee**: EUR 6.20 (if any API calls are made)
-- **Search API**: Free
+- **Monthly base fee**: EUR 6.20 (when you have API access)
+- **Search API**: Free (after base fee)
 - **Profile APIs**: EUR 0.02 per call
 - **Government organizations**: All API calls are free
+- **Access requirement**: Only authorized business representatives can
+  apply
 
 ## More Information
 

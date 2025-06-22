@@ -6,7 +6,7 @@
 \alias{kvkapiR-package}
 \title{kvkapiR: Interface to the Dutch Chamber of Commerce (KvK) API}
 \description{
-Access business registration data from the Dutch Chamber of Commerce (Kamer van Koophandel, KvK) through their official API. Search for companies by name, location, or registration number. Retrieve detailed business profiles, establishment information, and company name histories. Built on 'httr2' for robust API interaction with automatic pagination, error handling, and usage tracking.
+Access business registration data from the Dutch Chamber of Commerce (Kamer van Koophandel, KvK) through their official API \url{https://developers.kvk.nl/}. Search for companies by name, location, or registration number. Retrieve detailed business profiles, establishment information, and company name histories. Built on 'httr2' for robust API interaction with automatic pagination, error handling, and usage tracking.
 }
 \seealso{
 Useful links:

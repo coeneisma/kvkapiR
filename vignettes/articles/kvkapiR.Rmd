@@ -56,24 +56,18 @@ kvk_set_api_key(api_key = "your_api_key_here")
 
 ### Persistent API Key (Stored in `.Renviron`)
 
-If you want to store the API key permanently, use the `kvk_store_api_key()` function. This saves the key in the `.Renviron` file, making it persist across R sessions.
+For persistent storage across R sessions, you can manually add your API key to your `.Renviron` file:
 
-``` r
-kvk_store_api_key(api_key = "your_api_key_here")
-```
-To update an existing API key, set the `overwrite` parameter to `TRUE`:
+1. Open your `.Renviron` file: `usethis::edit_r_environ()`
+2. Add the line: `KVK_API_KEY=your_api_key_here`
+3. Save the file and restart R
 
-``` r 
-kvk_store_api_key(api_key = "your_new_api_key", overwrite = TRUE)
-```
-**⚠️ Important:** You must restart R for the changes to take effect.
-
-**⚠️ Warning:** Only use this method if you can safely store your API key on your system.
+**⚠️ Warning:** Only store your API key this way if you can safely store it on your system.
 
 
 ## Search the KvK API
 
-The `kvk_search()` function is wrapper for the KvK Search API. It automatically paginates results (up to 1,000 records).
+The `kvk_search()` function is a wrapper for the KvK Search API. It automatically handles pagination to retrieve all available results, up to the API limit of 1,000 records.
 
 Below are examples demonstrating how to perform searches and handle API responses.
 
@@ -144,7 +138,7 @@ mixed_types
 
 You can search for businesses at a specific address using different combinations:
 
-#### Full address search (postcode + house number):
+#### Postcode and house number search:
 ```{r, eval = has_api_key}
 # Search businesses at a specific address
 secret_address <- kvk_search(postcode = "2594BD", huisnummer = "10")
@@ -168,11 +162,7 @@ The package provides functions to retrieve three types of detailed profiles from
 
 **💰 Note:** Each profile retrieval costs EUR 0.02 per call (except for government organizations - see below).
 
-### Production Examples
-
-Here we retrieve real data from the production API:
-
-#### Basisprofiel
+### Basisprofiel
 
 The basic profile contains general company information:
 
@@ -182,7 +172,7 @@ stichting_profile <- kvk_get_basisprofiel(kvkNummer = "01036576")
 stichting_profile
 ```
 
-#### Vestigingsprofiel
+### Vestigingsprofiel
 
 The establishment profile provides detailed information about a specific location, including geographical data:
 
@@ -202,7 +192,7 @@ if (nrow(stichting_vestiging) > 0 && length(stichting_vestiging$adressen[[1]]) >
 }
 ```
 
-#### Naamgeving
+### Naamgeving
 
 The name history shows all historical names of a company:
 
@@ -215,100 +205,90 @@ stichting_names
 
 ## Usage Tracking and Cost Management
 
-The kvkapiR package includes automatic usage tracking to help you monitor API calls and costs.
+The kvkapiR package includes automatic session-based usage tracking to help you monitor API calls and costs within your current R session.
 
 ### View Usage Report
 
-Use `kvk_usage_report()` to see your API usage and costs in multiple formats:
+Use `kvk_usage_report()` to see your current session's API usage and costs:
 
 ```{r}
 # View summary report (default format)
 kvk_usage_report()
 
-# Get detailed tibble format for data analysis
+# Get structured tibble format for data analysis
 usage_data <- kvk_usage_report(format = "tibble")
 usage_data
 
-# Get tidy format for visualization and analysis
-usage_tidy <- kvk_usage_report(format = "tidy")
-usage_tidy
-
-# View specific month
-kvk_usage_report(year = 2025, month = 6)
+# Get detailed format with one row per API call
+usage_detailed <- kvk_usage_report(format = "detailed")
+usage_detailed
 ```
 
 The different output formats serve different purposes:
 
-- **"summary"** (default): Human-readable overview with costs and totals
-- **"tibble"**: Structured data frame for analysis, one row per month
-- **"tidy"**: Long format with one row per API call, perfect for creating visualizations
+- **"summary"** (default): Human-readable overview with session costs and totals
+- **"tibble"**: Structured summary of your session usage
+- **"detailed"**: One row per API call, perfect for detailed analysis
 
-The report shows:
-
-- Monthly base fee: EUR 6.20
-- Per-query costs: EUR 0.02 for profile retrievals (search is free)
-- Total costs and call counts by type
+The report shows your current session costs:
+- Per-query costs: EUR 0.02 for profile retrievals (search calls are free)
+- Total session costs and call counts by type
 
 ### Set Usage Alerts
 
-Protect against unexpected costs with usage alerts:
+Protect against unexpected costs with session-based usage alerts:
 
 ```{r}
-# Set monthly cost limit of EUR 25
-kvk_usage_alert(max_cost = 25, period = "month")
+# Set session cost limit of EUR 5.00
+kvk_usage_alert(max_cost = 5.00)
 
-# Set call count limit
-kvk_usage_alert(max_calls = 500, period = "month")
+# Set session limit for paid API calls only (search calls don't count)
+kvk_usage_alert(max_calls = 100)
 
-# Set yearly limit
-kvk_usage_alert(max_cost = 300, period = "year")
+# Set both limits for your current session
+kvk_usage_alert(max_calls = 100, max_cost = 5.00)
+
+# Disable all alerts for this session
+kvk_usage_alert()
 ```
 
-When limits are exceeded, you'll see:
+Alert features:
 
-- **First alert**: Warning when limit is reached
-- **Reminder alerts**: Notifications for continued usage over limits
+- **Paid calls only**: Call limits apply only to paid API calls (basisprofiel, vestigingsprofiel, naamgeving)
+- **Search calls are free**: Search calls don't count towards call limits
+- **Session-based**: Alerts apply only to your current R session
+- **Real-time**: Immediate notification when limits are exceeded
 
 ### Export Usage Data
 
-Export your usage history for external analysis:
+Export your session usage data for external analysis:
 
 ```{r, eval = FALSE}
-# Export as tidy format (one row per call)
-kvk_export_usage("my_usage.csv", format = "tidy")
+# Export session summary (default)
+kvk_export_usage("session_summary.csv")
 
-# Export as monthly summary
-kvk_export_usage("monthly_summary.csv", format = "monthly")
+# Export detailed call data (one row per API call)
+kvk_export_usage("detailed_calls.csv", format = "detailed")
 ```
 
 ### Usage Tracking Privacy and Control
 
-**Privacy-First Design**: kvkapiR respects your privacy with the following safeguards:
+**Session-Based Design**: kvkapiR uses session-based usage tracking with these privacy features:
 
-- **Opt-in Only**: You'll be asked for permission before any tracking begins
-- **Local Storage**: All data stays on your computer (in your user directory)
+- **Session Only**: All usage data is stored in memory for your current R session only
+- **No File Storage**: No data is written to your computer's file system
 - **No External Transmission**: Nothing is sent to external servers
-- **Easy to Disable**: Multiple ways to turn off tracking
-
-**First Time Setup**: When you make your first API call, you'll see:
-```
-Enable usage tracking? (yes/no):
-```
+- **Automatic Reset**: All tracking data is cleared when you restart R
 
 **Control Options**:
 
 ```{r, eval = FALSE}
-# Permanently disable tracking
+# Disable tracking completely
 Sys.setenv(KVKAPI_DISABLE_TRACKING = "true")
 
-# Enable tracking programmatically
-options(kvkapiR.usage_tracking_opted_in = TRUE)
-
-# Disable tracking programmatically  
-options(kvkapiR.usage_tracking_opted_in = FALSE)
+# Clear current session usage data
+kvk_reset_usage()
 ```
-
-**Data Location**: Usage data is stored in your user directory using `tools::R_user_dir("kvkapiR", "data")` for R 4.0+ or `~/.kvkapiR/` for older versions.
 
 ## Cost Information
 
@@ -316,9 +296,20 @@ options(kvkapiR.usage_tracking_opted_in = FALSE)
 
 ### Pricing Structure
 
-- **Monthly base fee**: EUR 6.20 (charged if any API calls are made)
-- **Search API**: Free
+- **Monthly base fee**: EUR 6.20 (charged when you have API access)
+- **Search API**: Free (after base fee)
 - **Profile APIs**: EUR 0.02 per call (basisprofiel, vestigingsprofiel, naamgeving)
+
+### API Access Requirements
+
+**Important**: Only authorized business representatives can apply for API access and sign contracts with KvK. Private individuals cannot register for API access.
+
+Authorized representatives include:
+- Business owners (sole proprietorships)
+- Directors of companies (BV, NV)
+- Board members of foundations and associations
+- Partners in partnerships (VOF, CV, Maatschap)
+- Authorized signatories with full or limited authority
 
 ### Government Organizations
 
@@ -383,8 +374,10 @@ The `kvkapiR` package provides a comprehensive interface for accessing KvK busin
 - Simple authentication management
 - Full API coverage (search and profile retrieval)
 - Test environment support for development
-- Automatic usage tracking and cost monitoring
+- Session-based usage tracking and cost monitoring
 - Flexible search options including multiple filters
+- Real-time usage alerts with smart filtering (paid calls only)
 - Government organization fee exemption
+- Privacy-focused design with no permanent file storage
 
 For more details, refer to the official [KvK API documentation](https://developers.kvk.nl/apis).

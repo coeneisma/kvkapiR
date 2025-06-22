@@ -10,7 +10,6 @@ reference:
 - title: KvK API keys
   contents:
   - kvk_set_api_key
-  - kvk_store_api_key
 
 - title: Query the KvK API
   contents:

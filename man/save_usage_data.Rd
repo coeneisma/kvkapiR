@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{save_usage_data}
 \alias{save_usage_data}
-\title{Save usage data to disk}
+\title{Save usage data to session storage}
 \usage{
 save_usage_data(usage_data)
 }
@@ -10,6 +10,6 @@ save_usage_data(usage_data)
 \item{usage_data}{Data frame with usage data to save}
 }
 \description{
-Save usage data to disk
+Save usage data to session storage
 }
 \keyword{internal}

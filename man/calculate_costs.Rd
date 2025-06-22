@@ -4,12 +4,10 @@
 \alias{calculate_costs}
 \title{Calculate costs for API usage}
 \usage{
-calculate_costs(usage_data, monthly_fee = 6.2, cost_per_query = 0.02)
+calculate_costs(usage_data, cost_per_query = 0.02)
 }
 \arguments{
 \item{usage_data}{Data frame with usage data}
-
-\item{monthly_fee}{Numeric, monthly API key connection fee in euros (default: 6.20)}
 
 \item{cost_per_query}{Numeric, cost per paid query in euros (default: 0.02)}
 }

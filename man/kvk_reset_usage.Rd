@@ -2,30 +2,30 @@
 % Please edit documentation in R/utils-usage-tracking.R
 \name{kvk_reset_usage}
 \alias{kvk_reset_usage}
-\title{Reset usage tracking data}
+\title{Reset session usage tracking data}
 \usage{
 kvk_reset_usage()
 }
 \value{
 Invisibly returns NULL. The function is called for its side effect
-of deleting the usage data file.
+of clearing session usage data.
 }
 \description{
-Permanently delete all stored API usage data. This action cannot be undone
-and will clear your entire usage history including call counts, timestamps,
+Clear all API usage data from the current R session. This action cannot be undone
+and will reset your session usage history including call counts, timestamps,
 and cost calculations.
 }
 \details{
-This function removes the usage tracking file from your user data directory.
+This function clears the session-based usage tracking data stored in memory.
 After reset:
 \itemize{
-\item All usage history is permanently deleted
+\item All session usage history is cleared
 \item \code{\link{kvk_usage_report}} will show no data
-\item Cost calculations will restart from zero
-\item Usage alerts will use the new baseline
+\item Session cost calculations restart from zero
+\item Usage alerts continue with the new baseline
 }
 
-The function only affects stored usage data. It does not change:
+The function only affects session usage data. It does not change:
 \itemize{
 \item Usage alert settings (these are stored in R options)
 \item API key configuration
@@ -34,15 +34,15 @@ The function only affects stored usage data. It does not change:
 
 This can be useful for:
 \itemize{
-\item Starting fresh tracking after a billing period
+\item Starting fresh tracking within a long R session
 \item Clearing test data before production use
-\item Privacy reasons when sharing a computer
+\item Resetting session counters for specific analyses
 \item Troubleshooting usage tracking issues
 }
 }
 \examples{
 \dontshow{if (interactive()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-# Clear all usage history
+# Clear session usage history
 kvk_reset_usage()
 
 # Verify reset worked
@@ -55,6 +55,6 @@ kvk_usage_report()  # Will show the new call
 }
 \seealso{
 \code{\link{kvk_usage_report}} for viewing current usage,
-\code{\link{kvk_export_usage}} for backing up data before reset,
+\code{\link{kvk_export_usage}} for exporting session data,
 \code{\link{kvk_usage_alert}} for setting usage limits
 }
