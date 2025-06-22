@@ -46,12 +46,19 @@
 <li>
 <code><a href="../reference/kvk_usage_alert.html">kvk_usage_alert()</a></code> sets usage and cost limits with real-time alerts.</li>
 <li>
-<code><a href="../reference/kvk_export_usage.html">kvk_export_usage()</a></code> exports usage data to CSV in tidy or monthly formats.</li>
+<code><a href="../reference/kvk_export_usage.html">kvk_export_usage()</a></code> exports usage data to CSV in detailed or summary formats.</li>
 <li>
 <code><a href="../reference/kvk_reset_usage.html">kvk_reset_usage()</a></code> clears usage tracking history.</li>
 <li>All functions support test environment via <code>test_environment = TRUE</code> for cost-free testing.</li>
 <li>Search functions support multiple business types in single query and street-only search.</li>
 <li>Automatic error handling with user-friendly messages and Dutch IPD code translations.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="technical-features-0-1-2">Technical features<a class="anchor" aria-label="anchor" href="#technical-features-0-1-2"></a></h3>
+<ul><li>Session-based usage tracking (no file system writes) for CRAN compliance.</li>
+<li>Complete test suite with 226+ tests covering all functionality.</li>
+<li>Robust error handling with IPD error code translations.</li>
+<li>Privacy-focused design with optional tracking disable via environment variable.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="documentation-0-1-2">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-1-2"></a></h3>

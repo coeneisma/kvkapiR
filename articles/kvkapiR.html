@@ -113,26 +113,26 @@ session. The key will be lost once you restart R.</p>
 <div class="section level3">
 <h3 id="persistent-api-key-stored-in--renviron">Persistent API Key (Stored in <code>.Renviron</code>)<a class="anchor" aria-label="anchor" href="#persistent-api-key-stored-in--renviron"></a>
 </h3>
-<p>If you want to store the API key permanently, use the
-<code><a href="../reference/kvk_store_api_key.html">kvk_store_api_key()</a></code> function. This saves the key in the
-<code>.Renviron</code> file, making it persist across R sessions.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_store_api_key.html">kvk_store_api_key</a></span><span class="op">(</span>api_key <span class="op">=</span> <span class="st">"your_api_key_here"</span><span class="op">)</span></span></code></pre></div>
-<p>To update an existing API key, set the <code>overwrite</code>
-parameter to <code>TRUE</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/kvk_store_api_key.html">kvk_store_api_key</a></span><span class="op">(</span>api_key <span class="op">=</span> <span class="st">"your_new_api_key"</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><strong>⚠️ Important:</strong> You must restart R for the changes to
-take effect.</p>
-<p><strong>⚠️ Warning:</strong> Only use this method if you can safely
-store your API key on your system.</p>
+<p>For persistent storage across R sessions, you can manually add your
+API key to your <code>.Renviron</code> file:</p>
+<ol style="list-style-type: decimal">
+<li>Open your <code>.Renviron</code> file:
+<code>usethis::edit_r_environ()</code>
+</li>
+<li>Add the line: <code>KVK_API_KEY=your_api_key_here</code>
+</li>
+<li>Save the file and restart R</li>
+</ol>
+<p><strong>⚠️ Warning:</strong> Only store your API key this way if you
+can safely store it on your system.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="search-the-kvk-api">Search the KvK API<a class="anchor" aria-label="anchor" href="#search-the-kvk-api"></a>
 </h2>
-<p>The <code><a href="../reference/kvk_search.html">kvk_search()</a></code> function is wrapper for the KvK Search
-API. It automatically paginates results (up to 1,000 records).</p>
+<p>The <code><a href="../reference/kvk_search.html">kvk_search()</a></code> function is a wrapper for the KvK
+Search API. It automatically handles pagination to retrieve all
+available results, up to the API limit of 1,000 records.</p>
 <p>Below are examples demonstrating how to perform searches and handle
 API responses.</p>
 <div class="section level3">
@@ -142,10 +142,10 @@ API responses.</p>
 Since this is a small village with fewer than <em>1.000</em> registered
 businesses (the API limit), all records are retrieved in one
 request.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">koudum</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Koudum"</span><span class="op">)</span></span>
 <span><span class="va">koudum</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 511 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 512 × 6</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 01036576  000007810083     Stichting Gemeenschapsc… <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span></span></span>
@@ -158,7 +158,7 @@ request.</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 62724843  000031708129     De Klink Exploitatie B.… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 01091668  000000678279     Multiservice Beheer en … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 41005555  000021707499     Stichting Jongerenwerk … <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 501 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 502 more rows</span></span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="example-2-single-variable-more-then-1-000-records">Example 2: single variable, more then 1.000 records<a class="anchor" aria-label="anchor" href="#example-2-single-variable-more-then-1-000-records"></a>
@@ -167,7 +167,7 @@ request.</p>
 Rotterdam</a> is significantly larger than Koudum. Searching for all
 registrations in Rotterdam will return more than 1,000 records,
 exceeding the API limit. When this happens, a warning is displayed:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rotterdam</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Rotterdam"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #BBBB00;">!</span> API response contains more than 1000 results. Only the first 1000 will be retrieved.</span></span>
 <span><span class="va">rotterdam</span></span>
@@ -192,7 +192,7 @@ exceeding the API limit. When this happens, a warning is displayed:</p>
 <p>You can combine multiple search terms in any parameter to refine your
 search. The API treats multiple words within a parameter as an AND
 operation by default.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Search for businesses with both "snackbar" and "hoekje" in their name</span></span>
 <span><span class="va">snackbar_hoekje</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"snackbar hoekje"</span><span class="op">)</span></span>
 <span><span class="va">snackbar_hoekje</span></span>
@@ -223,7 +223,7 @@ operation by default.</p>
 <p>You can combine multiple search criteria in a query.</p>
 <p>For example, let’s search for businesses in Utrecht where the name
 contains both <code>snackbar</code> and <code>hoek</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">snackbar</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>plaats <span class="op">=</span> <span class="st">"Utrecht"</span>, naam <span class="op">=</span> <span class="st">"snackbar"</span><span class="op">)</span></span>
 <span><span class="va">snackbar</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 17 × 7</span></span></span>
@@ -242,7 +242,7 @@ contains both <code>snackbar</code> and <code>hoek</code>:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 30050751  000007808208     <span style="color: #949494;">"</span>Petit-Re… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span> 30192953  000002554313     <span style="color: #949494;">"</span>Cafetari… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span> 30156975  000013513508     <span style="color: #949494;">"</span>Bestaria… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar \"…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 86470833  000005957397     <span style="color: #949494;">"</span>Giros<span style="color: #949494;">"</span>    <span style="color: #949494;">&lt;named list&gt;</span> neve… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar Gi…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span> 86470833  000005957397     <span style="color: #949494;">"</span>Giros<span style="color: #949494;">"</span>    <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar Gi…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span> 29036082  000020552270     <span style="color: #949494;">"</span>Restaura… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">16</span> 76537293  000044313047     <span style="color: #949494;">"</span>Biltstra… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span> <span style="color: #949494;">"</span>Snackbar de…</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">17</span> 76449548  000044233884     <span style="color: #949494;">"</span>Snackbar… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span>  <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
@@ -263,7 +263,7 @@ parameter. You can search for:</p>
 </ul>
 <p>You can also combine multiple types by passing the <code>type</code>
 parameter multiple times:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Search for both main branches AND legal entities in Amsterdam</span></span>
 <span><span class="va">mixed_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span></span>
 <span>  plaats <span class="op">=</span> <span class="st">"Amsterdam"</span>,</span>
@@ -293,9 +293,9 @@ parameter multiple times:</p>
 <p>You can search for businesses at a specific address using different
 combinations:</p>
 <div class="section level4">
-<h4 id="full-address-search-postcode-house-number">Full address search (postcode + house number):<a class="anchor" aria-label="anchor" href="#full-address-search-postcode-house-number"></a>
+<h4 id="postcode-and-house-number-search">Postcode and house number search:<a class="anchor" aria-label="anchor" href="#postcode-and-house-number-search"></a>
 </h4>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Search businesses at a specific address</span></span>
 <span><span class="va">secret_address</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>postcode <span class="op">=</span> <span class="st">"2594BD"</span>, huisnummer <span class="op">=</span> <span class="st">"10"</span><span class="op">)</span></span>
 <span><span class="va">secret_address</span></span>
@@ -307,11 +307,11 @@ combinations:</p>
 <div class="section level4">
 <h4 id="street-name-only-search">Street name only search:<a class="anchor" aria-label="anchor" href="#street-name-only-search"></a>
 </h4>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Search all businesses on a specific street</span></span>
 <span><span class="va">street_businesses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>straatnaam <span class="op">=</span> <span class="st">"Bezuidenhoutseweg"</span>, plaats <span class="op">=</span> <span class="st">"Den Haag"</span><span class="op">)</span></span>
 <span><span class="va">street_businesses</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 665 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 667 × 6</span></span></span>
 <span><span class="co">#&gt;    kvkNummer vestigingsnummer naam                     adres        type  links </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 32135977  000017722586     HE Den Haag B.V.         <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
@@ -324,7 +324,7 @@ combinations:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 27354017  000015683672     Tandartspraktijk A.G. S… <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 80942598  000047272619     JDMD Holding B.V.        <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 27185211  000003272141     Van Rijn Holding B.V.    <span style="color: #949494;">&lt;named list&gt;</span> hoof… <span style="color: #949494;">&lt;list&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 655 more rows</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 657 more rows</span></span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -347,14 +347,10 @@ names</li>
 <p><strong>💰 Note:</strong> Each profile retrieval costs EUR 0.02 per
 call (except for government organizations - see below).</p>
 <div class="section level3">
-<h3 id="production-examples">Production Examples<a class="anchor" aria-label="anchor" href="#production-examples"></a>
+<h3 id="basisprofiel">Basisprofiel<a class="anchor" aria-label="anchor" href="#basisprofiel"></a>
 </h3>
-<p>Here we retrieve real data from the production API:</p>
-<div class="section level4">
-<h4 id="basisprofiel">Basisprofiel<a class="anchor" aria-label="anchor" href="#basisprofiel"></a>
-</h4>
 <p>The basic profile contains general company information:</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get basic profile for a social organization (Stichting Gemeenschapscentrum Koudum)</span></span>
 <span><span class="va">stichting_profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_get_basisprofiel.html">kvk_get_basisprofiel</a></span><span class="op">(</span>kvkNummer <span class="op">=</span> <span class="st">"01036576"</span><span class="op">)</span></span>
 <span><span class="va">stichting_profile</span></span>
@@ -366,12 +362,12 @@ call (except for government organizations - see below).</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: statutaireNaam &lt;chr&gt;, handelsnamen &lt;list&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   sbiActiviteiten &lt;list&gt;, links &lt;list&gt;, `_embedded` &lt;list&gt;</span></span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="vestigingsprofiel">Vestigingsprofiel<a class="anchor" aria-label="anchor" href="#vestigingsprofiel"></a>
-</h4>
+<div class="section level3">
+<h3 id="vestigingsprofiel">Vestigingsprofiel<a class="anchor" aria-label="anchor" href="#vestigingsprofiel"></a>
+</h3>
 <p>The establishment profile provides detailed information about a
 specific location, including geographical data:</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get establishment profile for the same organization</span></span>
 <span><span class="va">stichting_vestiging</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_get_vestigingsprofiel.html">kvk_get_vestigingsprofiel</a></span><span class="op">(</span>vestigingsnummer <span class="op">=</span> <span class="st">"000007810083"</span><span class="op">)</span></span>
 <span><span class="va">stichting_vestiging</span></span>
@@ -396,11 +392,11 @@ specific location, including geographical data:</p>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
-<div class="section level4">
-<h4 id="naamgeving">Naamgeving<a class="anchor" aria-label="anchor" href="#naamgeving"></a>
-</h4>
+<div class="section level3">
+<h3 id="naamgeving">Naamgeving<a class="anchor" aria-label="anchor" href="#naamgeving"></a>
+</h3>
 <p>The name history shows all historical names of a company:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get name history</span></span>
 <span><span class="va">stichting_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_get_naamgeving.html">kvk_get_naamgeving</a></span><span class="op">(</span>kvkNummer <span class="op">=</span> <span class="st">"01036576"</span><span class="op">)</span></span>
 <span><span class="va">stichting_names</span></span>
@@ -410,126 +406,146 @@ specific location, including geographical data:</p>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 01036576  002897295 Stichting Gemeenschap… Stic… 19660217   <span style="color: #949494;">&lt;list [2]&gt;</span>  <span style="color: #949494;">&lt;list&gt;</span></span></span></code></pre></div>
 </div>
 </div>
-</div>
 <div class="section level2">
 <h2 id="usage-tracking-and-cost-management">Usage Tracking and Cost Management<a class="anchor" aria-label="anchor" href="#usage-tracking-and-cost-management"></a>
 </h2>
-<p>The kvkapiR package includes automatic usage tracking to help you
-monitor API calls and costs.</p>
+<p>The kvkapiR package includes automatic session-based usage tracking
+to help you monitor API calls and costs within your current R
+session.</p>
 <div class="section level3">
 <h3 id="view-usage-report">View Usage Report<a class="anchor" aria-label="anchor" href="#view-usage-report"></a>
 </h3>
-<p>Use <code><a href="../reference/kvk_usage_report.html">kvk_usage_report()</a></code> to see your API usage and costs
-in multiple formats:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<p>Use <code><a href="../reference/kvk_usage_report.html">kvk_usage_report()</a></code> to see your current session’s API
+usage and costs:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View summary report (default format)</span></span>
 <span><span class="fu"><a href="../reference/kvk_usage_report.html">kvk_usage_report</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No usage data found. Make some API calls first!</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── <span style="font-weight: bold;">KvK API Usage Report - Current Session</span> ──</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── API Calls</span></span>
+<span><span class="co">#&gt; • Search calls (free): 7</span></span>
+<span><span class="co">#&gt; • Profile calls (EUR 0.02 each): 3</span></span>
+<span><span class="co">#&gt; • Total calls: 10</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; ── Session Costs</span></span>
+<span><span class="co">#&gt; • Paid API calls: 3 x EUR 0.02 = EUR 0.06</span></span>
+<span><span class="co">#&gt; </span></span>
 <span></span>
-<span><span class="co"># Get detailed tibble format for data analysis</span></span>
+<span><span class="co"># Get structured tibble format for data analysis</span></span>
 <span><span class="va">usage_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_usage_report.html">kvk_usage_report</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"tibble"</span><span class="op">)</span></span>
 <span><span class="va">usage_data</span></span>
-<span><span class="co">#&gt; data frame with 0 columns and 0 rows</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   Search Basisprofiel Vestiging Naamgeving `Total Calls` `Costs (EUR)`</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      7            1         1          1            10          0.06</span></span>
 <span></span>
-<span><span class="co"># Get tidy format for visualization and analysis</span></span>
-<span><span class="va">usage_tidy</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_usage_report.html">kvk_usage_report</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"tidy"</span><span class="op">)</span></span>
-<span><span class="va">usage_tidy</span></span>
-<span><span class="co">#&gt; data frame with 0 columns and 0 rows</span></span>
-<span></span>
-<span><span class="co"># View specific month</span></span>
-<span><span class="fu"><a href="../reference/kvk_usage_report.html">kvk_usage_report</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fl">2025</span>, month <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> No usage data found. Make some API calls first!</span></span></code></pre></div>
+<span><span class="co"># Get detailed format with one row per API call</span></span>
+<span><span class="va">usage_detailed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_usage_report.html">kvk_usage_report</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"detailed"</span><span class="op">)</span></span>
+<span><span class="va">usage_detailed</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 10 × 6</span></span></span>
+<span><span class="co">#&gt;    timestamp           date        year month call_type         test_environment</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 2025-06-22 <span style="color: #949494;">21:02:11</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 2025-06-22 <span style="color: #949494;">21:02:15</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 2025-06-22 <span style="color: #949494;">21:02:16</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 2025-06-22 <span style="color: #949494;">21:02:16</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 2025-06-22 <span style="color: #949494;">21:02:20</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 2025-06-22 <span style="color: #949494;">21:02:20</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 2025-06-22 <span style="color: #949494;">21:02:23</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 search            FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 2025-06-22 <span style="color: #949494;">21:02:23</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 basisprofiel      FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 2025-06-22 <span style="color: #949494;">21:02:24</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 vestigingsprofiel FALSE           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 2025-06-22 <span style="color: #949494;">21:02:24</span> 2025-06-22  <span style="text-decoration: underline;">2</span>025     6 naamgeving        FALSE</span></span></code></pre></div>
 <p>The different output formats serve different purposes:</p>
 <ul>
 <li>
 <strong>“summary”</strong> (default): Human-readable overview with
-costs and totals</li>
+session costs and totals</li>
 <li>
-<strong>“tibble”</strong>: Structured data frame for analysis, one
-row per month</li>
+<strong>“tibble”</strong>: Structured summary of your session
+usage</li>
 <li>
-<strong>“tidy”</strong>: Long format with one row per API call,
-perfect for creating visualizations</li>
+<strong>“detailed”</strong>: One row per API call, perfect for
+detailed analysis</li>
 </ul>
-<p>The report shows:</p>
-<ul>
-<li>Monthly base fee: EUR 6.20</li>
-<li>Per-query costs: EUR 0.02 for profile retrievals (search is
-free)</li>
-<li>Total costs and call counts by type</li>
-</ul>
+<p>The report shows your current session costs: - Per-query costs: EUR
+0.02 for profile retrievals (search calls are free) - Total session
+costs and call counts by type</p>
 </div>
 <div class="section level3">
 <h3 id="set-usage-alerts">Set Usage Alerts<a class="anchor" aria-label="anchor" href="#set-usage-alerts"></a>
 </h3>
-<p>Protect against unexpected costs with usage alerts:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Set monthly cost limit of EUR 25</span></span>
-<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_cost <span class="op">=</span> <span class="fl">25</span>, period <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max cost: "25" per month</span></span>
+<p>Protect against unexpected costs with session-based usage alerts:</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Set session cost limit of EUR 5.00</span></span>
+<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_cost <span class="op">=</span> <span class="fl">5.00</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max cost: EUR 5.00 for this session</span></span>
 <span></span>
-<span><span class="co"># Set call count limit</span></span>
-<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_calls <span class="op">=</span> <span class="fl">500</span>, period <span class="op">=</span> <span class="st">"month"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max calls: 500 per month</span></span>
+<span><span class="co"># Set session limit for paid API calls only (search calls don't count)</span></span>
+<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_calls <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max paid calls: 100 for this session</span></span>
 <span></span>
-<span><span class="co"># Set yearly limit</span></span>
-<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_cost <span class="op">=</span> <span class="fl">300</span>, period <span class="op">=</span> <span class="st">"year"</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max cost: "300" per year</span></span></code></pre></div>
-<p>When limits are exceeded, you’ll see:</p>
+<span><span class="co"># Set both limits for your current session</span></span>
+<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span>max_calls <span class="op">=</span> <span class="fl">100</span>, max_cost <span class="op">=</span> <span class="fl">5.00</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max paid calls: 100 for this session</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Max cost: EUR 5.00 for this session</span></span>
+<span></span>
+<span><span class="co"># Disable all alerts for this session</span></span>
+<span><span class="fu"><a href="../reference/kvk_usage_alert.html">kvk_usage_alert</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> All usage alerts have been disabled for this session</span></span></code></pre></div>
+<p>Alert features:</p>
 <ul>
 <li>
-<strong>First alert</strong>: Warning when limit is reached</li>
+<strong>Paid calls only</strong>: Call limits apply only to paid API
+calls (basisprofiel, vestigingsprofiel, naamgeving)</li>
 <li>
-<strong>Reminder alerts</strong>: Notifications for continued usage
-over limits</li>
+<strong>Search calls are free</strong>: Search calls don’t count
+towards call limits</li>
+<li>
+<strong>Session-based</strong>: Alerts apply only to your current R
+session</li>
+<li>
+<strong>Real-time</strong>: Immediate notification when limits are
+exceeded</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="export-usage-data">Export Usage Data<a class="anchor" aria-label="anchor" href="#export-usage-data"></a>
 </h3>
-<p>Export your usage history for external analysis:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Export as tidy format (one row per call)</span></span>
-<span><span class="fu"><a href="../reference/kvk_export_usage.html">kvk_export_usage</a></span><span class="op">(</span><span class="st">"my_usage.csv"</span>, format <span class="op">=</span> <span class="st">"tidy"</span><span class="op">)</span></span>
+<p>Export your session usage data for external analysis:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Export session summary (default)</span></span>
+<span><span class="fu"><a href="../reference/kvk_export_usage.html">kvk_export_usage</a></span><span class="op">(</span><span class="st">"session_summary.csv"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Export as monthly summary</span></span>
-<span><span class="fu"><a href="../reference/kvk_export_usage.html">kvk_export_usage</a></span><span class="op">(</span><span class="st">"monthly_summary.csv"</span>, format <span class="op">=</span> <span class="st">"monthly"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Export detailed call data (one row per API call)</span></span>
+<span><span class="fu"><a href="../reference/kvk_export_usage.html">kvk_export_usage</a></span><span class="op">(</span><span class="st">"detailed_calls.csv"</span>, format <span class="op">=</span> <span class="st">"detailed"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="usage-tracking-privacy-and-control">Usage Tracking Privacy and Control<a class="anchor" aria-label="anchor" href="#usage-tracking-privacy-and-control"></a>
 </h3>
-<p><strong>Privacy-First Design</strong>: kvkapiR respects your privacy
-with the following safeguards:</p>
+<p><strong>Session-Based Design</strong>: kvkapiR uses session-based
+usage tracking with these privacy features:</p>
 <ul>
 <li>
-<strong>Opt-in Only</strong>: You’ll be asked for permission before
-any tracking begins</li>
+<strong>Session Only</strong>: All usage data is stored in memory
+for your current R session only</li>
 <li>
-<strong>Local Storage</strong>: All data stays on your computer (in
-your user directory)</li>
+<strong>No File Storage</strong>: No data is written to your
+computer’s file system</li>
 <li>
 <strong>No External Transmission</strong>: Nothing is sent to
 external servers</li>
 <li>
-<strong>Easy to Disable</strong>: Multiple ways to turn off
-tracking</li>
+<strong>Automatic Reset</strong>: All tracking data is cleared when
+you restart R</li>
 </ul>
-<p><strong>First Time Setup</strong>: When you make your first API call,
-you’ll see:</p>
-<pre><code>Enable usage tracking? (yes/no):</code></pre>
 <p><strong>Control Options</strong>:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Permanently disable tracking</span></span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Disable tracking completely</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>KVKAPI_DISABLE_TRACKING <span class="op">=</span> <span class="st">"true"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Enable tracking programmatically</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>kvkapiR.usage_tracking_opted_in <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Disable tracking programmatically  </span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>kvkapiR.usage_tracking_opted_in <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><strong>Data Location</strong>: Usage data is stored in your user
-directory using <code>tools::R_user_dir("kvkapiR", "data")</code> for R
-4.0+ or <code>~/.kvkapiR/</code> for older versions.</p>
+<span><span class="co"># Clear current session usage data</span></span>
+<span><span class="fu"><a href="../reference/kvk_reset_usage.html">kvk_reset_usage</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -544,14 +560,25 @@ versions of this package.</p>
 </h3>
 <ul>
 <li>
-<strong>Monthly base fee</strong>: EUR 6.20 (charged if any API
-calls are made)</li>
+<strong>Monthly base fee</strong>: EUR 6.20 (charged when you have
+API access)</li>
 <li>
-<strong>Search API</strong>: Free</li>
+<strong>Search API</strong>: Free (after base fee)</li>
 <li>
 <strong>Profile APIs</strong>: EUR 0.02 per call (basisprofiel,
 vestigingsprofiel, naamgeving)</li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="api-access-requirements">API Access Requirements<a class="anchor" aria-label="anchor" href="#api-access-requirements"></a>
+</h3>
+<p><strong>Important</strong>: Only authorized business representatives
+can apply for API access and sign contracts with KvK. Private
+individuals cannot register for API access.</p>
+<p>Authorized representatives include: - Business owners (sole
+proprietorships) - Directors of companies (BV, NV) - Board members of
+foundations and associations - Partners in partnerships (VOF, CV,
+Maatschap) - Authorized signatories with full or limited authority</p>
 </div>
 <div class="section level3">
 <h3 id="government-organizations">Government Organizations<a class="anchor" aria-label="anchor" href="#government-organizations"></a>
@@ -593,7 +620,7 @@ displays a message like:</p>
 <div class="section level3">
 <h3 id="test-environment-examples">Test Environment Examples<a class="anchor" aria-label="anchor" href="#test-environment-examples"></a>
 </h3>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Search in test environment - no API key needed</span></span>
 <span><span class="co"># Note: You'll see a message indicating test environment usage</span></span>
 <span><span class="va">test_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/kvk_search.html">kvk_search</a></span><span class="op">(</span>naam <span class="op">=</span> <span class="st">"Donald"</span>, test_environment <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
@@ -662,9 +689,11 @@ for accessing KvK business data in R with:</p>
 <li>Simple authentication management</li>
 <li>Full API coverage (search and profile retrieval)</li>
 <li>Test environment support for development</li>
-<li>Automatic usage tracking and cost monitoring</li>
+<li>Session-based usage tracking and cost monitoring</li>
 <li>Flexible search options including multiple filters</li>
+<li>Real-time usage alerts with smart filtering (paid calls only)</li>
 <li>Government organization fee exemption</li>
+<li>Privacy-focused design with no permanent file storage</li>
 </ul>
 <p>For more details, refer to the official <a href="https://developers.kvk.nl/apis" class="external-link">KvK API documentation</a>.</p>
 </div>

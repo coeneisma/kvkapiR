@@ -60,18 +60,24 @@ using <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-lin
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The function sets the API key using <code><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv()</a></code>, making
-it available for the current session. However, it does <strong>not</strong> persist
-across sessions.</p>
-<p>If you want to store the key permanently, use <code><a href="kvk_store_api_key.html">kvk_store_api_key()</a></code>.</p>
+it available for the current session only.</p>
+<p>To store your API key permanently across R sessions, add the following
+line to your .Renviron file:</p>
+<p><code>KVK_API_KEY=l7xxYourActualApiKeyHere1234567890abcdef</code></p>
+<p>You can edit your .Renviron file by running:
+<code>usethis::edit_r_environ()</code></p>
+<p>After adding the key, restart R for the changes to take effect.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
 <span class="r-in"><span><span class="co"># Set the API key for the current session</span></span></span>
 <span class="r-in"><span><span class="fu">kvk_set_api_key</span><span class="op">(</span><span class="st">"abcd1234"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># To store permanently, add this line to .Renviron:</span></span></span>
+<span class="r-in"><span><span class="co"># KVK_API_KEY=your_actual_api_key_here</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
